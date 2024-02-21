@@ -60,6 +60,8 @@ project(":android") {
 
     dependencies {
         implementation project(":core")
+        implementation 'com.google.android.gms:play-services-games:21.0.0'
+        implementation 'com.google.android.gms:play-services-auth:19.2.0'
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
