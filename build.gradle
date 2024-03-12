@@ -12,6 +12,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:8.1.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.20'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'com.google.gms:google-services:4.4.1'
     }
 }
 
@@ -56,6 +57,8 @@ project(":android") {
     apply plugin: "android"
     apply plugin: "kotlin-android"
 
+    apply plugin: 'com.google.gms.google-services'
+
     configurations { natives }
 
     dependencies {
@@ -66,6 +69,9 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+        implementation platform('com.google.firebase:firebase-bom:26.7.0')
+        implementation 'com.google.firebase:firebase-database'
     }
 }
 
