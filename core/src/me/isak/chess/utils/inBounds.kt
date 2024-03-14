@@ -1,3 +1,6 @@
+package me.isak.chess.utils
+
+/* Used to check border crossings */
 val directionMap: Map<Char, Int> = mapOf(
     'E' to 1,
     'S' to 1,
@@ -6,8 +9,8 @@ val directionMap: Map<Char, Int> = mapOf(
 )
 
 fun decomposeDirection(direction: String): Pair<Int, Int> {
-    val dx = direction.sumOf { if (it in setOf('E', 'W')) directionMap[it] ?: 0 else 0 }
-    val dy = direction.sumOf { if (it in setOf('S', 'N')) directionMap[it] ?: 0 else 0 }
+    val dx = direction.sumOf { if (it in "EW") directionMap[it] ?: 0 else 0 }
+    val dy = direction.sumOf { if (it in "SN") directionMap[it] ?: 0 else 0 }
     return Pair(dx, dy)
 }
 

@@ -1,11 +1,20 @@
-import kotlin.text.Regex
-import friends
+package me.isak.chess.move
+
+val occupied = ".\\w".toRegex()
+val always = "..".toRegex()
+
+val enemies = "[A-Z][a-z]|[a-z][A-Z]".toRegex()
+val friends = "[A-Z][A-Z]|[a-z][a-z]".toRegex()
+
+
+val notEnemies = "[A-Z][A-Z ]|[a-z][a-z ]".toRegex()
+
 
 class Mb {
     var d: Array<String> = arrayOf()
-    var sb: Regex = friends
-    var sa: Regex = always
-    var t: String = ""
+    var sb = friends
+    var sa = always
+    var t = ""
     var bc: Regex? = null
     var r: String? = null
 
