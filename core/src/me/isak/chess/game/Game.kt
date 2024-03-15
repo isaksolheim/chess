@@ -46,6 +46,10 @@ class Game(private val version: String) {
         return gameState.getBoard()
     }
 
+    fun getBoardAsString(): String {
+        return gameState.board
+    }
+
      fun getLegalMoves(): List<Move> {
         return legalMoves
     } 
