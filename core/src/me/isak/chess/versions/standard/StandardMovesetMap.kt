@@ -1,7 +1,8 @@
 package me.isak.chess.versions.standard
 
-import me.isak.chess.move.MovesetMap
+
 import me.isak.chess.move.Moveset
+import me.isak.chess.move.MovesetMap
 import me.isak.chess.move.Mb
 
 

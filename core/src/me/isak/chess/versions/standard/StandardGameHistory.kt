@@ -2,6 +2,7 @@ package me.isak.chess.versions.standard
 
 import me.isak.chess.game.GameHistory
 import me.isak.chess.move.Move
+
 import me.isak.chess.utils.parseDirection
 
 val rookH1 = Regex("R$")

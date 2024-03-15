@@ -1,7 +1,8 @@
 package me.isak.chess.move
 
-import me.isak.chess.move.always
 import me.isak.chess.move.friends
+import me.isak.chess.move.always
+
 
 
 class Moveset(

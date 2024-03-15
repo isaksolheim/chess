@@ -1,6 +1,7 @@
 package me.isak.chess.move
-import me.isak.chess.utils.isInBounds
+
 import me.isak.chess.utils.parseDirection
+import me.isak.chess.utils.isInBounds
 
 val piece = "[a-zA-Z]".toRegex()
 val black = "[a-z]".toRegex()
@@ -20,7 +21,6 @@ class MoveCalculator(private val movesetMap: MovesetMap) {
                 while (isInBounds(square, direction)) {
                     square += parseDirection(direction)
                     val moveDescription: String = board[startSquare].toString() + board[square].toString()
-
 
                     if (moveset.shouldStopBefore(moveDescription)) break
                     if (!moveset.boardCheck(board, startSquare)) break

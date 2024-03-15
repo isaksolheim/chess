@@ -5,7 +5,7 @@ import me.isak.chess.versions.standard.StandardGameState
 import me.isak.chess.versions.standard.StandardGameHistory
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.game.GameHistory
-import me.isak.chess.move.MovesetMap
+import me.isak.chess.move.Moveset
 
 data class FactoryResult(val calculator: MoveCalculator, val gameState: GameState, val gameHistory: GameHistory)
 
