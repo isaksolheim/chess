@@ -11,6 +11,8 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Chess(), config);
+		Chess chess = new Chess();
+		chess.play();	// To test that it is working
+		initialize(chess, config);
 	}
 }

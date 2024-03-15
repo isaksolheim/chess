@@ -40,6 +40,8 @@ class Chess : ApplicationAdapter() {
         
         game.click(60)
         game.click(51)
+
+        println(game.getBoardAsString())
     }
 }
 
