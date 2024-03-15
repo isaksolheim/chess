@@ -52,7 +52,17 @@ class Game(private val version: String) {
 
      fun getLegalMoves(): List<Move> {
         return legalMoves
-    } 
+    }
+
+    fun fen(): String {
+        val gameString = (0 until 8).map { i ->
+            gameState.getBoard().slice(i * 8 until (i + 1) * 8) }
+            .map { row -> row.joinToString("") }
+            .map { row -> row.replace("\\s+".toRegex()) { match -> match.value.length.toString() }}
+            .joinToString("/")
+
+        return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
+    }
 }
 
 

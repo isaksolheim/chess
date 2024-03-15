@@ -28,20 +28,52 @@ class Chess : ApplicationAdapter() {
 		img.dispose()
 	}
 
-    
+    // This function highlights how the game object can be used.
+	//
+	// After all the moves have been executed, the game prints this to console:
+	// "rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1 b kq -"
     fun play() {
         val game = Game("standard")
-        
-        game.click(51)
-        game.click(35)
-        
-        game.click(1)
-        game.click(16)
-        
-        game.click(60)
-        game.click(51)
 
-        println(game.getBoardAsString())
+
+        game.click(52)		// Click on f2 (pawn)
+		game.click(36)		// move pawn two forward
+
+        game.click(11)
+        game.click(27)		// move black pawn two forward
+        
+        game.click(36)
+        game.click(28)		// move white pawn even further
+
+		game.click(13)
+		game.click(29)		// move black pawn next to white pawn
+
+		game.click(28)
+		game.click(21)		// white en passant
+
+		game.click(6)
+		game.click(21) 		// black move knight
+
+		game.click(61)
+		game.click(25)		// white check black with bishop
+
+		game.click(10)
+		game.click(18)		// black block with pawn
+
+		game.click(62)
+		game.click(45)		// white move knight
+
+		game.click(18)
+		game.click(25)		// black capture bishop
+
+		game.click(60)
+		game.click(62)		// white castle kingside
+
+		println(game.fen())
+		// Any position can be viewed by going to lichess.org/analysis
+		// and put the printed string in the FEN section.
+		// Any game state can be printed with println(game.fen()).
+		// https://lichess.org/analysis/fromPosition/rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1_w_kq_-_0_1
     }
 }
 

@@ -36,4 +36,8 @@ class StandardGameState(moveCalculator: MoveCalculator): GameState(moveCalculato
         return true
     }
 
+    override fun toString(): String {
+        return if (turn) "w" else "b"
+    }
+
 }
