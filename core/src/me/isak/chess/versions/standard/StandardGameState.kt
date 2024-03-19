@@ -24,10 +24,44 @@ class StandardGameState(moveCalculator: MoveCalculator): GameState(moveCalculato
         }
     
         /* NEED TO ALSO CHECK FOR GAME OVER AFTER EXECUTING A MOVE !!! */
-    
+        if (GameOver(true)) {
+        //WE DID THE CHECKMATE
+        }
+
+
         return boardList.toTypedArray()
     }
-    
+
+
+    fun GameOver(WhitesTurn : Boolean) : Boolean
+    {
+        val piecesToCheck = mutableListOf<Int>()
+
+
+        if (WhitesTurn) {
+            Regex("[a-z]").findAll(getBoard().toString()).forEach {
+                piecesToCheck.add(it.range.first)
+            }
+        }
+        else {
+            Regex("[A-Z]").findAll(getBoard().toString()).forEach {
+                piecesToCheck.add(it.range.first)
+            }
+        }
+        piecesToCheck.forEach{square ->
+
+            val legalMoves = moveCalculator.calculate(getBoard(), square) // Calculate all potentially legal moves
+            .filter { checkGame(it) } // Filter away moves that are illegal for game specific reasons
+            //.filter { gameHistory.checkHistory(it) } // Filter away moves that are illegal for historic reasons
+
+            if (legalMoves.isEmpty())
+                return false;
+            }
+        //Ingen lovlige trekk funnet
+        return true;
+    }
+
+
     override fun checkGame(move: Move): Boolean {
         if (isKingInCheck(move)) return false
     

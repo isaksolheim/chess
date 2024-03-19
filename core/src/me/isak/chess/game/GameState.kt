@@ -12,7 +12,7 @@ val tagToCastleSquares = mapOf(
     "K" to listOf(60, 61, 62)
 )
 
-abstract class GameState(private val moveCalculator: MoveCalculator) {
+abstract class GameState(protected val moveCalculator: MoveCalculator) {
     public var turn = true;
     public var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
     public var gameActive = true;
