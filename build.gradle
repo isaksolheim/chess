@@ -20,6 +20,14 @@ allprojects {
     apply plugin: "eclipse"
     version = '1.0'
 
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion kotlinVersion
+            }
+        }
+    }
+
     tasks.withType(JavaCompile) {
         sourceCompatibility = '17'
         targetCompatibility = '17'
@@ -61,6 +69,17 @@ project(":android") {
 
     configurations { natives }
 
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_17
+            targetCompatibility JavaVersion.VERSION_17
+        }
+
+        kotlinOptions {
+            jvmTarget = "17"
+        }
+    }
+
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
@@ -68,10 +87,11 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
-        implementation platform('com.google.firebase:firebase-bom:26.7.0')
+        implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
         implementation 'com.google.firebase:firebase-database'
+        implementation 'com.google.firebase:firebase-database-ktx:latest_version'
     }
 }
 
@@ -79,10 +99,9 @@ project(":android") {
 project(":core") {
     apply plugin: "kotlin"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
         implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
     }
 }
