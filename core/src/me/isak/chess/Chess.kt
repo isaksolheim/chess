@@ -2,27 +2,28 @@ package me.isak.chess;
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
+import me.isak.chess.views.BoardView
 
 class Chess : ApplicationAdapter() {
-	private lateinit var batch: SpriteBatch
 	private lateinit var img: Texture
+	private val spriteBatch by lazy { Renderer.spriteBatch }
+	private val boardView = BoardView()
 
 	override fun create() {
-		batch = SpriteBatch()
-		img = Texture("badlogic.jpg")
+		// Setup...
 	}
 
 	override fun render() {
-		ScreenUtils.clear(1f, 1f, 0f, 1f)
-		batch.begin()
-		batch.draw(img, 0f, 0f)
-		batch.end()
+		ScreenUtils.clear(0.95f, 0.95f, 0.95f, 1f)
+
+		spriteBatch.begin()
+		boardView.render()
+		spriteBatch.end()
 	}
 
 	override fun dispose() {
-		batch.dispose()
+		spriteBatch.dispose()
 		img.dispose()
 	}
 }
