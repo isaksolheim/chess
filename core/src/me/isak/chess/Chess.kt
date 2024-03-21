@@ -1,11 +1,11 @@
-package me.isak.chess;
+package me.isak.chess
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 
-class Chess : ApplicationAdapter() {
+class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
 	private lateinit var batch: SpriteBatch
 	private lateinit var img: Texture
 
