@@ -1,28 +1,84 @@
 package me.isak.chess
 
+import me.isak.chess.game.Game
+
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
 
 class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
-	private lateinit var batch: SpriteBatch
-	private lateinit var img: Texture
+    private lateinit var batch: SpriteBatch
+    private lateinit var img: Texture
 
-	override fun create() {
-		batch = SpriteBatch()
-		img = Texture("badlogic.jpg")
-	}
+    override fun create() {
+        batch = SpriteBatch()
+        img = Texture("badlogic.jpg")
+    }
 
-	override fun render() {
-		ScreenUtils.clear(1f, 1f, 0f, 1f)
-		batch.begin()
-		batch.draw(img, 0f, 0f)
-		batch.end()
-	}
+    override fun render() {
+        ScreenUtils.clear(1f, 1f, 0f, 1f)
+        batch.begin()
+        batch.draw(img, 0f, 0f)
+        batch.end()
+    }
 
-	override fun dispose() {
-		batch.dispose()
-		img.dispose()
-	}
+    override fun dispose() {
+        batch.dispose()
+        img.dispose()
+    }
+
+    // This function highlights how the game object can be used.
+    //
+    // After all the moves have been executed, the game prints this to console:
+    // "rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1 b kq -"
+    fun play() {
+        val game = Game("standard")
+
+
+        game.click(52)        // Click on f2 (pawn)
+        game.click(36)        // move pawn two forward
+
+        game.click(11)
+        game.click(27)        // move black pawn two forward
+
+        game.click(36)
+        game.click(28)        // move white pawn even further
+
+        game.click(13)
+        game.click(29)        // move black pawn next to white pawn
+
+        game.click(28)
+        game.click(21)        // white en passant
+
+        game.click(6)
+        game.click(21)        // black move knight
+
+        game.click(61)
+        game.click(25)        // white check black with bishop
+
+        game.click(10)
+        game.click(18)        // black block with pawn
+
+        game.click(62)
+        game.click(45)        // white move knight
+
+        game.click(18)
+        game.click(25)        // black capture bishop
+
+        game.click(60)
+        game.click(62)        // white castle kingside
+
+        println(game.fen())
+        // Any position can be viewed by going to lichess.org/analysis
+        // and put the printed string in the FEN section.
+        // Any game state can be printed with println(game.fen()).
+        // https://lichess.org/analysis/fromPosition/rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1_w_kq_-_0_1
+    }
+}
+
+fun main() {
+    val coreInterface = CoreInterface()
+    val chess = Chess(coreInterface)
+    chess.play()
 }
