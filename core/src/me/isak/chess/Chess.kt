@@ -3,29 +3,27 @@ package me.isak.chess
 import me.isak.chess.game.Game
 
 import com.badlogic.gdx.ApplicationAdapter
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.ScreenUtils
+import me.isak.chess.views.BoardView
 
 class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
-    private lateinit var batch: SpriteBatch
-    private lateinit var img: Texture
+    private val spriteBatch by lazy { Renderer.spriteBatch }
+    private val boardView = BoardView()
 
     override fun create() {
-        batch = SpriteBatch()
-        img = Texture("badlogic.jpg")
+        // initialize stuff here
     }
 
     override fun render() {
-        ScreenUtils.clear(1f, 1f, 0f, 1f)
-        batch.begin()
-        batch.draw(img, 0f, 0f)
-        batch.end()
+        ScreenUtils.clear(0.95f, 0.95f, 0.95f, 1f)
+
+        spriteBatch.begin()
+        boardView.render()
+        spriteBatch.end()
     }
 
     override fun dispose() {
-        batch.dispose()
-        img.dispose()
+        spriteBatch.dispose()
     }
 
     // This function highlights how the game object can be used.
@@ -34,7 +32,6 @@ class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
     // "rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1 b kq -"
     fun play() {
         val game = Game("standard")
-
 
         game.click(52)        // Click on f2 (pawn)
         game.click(36)        // move pawn two forward
