@@ -16,8 +16,8 @@ class GameFactory {
         if (version == "standard") {
             val movesetMap = StandardMovesetMap()
             val calculator = MoveCalculator(movesetMap)
-            val gameState = StandardGameState(calculator)
             val gameHistory = StandardGameHistory()
+            val gameState = StandardGameState(calculator,gameHistory)
             return FactoryResult(calculator, gameState, gameHistory)
         }
 

@@ -76,7 +76,7 @@ val standardMovesetMap: Map<Char, Array<Moveset>> = mapOf(
 class StandardMovesetMap: MovesetMap {
 
     override fun getMoveset(piece: Char): Array<Moveset> { 
-        return standardMovesetMap.get(piece) ?: throw Error("Moveset does not exist for this piece")
+        return standardMovesetMap.get(piece) ?: throw Error("Moveset does not exist for this piece :$piece")
     }   
 }
 
