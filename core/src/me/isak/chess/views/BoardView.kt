@@ -1,12 +1,13 @@
 package me.isak.chess.views
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.viewmodels.GameViewModel
 
-class BoardView(private val viewModel: GameViewModel) {
+class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
@@ -30,8 +31,22 @@ class BoardView(private val viewModel: GameViewModel) {
 
     init {
         viewModel.onBoardChanged = { board ->
-            renderPieces(board)
+            Gdx.app.postRunnable { renderPieces(board) }
         }
+    }
+
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        val squareSize = Gdx.graphics.width / 8f
+        val yOffset = Gdx.graphics.height - (Gdx.graphics.height / 5f) - (8 * squareSize)
+        val boardX = (screenX / squareSize).toInt()
+        val boardY = ((Gdx.graphics.height - screenY - yOffset) / squareSize).toInt()
+
+        // Check if boardX and boardY are within valid range before calculating the square
+        if (boardX in 0..7 && boardY in 0..7) {
+            val square = (7 - boardY) * 8 + boardX
+            viewModel.onUserMove(square)
+        }
+        return true
     }
 
     private fun renderPieces(board: Array<Char>) {

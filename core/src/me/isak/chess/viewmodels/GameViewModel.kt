@@ -4,9 +4,9 @@ import me.isak.chess.game.Game
 
 class GameViewModel(private val game: Game) {
     var onBoardChanged: ((Array<Char>) -> Unit)? = null
+    private var selectedSquare: Int? = null
 
     init {
-        // Initialize with the current board state
         onBoardChanged?.invoke(game.getBoard())
     }
 
@@ -14,9 +14,21 @@ class GameViewModel(private val game: Game) {
         return game.getBoard()
     }
 
-    // Call this method when the user tries to make a move in the UI
-    fun onUserMove(start: Int, end: Int) {
-        // Convert start and end positions to a Move object
-        // Execute the move and update the UI accordingly
+    fun onUserMove(square: Int) {
+        selectedSquare?.let {
+            // Attempt to move selected piece to the new square
+            println(it)
+            println(square)
+            game.click(it)
+            game.click(square)
+            onBoardChanged?.invoke(game.getBoard())
+            selectedSquare = null // Reset selection
+
+        } ?: run {
+            // No piece selected yet, so select the current square
+            selectedSquare = square
+        }
+
+        onBoardChanged?.invoke(game.getBoard())
     }
 }

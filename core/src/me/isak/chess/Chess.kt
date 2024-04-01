@@ -1,6 +1,7 @@
 package me.isak.chess
 
 import com.badlogic.gdx.ApplicationAdapter
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ScreenUtils
 import me.isak.chess.game.Game
 import me.isak.chess.viewmodels.GameViewModel
@@ -15,6 +16,7 @@ class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
 
     override fun create() {
         // initialize stuff here
+        Gdx.input.inputProcessor = boardView
     }
 
     override fun render() {
