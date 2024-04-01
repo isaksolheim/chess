@@ -9,8 +9,8 @@ class AndroidLauncher : AndroidApplication() {
 		super.onCreate(savedInstanceState)
 		val config = AndroidApplicationConfiguration()
 		val androidInterface = AndroidInterface()
-		val chess = Chess(androidInterface)
-		chess.play()
+		// val chess = Chess(androidInterface)
+		// chess.play()
 		initialize(Chess(androidInterface), config)
 	}
 }
