@@ -35,7 +35,7 @@ class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
     // After all the moves have been executed, the game prints this to console:
     // "rnbqkb1r/pp2p1pp/5n2/1p1p4/8/5N2/PPPP1PPP/RNBQ1RK1 b kq -"
     fun play() {
-        //val game = Game("standard")
+        val game = Game("standard")
 
         game.click(52)        // Click on f2 (pawn)
         game.click(36)        // move pawn two forward

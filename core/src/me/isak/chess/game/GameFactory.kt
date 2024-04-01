@@ -6,6 +6,7 @@ import me.isak.chess.versions.standard.StandardGameHistory
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.game.GameHistory
 import me.isak.chess.move.Moveset
+import me.isak.chess.versions.standard.StandardGameOverChecker
 
 data class FactoryResult(val calculator: MoveCalculator, val gameState: GameState, val gameHistory: GameHistory)
 
@@ -17,7 +18,9 @@ class GameFactory {
             val movesetMap = StandardMovesetMap()
             val calculator = MoveCalculator(movesetMap)
             val gameHistory = StandardGameHistory()
-            val gameState = StandardGameState(calculator,gameHistory)
+            val gameOverChecker = StandardGameOverChecker(calculator,gameHistory)
+            val gameState = StandardGameState(calculator,gameOverChecker)
+            gameOverChecker.gameState = gameState
             return FactoryResult(calculator, gameState, gameHistory)
         }
 
