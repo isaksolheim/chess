@@ -21,8 +21,6 @@ class StandardGameOverChecker(val moveCalculator: MoveCalculator,val gameHistory
 
         //Game is over find the winner
         SetWinner()
-        Endgame()
-
         return gameOver
     }
 
@@ -56,12 +54,15 @@ class StandardGameOverChecker(val moveCalculator: MoveCalculator,val gameHistory
 
     private fun SetWinner() {
         if (!KingInCheck()) {
-            winner = Winner.Draw
+            endGame(Winner.Draw)
+            return
         }
-        if (turn)
-            winner = Winner.Black
-        else
-            winner = Winner.White
+        if (turn) {
+            endGame(Winner.Black)
+        }
+        else {
+            endGame(Winner.White)
+        }
     }
 
     private fun KingInCheck(): Boolean

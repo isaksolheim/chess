@@ -6,14 +6,10 @@ abstract class GameOverChecker()
 {
     public enum class Winner{White,Black,Draw}
 
-    var winner : Winner? = null
     abstract fun gameOver(turn: Boolean) : Boolean
-    protected fun Endgame()
+    protected fun endGame(winner : Winner)
     {
         //The game has come to an end goto end game screen
-
-        if (winner == null) throw IllegalArgumentException("Winner is set to null")
-
         if (winner == Winner.Draw)
         {
             println("Draw!")
