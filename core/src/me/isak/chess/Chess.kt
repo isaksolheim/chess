@@ -4,15 +4,17 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ScreenUtils
 import me.isak.chess.game.Game
+import me.isak.chess.sound.SoundController
 import me.isak.chess.viewmodels.GameViewModel
 import me.isak.chess.views.BoardView
 
 class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
-
+    private val soundController = SoundController.getInstance()
     private val game = Game("standard")
     private val gameViewModel = GameViewModel(game)
     private val boardView = BoardView(gameViewModel)
+
 
     override fun create() {
         // initialize stuff here

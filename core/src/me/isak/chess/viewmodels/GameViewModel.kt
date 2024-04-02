@@ -2,8 +2,10 @@ package me.isak.chess.viewmodels
 
 import me.isak.chess.game.Game
 import me.isak.chess.move.Move
+import me.isak.chess.sound.SoundController
 
 class GameViewModel(private val game: Game) {
+    val soundController = SoundController.getInstance()
     var onBoardChanged: ((Array<Char>) -> Unit)? = null
     var onLegalMovesChanged: ((List<Move>) -> Unit)? = null
     private var selectedSquare: Int? = null
@@ -31,12 +33,18 @@ class GameViewModel(private val game: Game) {
             onBoardChanged?.invoke(game.getBoard())
             selectedSquare = null // Reset selection
 
+            //Play sound
+            soundController.playMenuSoundEffect(SoundController.MenueSounds.Click)
+
 
         } ?: run {
             // No piece selected yet, so select the current square
             selectedSquare = square
             game.click(square)
             onLegalMovesChanged?.invoke(game.getLegalMoves())
+
+            //Play sound
+            soundController.playMenuSoundEffect(SoundController.MenueSounds.Click)
         }
 
         onBoardChanged?.invoke(game.getBoard())
