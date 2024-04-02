@@ -3,6 +3,7 @@ package me.isak.chess.game
 
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
+import me.isak.chess.move.Moveset
 
 class Game(private val version: String) {
 
@@ -20,26 +21,27 @@ class Game(private val version: String) {
         gameHistory = history
     }
 
-    fun click(square: Int) {
+    fun click(square: Int) : List<Move> {
         val move = legalMoves.find { it.square == square }
 
         if (move != null) {
             legalMoves = listOf()
             gameState.executeMove(move)
             gameHistory.changeHistory(move)
-            return
+            return listOf()
         }
 
         val piece = gameState.board[square]
 
         if (piece == ' ' || !gameState.isPieceTurn(piece)) {
             legalMoves = listOf()
-            return
+            return listOf()
         }
 
         legalMoves = moveCalculator.calculate(gameState.getBoard(), square) // Calculate all potentially legal moves
             .filter { gameState.checkGame(it) } // Filter away moves that are illegal for game specific reasons
             .filter { gameHistory.checkHistory(it) } // Filter away moves that are illegal for historic reasons
+        return legalMoves;
     }
 
     fun getBoard(): Array<Char> {

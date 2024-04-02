@@ -1,11 +1,13 @@
 package me.isak.chess.versions.standard
 
+import me.isak.chess.game.GameHistory
+import me.isak.chess.game.GameOverChecker
 import me.isak.chess.game.GameState
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 
 
-class StandardGameState(moveCalculator: MoveCalculator): GameState(moveCalculator) {
+class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
     override fun executeMove(move: Move): Array<Char> {
         turn = !turn
         board = move.result
@@ -24,10 +26,12 @@ class StandardGameState(moveCalculator: MoveCalculator): GameState(moveCalculato
         }
     
         /* NEED TO ALSO CHECK FOR GAME OVER AFTER EXECUTING A MOVE !!! */
+        if (gameOverChecker.gameOver(turn))
+            println("Check mate")
+
     
         return boardList.toTypedArray()
     }
-    
     override fun checkGame(move: Move): Boolean {
         if (isKingInCheck(move)) return false
     

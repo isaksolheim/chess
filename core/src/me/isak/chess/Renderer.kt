@@ -17,4 +17,9 @@ object Renderer {
         val darkPixelRegion = TextureRegion(darkPixelTexture)
         ShapeDrawer(spriteBatch, darkPixelRegion)
     }
+    val dotPixelDrawer: ShapeDrawer by lazy {
+        val dotPixelTexture = Texture("Dot.png")
+        val dotPixelRegion = TextureRegion(dotPixelTexture)
+        ShapeDrawer(spriteBatch, dotPixelRegion)
+    }
 }

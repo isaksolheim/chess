@@ -5,12 +5,17 @@ import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
+import me.isak.chess.move.Move
+import me.isak.chess.move.Moveset
 import me.isak.chess.viewmodels.GameViewModel
 
 class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
+    private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
+
+    //private val dotTexture = new Texture(Gdx.files.internal("pieces/wP.png"))
 
     private val pieceImages by lazy {
         hashMapOf<Char, Texture>().apply {
@@ -30,6 +35,9 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     }
 
     init {
+        viewModel.onLegalMovesChanged = { moves ->
+            Gdx.app.postRunnable{renderLegalMoves(moves)}
+        }
         viewModel.onBoardChanged = { board ->
             Gdx.app.postRunnable { renderPieces(board) }
         }
@@ -65,6 +73,25 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
                 spriteBatch.draw(it, xPos, adjustedYPos, squareSize, squareSize)
             }
         }
+
+    }
+
+    private fun renderLegalMoves(moveset: List<Move>)
+    {
+        val squareSize = Gdx.graphics.width / 8f
+        var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
+        val circleSize = squareSize/8f
+
+        for (move : Move in moveset)
+        {
+            val index = move.square
+            val colNum = index % 8
+            val rowNum = index / 8
+
+            val xPos = colNum * squareSize + squareSize/2
+            val adjustedYPos = yPos - rowNum * squareSize + squareSize/2
+            dotPixelDrawer.filledCircle(xPos, adjustedYPos,circleSize)
+        }
     }
 
 
@@ -99,5 +126,6 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
         }
 
         renderPieces(viewModel.getBoard())
+        renderLegalMoves(viewModel.getLegalMoves())
     }
 }
