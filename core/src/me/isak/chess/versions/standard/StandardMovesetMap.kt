@@ -46,7 +46,7 @@ val blackKing = arrayOf(
 val whitePawn = arrayOf(
     Mb().directions(arrayOf("NE", "NW")).stopBefore(notEnemies).tag("P").build(),
     Mb().directions(arrayOf("N")).stopBefore(occupied).tag("P").build(),
-    Mb().directions(arrayOf("NN")).stopBefore(occupied).boardCondition(Regex(" .{7}I.{8,15}")).tag("whitePawnDoubleForward").build(),
+    Mb().directions(arrayOf("NN")).stopBefore(occupied).boardCondition(Regex(" .{7}I.{8,15}$")).tag("whitePawnDoubleForward").build(),
     Mb().directions(arrayOf("NE")).stopBefore(occupied).boardCondition(Regex(" (.{6})Ip(.{32,38})$")).replacement("P$1  $2").tag("enPassant").build(),
     Mb().directions(arrayOf("NW")).stopBefore(occupied).boardCondition(Regex(" (.{7})pI(.{32,38})$")).replacement("P$1  $2").tag("enPassant").build()
 )
