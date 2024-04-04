@@ -7,7 +7,7 @@ import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 
 
-class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
+open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
     override fun executeMove(move: Move): Array<Char> {
         turn = !turn
         board = move.result
