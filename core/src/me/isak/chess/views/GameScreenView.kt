@@ -8,7 +8,7 @@ import me.isak.chess.Renderer
 import me.isak.chess.game.Game
 import me.isak.chess.viewmodels.GameViewModel
 
-class GameScreen(private val game: Chess) : ScreenAdapter() {
+class GameScreen(private val app: Chess) : ScreenAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
     private val localGame = Game("standard")

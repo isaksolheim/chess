@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import me.isak.chess.views.MainMenuView
 
-class Chess(private val firebase: FirebaseInterface) : com.badlogic.gdx.Game() {
+class Chess(val firebase: FirebaseInterface) : com.badlogic.gdx.Game() {
     lateinit var skin: Skin
 
     override fun create() {

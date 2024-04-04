@@ -11,7 +11,7 @@ import me.isak.chess.Chess
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
 
-class LobbyView(private val game: Chess) : ScreenAdapter() {
+class LobbyView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
 
     init {
@@ -20,14 +20,16 @@ class LobbyView(private val game: Chess) : ScreenAdapter() {
         table.setFillParent(true)
         stage.addActor(table)
 
-        val skin = game.skin
+        val skin = app.skin
 
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 // This code will be executed when the back button is clicked
                 // Change to the previous screen, e.g., the main menu screen
-                game.setScreen(MainMenuView(game))
+                // val firebaseGameModel = app.toJSON()
+                // game.firebase.pushValue("1", firebaseGameModel)
+                app.setScreen(MainMenuView(app))
             }
         })
 
@@ -36,7 +38,7 @@ class LobbyView(private val game: Chess) : ScreenAdapter() {
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Create Firebase Game
-                game.setScreen(GameScreen(game))
+                app.setScreen(GameScreen(app))
             }
         })
 
@@ -44,7 +46,7 @@ class LobbyView(private val game: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join Game", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                game.setScreen(JoinGameView(game))
+                app.setScreen(JoinGameView(app))
             }
         })
 

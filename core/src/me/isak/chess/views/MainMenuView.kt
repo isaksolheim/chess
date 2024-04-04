@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 
-class MainMenuView(val game: Chess) : ScreenAdapter() {
+class MainMenuView(val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
 
     init {
@@ -25,24 +25,24 @@ class MainMenuView(val game: Chess) : ScreenAdapter() {
         table.setFillParent(true)
         stage.addActor(table)
 
-        val playLocalButton = TextButton("Play Local", game.skin)
+        val playLocalButton = TextButton("Play Local", app.skin)
         playLocalButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                game.setScreen(GameScreen(game))
+                app.setScreen(GameScreen(app))
             }
         })
 
-        val playMultiplayerButton = TextButton("Play Multiplayer", game.skin)
+        val playMultiplayerButton = TextButton("Play Multiplayer", app.skin)
         playMultiplayerButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                game.setScreen(LobbyView(game))
+                app.setScreen(LobbyView(app))
             }
         })
 
-        val aboutButton = TextButton("About", game.skin)
+        val aboutButton = TextButton("About", app.skin)
         aboutButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                game.setScreen(AboutScreenView(game))
+                app.setScreen(AboutScreenView(app))
             }
         })
 

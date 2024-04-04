@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
 import me.isak.chess.views.GameScreen
 
-class JoinGameView(private val game: Chess) : ScreenAdapter() {
+class JoinGameView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private lateinit var gameIdInput: TextField
 
@@ -21,14 +21,14 @@ class JoinGameView(private val game: Chess) : ScreenAdapter() {
         table.setFillParent(true)
         stage.addActor(table)
 
-        val skin = game.skin
+        val skin = app.skin
 
         gameIdInput = TextField("", skin)
         val joinGameButton = TextButton("Join Game", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Join Firebase Game
-                game.setScreen(GameScreen(game))
+                app.setScreen(GameScreen(app))
             }
         })
 

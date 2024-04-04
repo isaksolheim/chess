@@ -14,9 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 
-class AboutScreenView(private val game: Chess) : ScreenAdapter() {
+class AboutScreenView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
-    private val skin = game.skin // Assuming your game object holds a reference to the skin
+    private val skin = app.skin
     private val logoTexture = Texture(Gdx.files.internal("glos.jpeg"))
 
     init {
@@ -33,7 +33,7 @@ class AboutScreenView(private val game: Chess) : ScreenAdapter() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 // This code will be executed when the back button is clicked
                 // Change to the previous screen, e.g., the main menu screen
-                game.setScreen(MainMenuView(game))
+                app.setScreen(MainMenuView(app))
             }
         })
         table.add(backButton).padTop(20f) // Adjust padding as needed
