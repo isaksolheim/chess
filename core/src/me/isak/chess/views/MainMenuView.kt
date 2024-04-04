@@ -1,5 +1,6 @@
 package me.isak.chess.views
 
+import LobbyView
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
@@ -34,7 +35,7 @@ class MainMenuView(val game: Chess) : ScreenAdapter() {
         val playMultiplayerButton = TextButton("Play Multiplayer", game.skin)
         playMultiplayerButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                // TODO: Change to MultiplayerScreen
+                game.setScreen(LobbyView(game))
             }
         })
 
