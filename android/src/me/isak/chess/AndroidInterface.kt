@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import me.isak.chess.models.FirebaseGameModel
 
 /**
  * Implements FirebaseInterface to interact with Firebase Database.
@@ -28,7 +29,7 @@ class AndroidInterface : FirebaseInterface {
         })
     }
 
-    override fun pushValue(key: String, value: String) {
+    override fun pushValue(key: String, value: FirebaseGameModel) {
         val ref = database.getReference("/games").child(key)
 
         ref.setValue(value)

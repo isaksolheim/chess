@@ -1,9 +1,9 @@
 
 package me.isak.chess.game
 
+import me.isak.chess.models.FirebaseGameModel
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
-import me.isak.chess.move.Moveset
 
 class Game(private val version: String) {
 
@@ -64,6 +64,22 @@ class Game(private val version: String) {
             .joinToString("/")
 
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
+    }
+
+    fun toJSON(): FirebaseGameModel {
+        val currentTurn = if (gameState.turn) "white" else "black"
+        // Assuming the board is stored as an Array<Char> in gameState and you want it as List<Char>
+        val board = gameState.getBoardAsString()
+
+        return FirebaseGameModel(
+            board = board,
+            turnId = 1,
+            players = mapOf(
+                "white" to "1", // player id "1"
+                "black" to "2"  // player id "2"
+            ),
+            currentTurn = currentTurn
+        )
     }
 }
 

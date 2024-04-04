@@ -17,6 +17,10 @@ class Chess(private val firebase: FirebaseInterface) : ApplicationAdapter() {
     override fun create() {
         // initialize stuff here
         Gdx.input.inputProcessor = boardView
+        val firebaseGameModel = game.toJSON()
+        println("OUTPUT<3")
+        println(firebaseGameModel)
+        firebase.pushValue("1", firebaseGameModel)
     }
 
     override fun render() {
