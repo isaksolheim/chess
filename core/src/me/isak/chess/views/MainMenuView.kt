@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 
@@ -23,27 +24,24 @@ class MainMenuView(val game: Chess) : ScreenAdapter() {
         table.setFillParent(true)
         stage.addActor(table)
 
-        val atlas = TextureAtlas(Gdx.files.internal("skin/rainbow-ui.atlas"))
-        val skin = Skin(Gdx.files.internal("skin/rainbow-ui.json"), atlas)
-
-        val playLocalButton = TextButton("Play Local", skin)
+        val playLocalButton = TextButton("Play Local", game.skin)
         playLocalButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 game.setScreen(GameScreen(game))
             }
         })
 
-        val playMultiplayerButton = TextButton("Play Multiplayer", skin)
+        val playMultiplayerButton = TextButton("Play Multiplayer", game.skin)
         playMultiplayerButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Change to MultiplayerScreen
             }
         })
 
-        val aboutButton = TextButton("About", skin)
+        val aboutButton = TextButton("About", game.skin)
         aboutButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                // TODO: Change to About Screen
+                game.setScreen(AboutScreenView(game))
             }
         })
 
@@ -55,7 +53,9 @@ class MainMenuView(val game: Chess) : ScreenAdapter() {
     }
 
     override fun render(delta: Float) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT) // Clear the screen
+        Gdx.gl.glClearColor(0.95f, 0.95f, 0.95f, 1f) // Clear the screen
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
         stage.act(Gdx.graphics.deltaTime.coerceAtMost(1 / 30f))
         stage.draw()
     }
