@@ -34,7 +34,7 @@ class GameViewModel(private val game: Game) {
             selectedSquare = null // Reset selection
 
             //Play sound
-            soundController.playMenuSoundEffect(SoundController.MenueSounds.Click)
+            soundController.playGameSoundEffect(SoundController.GameSounds.ClickBoard)
 
 
         } ?: run {
@@ -44,7 +44,7 @@ class GameViewModel(private val game: Game) {
             onLegalMovesChanged?.invoke(game.getLegalMoves())
 
             //Play sound
-            soundController.playMenuSoundEffect(SoundController.MenueSounds.Click)
+            soundController.playGameSoundEffect(SoundController.GameSounds.ClickBoard)
         }
 
         onBoardChanged?.invoke(game.getBoard())

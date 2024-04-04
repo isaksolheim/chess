@@ -3,12 +3,15 @@ package me.isak.chess.sound
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
+import me.isak.chess.sound.soundeffects.StandardSoundEffectsMap
 import kotlin.concurrent.Volatile
 
 class SoundController private constructor()
 {
-    var soundEffectsMap : SoundEffectsMap? = null
-    public set
+    var soundEffects : SoundEffectsMap? = null
+        public set
+    private var standardSoundEffects : SoundEffectsMap = StandardSoundEffectsMap
+
     //Singleton pattern
     companion object {
         @Volatile
@@ -19,14 +22,14 @@ class SoundController private constructor()
     }
 
     public enum class MenueSounds{Click}
-    public enum class GameSounds{ClickBoard, MovePiece}
+    public enum class GameSounds{ClickBoard, MovePiece,TakeOver,Win}
 
     //Standard static menue sounds
     private val pieceImages by lazy {
         hashMapOf<MenueSounds, Sound>().apply {
-        put(MenueSounds.Click,Gdx.audio.newSound(Gdx.files.internal("sound/game/standard/click.wav")))
-            }
+            put(MenueSounds.Click,Gdx.audio.newSound(Gdx.files.internal("sound/game/standard/click.wav")))
         }
+    }
 
 
     public fun playMenuSoundEffect(menueSound: MenueSounds)
@@ -36,8 +39,19 @@ class SoundController private constructor()
         sound.play()
     }
 
-    public fun playGameSoundEffect(gameSounds: GameSounds)
+    public fun playGameSoundEffect(gameSound: GameSounds)
     {
+        if (soundEffects == null)
+        {
+            standardSoundEffects.GameSoundEffects.get(gameSound)!!.play()
+            return
+        }
+        if (!soundEffects!!.GameSoundEffects.containsKey(gameSound))
+        {
+            standardSoundEffects.GameSoundEffects.get(gameSound)!!.play()
+            return
+        }
+        soundEffects!!.GameSoundEffects.get(gameSound)!!.play()
 
     }
 
