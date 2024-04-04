@@ -7,10 +7,10 @@ import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 
 
-class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
-    override fun executeMove(move: Move): Array<Char> {
+open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
+    override fun executeMove(move: Move) {
         turn = !turn
-        board = move.result
+
     
         val boardList = move.result.toCharArray().toMutableList()
     
@@ -29,8 +29,7 @@ class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOve
         if (gameOverChecker.gameOver(turn))
             println("Check mate")
 
-    
-        return boardList.toTypedArray()
+        board = boardList.joinToString("")
     }
     override fun checkGame(move: Move): Boolean {
         if (isKingInCheck(move)) return false

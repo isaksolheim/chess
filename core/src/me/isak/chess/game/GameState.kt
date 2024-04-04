@@ -17,7 +17,7 @@ abstract class GameState(val moveCalculator: MoveCalculator, val gameOverChecker
     public var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
     public var gameActive = true;
 
-    abstract fun executeMove(move: Move): Array<Char>
+    abstract fun executeMove(move: Move)
     abstract fun checkGame(move: Move): Boolean
 
     fun getBoard(): Array<Char> {
