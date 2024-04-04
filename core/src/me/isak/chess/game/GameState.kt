@@ -14,7 +14,7 @@ val tagToCastleSquares = mapOf(
 
 abstract class GameState(val moveCalculator: MoveCalculator, val gameOverChecker: GameOverChecker) {
     public var turn = true;
-    public var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
+    public open var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
     public var gameActive = true;
 
     abstract fun executeMove(move: Move): Array<Char>
