@@ -11,7 +11,7 @@ class CoreInterface : FirebaseInterface {
         TODO("Not yet implemented")
     }
 
-    override fun setValue(key: String, value: String) {
+    override fun setValue(key: String, value: FirebaseGameModel) {
         TODO("Not yet implemented")
     }
 }

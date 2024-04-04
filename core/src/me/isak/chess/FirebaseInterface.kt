@@ -28,5 +28,5 @@ interface FirebaseInterface {
      * @param key Unused parameter in this context, kept for interface compliance.
      * @param value The value to be set at the root.
      */
-    fun setValue(key: String, value: String)
+    fun setValue(key: String, value: FirebaseGameModel)
 }

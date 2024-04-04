@@ -41,7 +41,7 @@ class AndroidInterface : FirebaseInterface {
             }
     }
 
-    override fun setValue(key: String, value: String) {
+    override fun setValue(key: String, value: FirebaseGameModel) {
         val ref = database.getReference("/")
 
         ref.child(key).setValue(value)

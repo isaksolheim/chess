@@ -37,7 +37,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                 // TODO: Create Firebase Game
                 val game = Game("standard")
                 val firebaseGameModel = game.toJSON()
-                app.firebase.pushValue("1", firebaseGameModel)
+                app.firebase.pushValue(game.id.toString(), firebaseGameModel)
 
                 app.setScreen(GameScreen(app, game))
             }
