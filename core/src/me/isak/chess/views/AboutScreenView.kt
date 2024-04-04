@@ -37,10 +37,12 @@ class AboutScreenView(private val game: Chess) : ScreenAdapter() {
             }
         })
         table.add(backButton).padTop(20f) // Adjust padding as needed
+        table.row()
 
         // Image
         val logoImage = Image(logoTexture)
         table.add(logoImage).padBottom(20f).row()
+        table.row()
 
         // About us text
         val aboutText = "This app is developed by students at NTNU\ntaking the TDT4240 course."

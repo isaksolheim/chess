@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
 import me.isak.chess.views.GameScreen
+import me.isak.chess.views.MainMenuView
 
 class LobbyView(private val game: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
@@ -20,6 +21,15 @@ class LobbyView(private val game: Chess) : ScreenAdapter() {
         stage.addActor(table)
 
         val skin = game.skin
+
+        val backButton = TextButton("Back", skin)
+        backButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                // This code will be executed when the back button is clicked
+                // Change to the previous screen, e.g., the main menu screen
+                game.setScreen(MainMenuView(game))
+            }
+        })
 
         // Create Game button
         val createGameButton = TextButton("Create Game", skin)
@@ -39,6 +49,8 @@ class LobbyView(private val game: Chess) : ScreenAdapter() {
         })
 
         // Adding buttons to the table
+        table.add(backButton).padTop(10f)
+        table.row()
         table.add(createGameButton).pad(10f)
         table.row()
         table.add(joinGameButton).pad(10f)
