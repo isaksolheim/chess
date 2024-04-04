@@ -8,10 +8,10 @@ import me.isak.chess.move.Move
 
 
 open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
-    override fun executeMove(move: Move): Array<Char> {
+    override fun executeMove(move: Move) {
         turn = !turn
-        board = move.result
-    
+
+
         val boardList = move.result.toCharArray().toMutableList()
     
         // Promote pawn should it reach the final rank
@@ -29,8 +29,7 @@ open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: Ga
         if (gameOverChecker.gameOver(turn))
             println("Check mate")
 
-    
-        return boardList.toTypedArray()
+        board = boardList.joinToString("")
     }
     override fun checkGame(move: Move): Boolean {
         if (isKingInCheck(move)) return false
