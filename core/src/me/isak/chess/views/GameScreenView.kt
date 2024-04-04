@@ -8,11 +8,10 @@ import me.isak.chess.Renderer
 import me.isak.chess.game.Game
 import me.isak.chess.viewmodels.GameViewModel
 
-class GameScreen(private val app: Chess) : ScreenAdapter() {
+class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
-    private val localGame = Game("standard")
-    private val gameViewModel = GameViewModel(localGame)
+    private val gameViewModel = GameViewModel(game)
     private val boardView = BoardView(gameViewModel)
 
     override fun show() {

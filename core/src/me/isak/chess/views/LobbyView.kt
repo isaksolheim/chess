@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
+import me.isak.chess.game.Game
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
 
@@ -25,10 +26,6 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                // This code will be executed when the back button is clicked
-                // Change to the previous screen, e.g., the main menu screen
-                // val firebaseGameModel = app.toJSON()
-                // game.firebase.pushValue("1", firebaseGameModel)
                 app.setScreen(MainMenuView(app))
             }
         })
@@ -38,7 +35,11 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Create Firebase Game
-                app.setScreen(GameScreen(app))
+                val game = Game("standard")
+                val firebaseGameModel = game.toJSON()
+                app.firebase.pushValue("1", firebaseGameModel)
+
+                app.setScreen(GameScreen(app, game))
             }
         })
 

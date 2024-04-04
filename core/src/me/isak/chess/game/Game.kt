@@ -4,8 +4,10 @@ package me.isak.chess.game
 import me.isak.chess.models.FirebaseGameModel
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
+import kotlin.random.Random
 
 class Game(private val version: String) {
+    val id: Int = Random.nextInt(1000, 10000)
 
     private val moveCalculator: MoveCalculator
     private val gameState: GameState

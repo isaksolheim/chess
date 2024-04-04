@@ -2,6 +2,7 @@ package me.isak.chess.viewmodels
 
 import me.isak.chess.game.Game
 import me.isak.chess.move.Move
+import java.util.UUID
 
 class GameViewModel(private val game: Game) {
     var onBoardChanged: ((Array<Char>) -> Unit)? = null
@@ -15,6 +16,10 @@ class GameViewModel(private val game: Game) {
 
     fun getBoard(): Array<Char> {
         return game.getBoard()
+    }
+
+    fun getGameId(): Int {
+        return game.id
     }
 
     fun getLegalMoves() : List<Move>

@@ -2,7 +2,9 @@ package me.isak.chess.views
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.move.Move
@@ -14,6 +16,9 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
+    private val font = BitmapFont().apply {
+        color = Color.BLACK
+    }
 
     //private val dotTexture = new Texture(Gdx.files.internal("pieces/wP.png"))
 
@@ -97,6 +102,11 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     fun render() {
         val squareSize = Gdx.graphics.width / 8f
+
+        val gameIdText = "Game ID: ${viewModel.getGameId()}"
+
+        font.data.setScale(3f)
+        font.draw(spriteBatch, gameIdText, 20f, Gdx.graphics.height - 20f)
 
         var colNum = 0
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f)

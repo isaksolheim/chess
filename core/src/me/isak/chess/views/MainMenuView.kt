@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
+import me.isak.chess.game.Game
 
 class MainMenuView(val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
@@ -28,7 +29,10 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
         val playLocalButton = TextButton("Play Local", app.skin)
         playLocalButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                app.setScreen(GameScreen(app))
+                // Create new local game
+                val game = Game("standard")
+
+                app.setScreen(GameScreen(app, game))
             }
         })
 
