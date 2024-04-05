@@ -57,13 +57,13 @@ class GameOverView(private val app: Chess, private val game: Game) : ScreenAdapt
         table.row()
         // Display king piece image(s) depending on who won
         val imagesTable = Table()
-        if (winner == "white") {
-            imagesTable.add(winnerImageWhite).size(150f, 150f)
-        } else if (winner == "black") {
-            imagesTable.add(winnerImageBlack).size(150f, 150f)
-        } else {
-            imagesTable.add(winnerImageWhite).size(150f, 150f)
-            imagesTable.add(winnerImageBlack).size(150f, 150f)
+        when (winner) {
+            "white" -> imagesTable.add(winnerImageWhite).size(150f, 150f)
+            "black" -> imagesTable.add(winnerImageBlack).size(150f, 150f)
+            else -> {
+                imagesTable.add(winnerImageWhite).size(150f, 150f)
+                imagesTable.add(winnerImageBlack).size(150f, 150f)
+            }
         }
         table.add(imagesTable)
         table.row().padBottom(20f)
