@@ -53,12 +53,10 @@ class GameViewModel(private val game: Game) {
             loser = "white"
         }
 
-        if (gameOverCondition == "draw") {
-            return ("Agreed to draw. No winner.")
-        } else if (gameOverCondition == "resign") {
-            return ("${loser.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!")
-        } else {
-            return ("${winner.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!")
+        return when (gameOverCondition) {
+            "draw" -> "The players agreed to draw."
+            "resign" -> "${loser.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!"
+            else -> "${winner.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!"
         }
     }
 
