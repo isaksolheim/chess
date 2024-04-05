@@ -103,7 +103,7 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     fun render() {
         val squareSize = Gdx.graphics.width / 8f
 
-        val gameIdText = "Game ID: ${viewModel.getGameId()}"
+        val gameIdText = "Game ID: {viewModel.getGameId()}"
 
         font.data.setScale(3f)
         font.draw(spriteBatch, gameIdText, 20f, Gdx.graphics.height - 20f)

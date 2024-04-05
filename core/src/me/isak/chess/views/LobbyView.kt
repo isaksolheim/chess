@@ -8,7 +8,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
+import me.isak.chess.FirebaseCallback
 import me.isak.chess.game.Game
+import me.isak.chess.models.FirebaseGameModel
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
 
@@ -35,11 +37,20 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Create Firebase Game
-                val game = Game("standard")
+                val localGame = Game("standard")
+                val game = Game("standard", localGame.toJSON())
                 val firebaseGameModel = game.toJSON()
-                app.firebase.pushValue(game.id.toString(), firebaseGameModel)
+                app.firebase.pushValue(game.id, firebaseGameModel)
 
-                app.setScreen(GameScreen(app, game))
+                var data = app.firebase.getData("games/${game.id}", object :
+                    FirebaseCallback {
+                    override fun onDataReceived(dataModel: FirebaseGameModel) {
+                        // println(dataModel)
+                        val game = Game("standard", dataModel, "white")
+                        //println(game.getBoardAsString())
+                        app.setScreen(GameScreen(app, game))
+                    }
+                })
             }
         })
 

@@ -14,13 +14,20 @@ import me.isak.chess.models.FirebaseGameModel
 class AndroidInterface : FirebaseInterface {
     private val database = FirebaseDatabase.getInstance()
 
-    override fun getData(key: String) {
+    override fun getData(key: String, callback: FirebaseCallback) {
         val ref = database.getReference("/").child(key)
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.value
-                Log.d("FirebaseGetData", "Value is: $value")
+                val value = snapshot.getValue(FirebaseGameModel::class.java)
+
+                println("DATA CHANGE!!!")
+
+                if (value != null) {
+                    callback.onDataReceived(value)
+                } else {
+                    Log.d("FirebaseGetData", "No data available")
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

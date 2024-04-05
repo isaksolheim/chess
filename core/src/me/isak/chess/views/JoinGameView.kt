@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
+import me.isak.chess.FirebaseCallback
 import me.isak.chess.game.Game
+import me.isak.chess.models.FirebaseGameModel
 import me.isak.chess.views.GameScreen
 
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
@@ -30,9 +32,14 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 // TODO: Join Firebase Game
                 // Get Firebase Game
-                val game = Game("standard")
-
-                app.setScreen(GameScreen(app, game))
+                var data = app.firebase.getData("games/${gameIdInput.text}", object : FirebaseCallback {
+                    override fun onDataReceived(dataModel: FirebaseGameModel) {
+                        // println(dataModel)
+                        val game = Game("standard", dataModel, "black")
+                        //println(game.getBoardAsString())
+                        app.setScreen(GameScreen(app, game))
+                    }
+                })
             }
         })
 

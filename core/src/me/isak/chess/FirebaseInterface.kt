@@ -12,7 +12,7 @@ interface FirebaseInterface {
      *
      * @param key The key at which to retrieve the value.
      */
-    fun getData(key: String)
+    fun getData(key: String, callback: FirebaseCallback)
 
     /**
      * Pushes a given value to a specific path in the Firebase database.

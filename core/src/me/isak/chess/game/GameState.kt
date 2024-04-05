@@ -20,6 +20,10 @@ abstract class GameState(val moveCalculator: MoveCalculator, val gameOverChecker
     abstract fun executeMove(move: Move): Array<Char>
     abstract fun checkGame(move: Move): Boolean
 
+    fun setBoardAsString(newBoard: String) {
+        board = newBoard
+    }
+
     fun getBoard(): Array<Char> {
         return board.toCharArray().toTypedArray()
     }

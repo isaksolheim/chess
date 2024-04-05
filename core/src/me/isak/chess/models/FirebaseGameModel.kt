@@ -1,8 +1,9 @@
 package me.isak.chess.models
 
 data class FirebaseGameModel(
-    val board: String,
-    val turnId: Int,
-    val players: Map<String, String>, // "white" -> UID, "black" -> UID
-    val currentTurn: String
+    val id: String = "",
+    var board: String = "",
+    val turnId: Int = 0,
+    val players: Map<String, String> = mapOf("white" to "", "black" to ""),
+    var currentTurn: String = ""
 )

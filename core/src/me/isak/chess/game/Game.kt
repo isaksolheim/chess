@@ -6,8 +6,9 @@ import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 import kotlin.random.Random
 
-class Game(private val version: String) {
-    val id: Int = Random.nextInt(1000, 10000)
+class Game(private val version: String, val firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
+    var id: String = Random.nextInt(1000, 10000).toString()
+    var isOnline = false
 
     private val moveCalculator: MoveCalculator
     private val gameState: GameState
@@ -21,6 +22,16 @@ class Game(private val version: String) {
         moveCalculator = cal
         gameState = state
         gameHistory = history
+
+        println("GAME ID: $id")
+
+        if (firebaseGameModel != null) {
+            isOnline = true
+            id = firebaseGameModel.id
+            gameState.setBoardAsString(firebaseGameModel.board)
+            player = firebaseGameModel.currentTurn
+            gameState.turn = player == "white"
+        }
     }
 
     fun click(square: Int) : List<Move> {
@@ -68,12 +79,20 @@ class Game(private val version: String) {
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
     }
 
+    fun getCurrentTurn(): String {
+        if (gameState.turn) {
+            return "white"
+        }
+        return "black"
+    }
+
     fun toJSON(): FirebaseGameModel {
-        val currentTurn = if (gameState.turn) "white" else "black"
+        val currentTurn = getCurrentTurn()
         // Assuming the board is stored as an Array<Char> in gameState and you want it as List<Char>
         val board = gameState.getBoardAsString()
 
         return FirebaseGameModel(
+            id = id,
             board = board,
             turnId = 1,
             players = mapOf(
