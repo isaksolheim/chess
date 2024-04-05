@@ -4,14 +4,11 @@ import LobbyView
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
-import com.badlogic.gdx.utils.ScreenUtils
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 import me.isak.chess.game.Game
@@ -50,11 +47,23 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
             }
         })
 
+        // TODO: Remove (added as temporary measure for opening the GameOverView)
+        val gameOverButton = TextButton("Game Over", app.skin)
+        gameOverButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent, actor: Actor) {
+                val game = Game("standard")
+                app.setScreen(GameOverView(app, game))
+            }
+        })
+
         table.add(playLocalButton).fillX().uniformX()
         table.row().pad(10f, 0f, 10f, 0f)
         table.add(playMultiplayerButton).fillX().uniformX()
         table.row()
         table.add(aboutButton).fillX().uniformX()
+        table.row()
+        // TODO: Remove (added as temporary measure for opening the GameOverView)
+        table.add(gameOverButton).fillX().uniformX()
     }
 
     override fun render(delta: Float) {
