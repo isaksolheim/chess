@@ -58,6 +58,11 @@ class Game(private val version: String) {
         return legalMoves
     }
 
+    // TODO: Would this be the intended function for the getGameStatus/gameActive? What does GameStatus entail?
+    fun getGameStatus() : Boolean {
+        return gameState.gameActive
+    }
+
     fun fen(): String {
         val gameString = (0 until 8).map { i ->
             gameState.getBoard().slice(i * 8 until (i + 1) * 8) }

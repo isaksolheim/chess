@@ -27,6 +27,52 @@ class GameViewModel(private val game: Game) {
         return game.getLegalMoves()
     }
 
+    // TODO: Retrieve actual winner (white/black/none) from the chess model / firebase (?)
+    fun getWinner() : String {
+//        return "white"
+        return "black"
+//        return "none"
+    }
+
+    // TODO: Retrieve actual game over condition (checkmate/draw/resign) from the chess model / firebase (?)
+    fun getGameOverCondition() : String {
+//        return "checkmate"
+//        return "draw"
+        return "resign"
+    }
+
+    // TODO: Rename to getGameStatus? Logical view names the function "GameStatus", but if it returns a string rather than a boolean, then maybe including "message" at the end makes it a bit more intuitive?
+    fun getGameStatusMessage() : String {
+        //TODO: Build these strings based on values retrieved from the chessModel (would need winner(s) and the end condition (checkmate/resignation/draw))
+        val winner = getWinner()
+        val gameOverCondition = getGameOverCondition()
+        var loser = "none"
+        if (winner == "white") {
+            loser = "black"
+        } else if (winner == "black") {
+            loser = "white"
+        }
+
+        if (gameOverCondition == "draw") {
+            return ("Agreed to draw. No winner.")
+        } else if (gameOverCondition == "resign") {
+            return ("${loser.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!")
+        } else {
+            return ("${winner.replaceFirstChar { it.titlecase() }} ${gameOverCondition}s. ${winner.replaceFirstChar { it.titlecase() }} wins!")
+        }
+    }
+
+    // TODO: implement resign, need to work for both local and online (firebase/chessModel?)
+    // Handled through firebase or the chessModel?
+        fun resign() {
+    }
+
+    // TODO: implement draw, need to work for both local and online (firebase/chessModel?)
+    // Handled through firebase or the chessModel?
+    fun offerDraw() {
+
+    }
+
     fun onUserMove(square: Int) {
         selectedSquare?.let {
             // Attempt to move selected piece to the new square
