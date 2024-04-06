@@ -3,7 +3,6 @@ package me.isak.chess.game
 
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
-import me.isak.chess.move.Moveset
 import me.isak.chess.move.MoveExecutor
 
 class Game(private val version: String) {

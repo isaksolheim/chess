@@ -18,24 +18,24 @@ val PathPatterns = mapOf(
      * A leaper is a chess piece that moves directly to a square a fixed distance away.
      * Cannot be blocked. 
      */
-    "leaper" to Regex("^([A-Z][a-z ]|[a-z][A-Z ])$") 
+    "leaper" to Regex("^([A-Z][a-z ]|[a-z][A-Z ])$"),
     
     /**
      * A ranger is a piece that moves an unlimited distance in one direction,
      * provided that there are no obstacles. If the obstacle is a friendly piece,
      * it blocks further movement; if the obstacle is an enemy piece, it may be captured.
      */
-    "ranger" to Regex("^([A-Z]\\W*[a-z]?|[a-z]\\W*[A-Z]?)$")
+    "ranger" to Regex("^([A-Z]\\W*[a-z]?|[a-z]\\W*[A-Z]?)$"),
     
     /**
      * Block move if square is occupied.
      */
-    "unoccupied" to Regex("^.\\W$")
+    "unoccupied" to Regex("^.\\W$"),
     
     /**
      * Only allow a move that captures an enemy
      */
-    "enemy" to Regex("^([A-Z][a-z]|[a-z][A-Z])$")
+    "enemy" to Regex("^([A-Z][a-z]|[a-z][A-Z])$"),
     ) 
 
 /**

@@ -47,7 +47,7 @@ class PieceDirector {
     
     fun wPawn(): PieceBuilder {
         return PieceBuilder()
-            .directions("NE", "NW").pathType("enemies").id("P").buildAction()
+            .directions("NE", "NW").pathType("enemy").id("P").buildAction()
             .directions("N").pathType("unoccupied").coverType("never").id("P").buildAction()
             .directions("NN").pathType("unoccupied").coverType("never").boardCondition(Regex(" .{7}I.{8,15}$")).id("wPawnDoubleForward").buildAction()
             .directions("NE").pathType("unoccupied").coverType("never").boardCondition(Regex(" (.{6})Ip(.{32,38})$")).replacement("P$1  $2").id("enPassant").buildAction()
@@ -57,7 +57,7 @@ class PieceDirector {
     
     fun bPawn(): PieceBuilder {
         return PieceBuilder()
-            .directions("SE", "SW").pathType("enemies").id("p").buildAction()
+            .directions("SE", "SW").pathType("enemy").id("p").buildAction()
             .directions("S").pathType("unoccupied").coverType("never").id("p").buildAction()
             .directions("SS").pathType("unoccupied").coverType("never").boardCondition(Regex("^.{8,15}I.{7} ")).id("bPawnDoubleForward").buildAction()
             .directions("SE").pathType("unoccupied").coverType("never").boardCondition(Regex("^(.{32,38})IP(.{7}) ")).replacement("$1  $2p").id("enPassant").buildAction()

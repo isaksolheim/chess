@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.move.Move
-import me.isak.chess.move.Moveset
 import me.isak.chess.viewmodels.GameViewModel
 
 class BoardView(private val viewModel: GameViewModel) : InputAdapter() {

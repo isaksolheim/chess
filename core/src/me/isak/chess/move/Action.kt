@@ -1,7 +1,5 @@
 package me.isak.chess.move
 
-import MovePatterns
-
 /**
  * A description of the behaviour of a piece. Each piece may have multiple actions.
  * @property id: used to reference special actions for checks. For example enPassant is an id used to ensure that action is possible at the right time.

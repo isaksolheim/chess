@@ -28,7 +28,7 @@ abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
     }
 
     fun isPieceTurn(piece: Char): Boolean {
-        return white.matches(piece.toString()) == turn
+        return piece.isUpperCase() == turn
     } 
 
 

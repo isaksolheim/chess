@@ -2,7 +2,6 @@ package me.isak.chess.move
 
 import me.isak.chess.move.Action
 import me.isak.chess.move.MutableAction
-import Piece
 import kotlin.collections.mutableListOf
 import CoverPatterns
 import PathPatterns

@@ -18,9 +18,9 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
 
   private val offsetMap = mapOf(
     'E' to 1,
-    'S' to 8
-    'W' to -1
-    'N' to -8
+    'S' to 8,
+    'W' to -1,
+    'N' to -8,
   )
 
   /**
@@ -38,13 +38,13 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
     val piece = pieceMap.getPiece(pieceSymbol)
 
     return piece
-      .filter{ boardCheck(it, board, startSquare)}
-      .flatMap{action -> 
-        action.directions.flatMap{direction ->
+      .filter { boardCheck(it, board, startSquare) }
+      .flatMap { action ->
+        action.directions.flatMap { direction ->
           generateSquares(action, board, startSquare, direction, CalculationType.PATH)
-          .map{square -> 
-            createMove(action, board, startSquare, square)
-          }
+            .map { square ->
+              createMove(action, board, startSquare, square)
+            }
         }
       }
   }
@@ -63,14 +63,14 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
     val piece = pieceMap.getPiece(pieceSymbol)
 
     return piece
-      .filter{action -> boardCheck(action, board, startSquare)}
-      .flatMap{action -> 
-        action.directions.flatMap{direction ->
+      .filter { action -> boardCheck(action, board, startSquare) }
+      .flatMap { action ->
+        action.directions.flatMap { direction ->
           generateSquares(action, board, startSquare, direction, CalculationType.COVER)
         }
       }
   }
-  
+
   /**
    * Finds every single square that the white or black pieces cover.
    * @param board to analyse
@@ -79,11 +79,11 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
    */
   fun calculateTeamCover(board: Array<Char>, teamWhite: Boolean): List<Int> {
     return board.indices
-      .filter{ board[it] != ' '} // remove empty squares
-      .filter{ board[it].isUpperCase() == teamWhite} // remove pieces of the opposite team
-      .flatMap{ calculatePieceCover(board, it)}
+      .filter { board[it] != ' ' } // remove empty squares
+      .filter { board[it].isUpperCase() == teamWhite } // remove pieces of the opposite team
+      .flatMap { calculatePieceCover(board, it) }
   }
-  
+
   /**
    * Find out if the king is in check by generating all moves the enemy can do.
    * If the resulting board after a move does not include the king, it means that
@@ -100,67 +100,73 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
 
     // return true if one of the moves results in a board without a king
     return board.indices
-      .filter{square -> board[square] != ' '} // remove emtpy squares
-      .filter{piece -> board[piece].isLowerCase() == whiteKing} // remove friendly pieces
-      .flatMap{enemy -> calculateSimpleMoves(board, enemy)}
-      .any{move -> !move.result.contains(kingToLookFor)}
+      .filter { square -> board[square] != ' ' } // remove emtpy squares
+      .filter { piece -> board[piece].isLowerCase() == whiteKing } // remove friendly pieces
+      .flatMap { enemy -> calculateSimpleMoves(board, enemy) }
+      .any { move -> !move.result.contains(kingToLookFor) }
   }
 
   /**
    * Calculate the absolute offset as described by a direction string.
    */
   fun parseDirection(direction: String): Int {
-    return direction.sumOf{ offsetMap[it] ?: 0 }
+    return direction.sumOf { offsetMap[it] ?: 0 }
   }
 
   /**
    * Generate either moves or cover that can be reached from startSquare.
-   * 
-   * A path is described using east, south, west, north. A number represents how 
+   *
+   * A path is described using east, south, west, north. A number represents how
    * many squares to walk in that direction. Multiple directions can make up a single path.
-   * 
+   *
    * Examples of how paths are processed:
    * E -> [1]
    * EE -> [2]
    * E1E1 -> [1, 2]
    * E* -> [1, 2, 3, 4, 5, 6, 7]
-   * 
+   *
    * NNE -> [-15]
    * NNE* -> [-15, -30, ...]
-   * 
+   *
    * E3S3W3 -> [1, 2, 3, -5, -13, -21, -22, -23, -24]
-   * 
+   *
    * These numbers are absolute offsets, which are added to the starting square.
-   * This allows us to make sure the path does not walk off the board. 
+   * This allows us to make sure the path does not walk off the board.
    * After having been constructed, the class is iterable over the result (queue).
    */
-  private fun generateSquares(action: Action, board: Array<Char>, startSquare: Int, path: String, type: CalculationType): List<Int> {
-      val squares: MutableList<Int> = mutableListOf()
-      val directionRegex = Regex("([ESWN]+)([\\d\\*]*)")
+  private fun generateSquares(
+    action: Action,
+    board: Array<Char>,
+    startSquare: Int,
+    path: String,
+    type: CalculationType
+  ): List<Int> {
+    val squares: MutableList<Int> = mutableListOf()
+    val directionRegex = Regex("([ESWN]+)([\\d\\*]*)")
 
-      var currentSquare = startSquare
-      var currentPath = board[startSquare].toString()
+    var currentSquare = startSquare
+    var currentPath = board[startSquare].toString()
 
-      for (match in directionRegex.findAll(path)) {
-        val (_, directionString, repetitionString) = match.destructured
+    for (match in directionRegex.findAll(path)) {
+      val (directionString, repetitionString) = match.destructured
 
-        val offset = parseDirection(directionString)
-        val repetitions = parseRepetitions(repetitionString)
+      val offset = parseDirection(directionString)
+      val repetitions = parseRepetitions(repetitionString)
 
-        repeat(repetitions) {
-          if (!isInBounds(currentSquare, directionString)) return squares
+      repeat(repetitions) {
+        if (!isInBounds(currentSquare, directionString)) return squares
 
-          currentSquare += offset
-          currentPath += board[currentSquare]
+        currentSquare += offset
+        currentPath += board[currentSquare]
 
-          if (
-            (type == CalculationType.PATH && !action.path.matches(currentPath)) ||
-            (type == CalculationType.COVER && !action.cover.matches(currentPath))
-          ) return squares
-          squares.add(currentSquare)
-        }
+        if (
+          (type == CalculationType.PATH && !action.path.matches(currentPath)) ||
+          (type == CalculationType.COVER && !action.cover.matches(currentPath))
+        ) return squares
+        squares.add(currentSquare)
       }
-      return squares
+    }
+    return squares
   }
 
   /**
@@ -173,26 +179,26 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
 
   /**
    * To find out if a move is going out of bounds, we have to be careful.
-   * It is not possible to use absolute offset, because the same offset might 
-   * be the result of different directions. This is the result of storing the board 
+   * It is not possible to use absolute offset, because the same offset might
+   * be the result of different directions. This is the result of storing the board
    * as an array. For example, the offset of WWWWWWW (-7) has the same absolute offset as
    * NE, but they will never both be legal.
-   * 
-   * For this reason, we have to break the direction into components, looking at 
+   *
+   * For this reason, we have to break the direction into components, looking at
    * the movement in y and x direction. This will allow us to see if the move
    * takes us out of bounds.
    */
   private fun isInBounds(startSquare: Int, direction: String): Boolean {
     var x = startSquare % 8
     var y = startSquare / 8
-    var dx = direction.count{ it == 'E'} - direction.count{ it == 'W'}
-    var dy = direction.count{ it == 'S'} - direction.count{ it == 'N'}
-    
-    return x + dx in 0..8 && y + dy in 0..8
+    var dx = direction.count { it == 'E' } - direction.count { it == 'W' }
+    var dy = direction.count { it == 'S' } - direction.count { it == 'N' }
+
+    return x + dx in 0..7 && y + dy in 0..7
   }
 
   /**
-   * Verify that the action follows condition specified 
+   * Verify that the action follows condition specified
    * by the boardCondition.
    */
   private fun boardCheck(action: Action, board: Array<Char>, startSquare: Int): Boolean {
@@ -207,11 +213,16 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
 
   /**
    * When a move has been confirmed to be legal, package it in
-   * the Move dataclass. This includes the landing square, 
+   * the Move dataclass. This includes the landing square,
    * the resulting board should the move be played, and the id inherited
    * from the action.
    */
-  private fun createMove(action: Action, board: Array<Char>, startSquare: Int, endSquare: Int): Move {
+  private fun createMove(
+    action: Action,
+    board: Array<Char>,
+    startSquare: Int,
+    endSquare: Int
+  ): Move {
 
     // Generate resulting board
     var result: String
@@ -224,11 +235,12 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
       result = boardCopy.joinToString("");
     } else {
       // Specialized replacement need to use the character I instead of the piece, otherwise matching will not work.
-    boardCopy[startSquare] = 'I';
+      boardCopy[startSquare] = 'I';
 
-    // make the specialized replacement (like castle or en passant)
-     result = boardCopy.joinToString("").replace(action.boardCondition, action.replacement);
+      // make the specialized replacement (like castle or en passant)
+      result = boardCopy.joinToString("").replace(action.boardCondition, action.replacement);
     }
 
     return Move(endSquare, result, action.id)
   }
+}
