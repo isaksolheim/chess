@@ -1,6 +1,6 @@
 package me.isak.chess.viewmodels
 
-import me.isak.chess.game.Game
+import me.isak.chess.model.base.Game
 import me.isak.chess.model.base.Move
 
 class GameViewModel(private val game: Game) {
