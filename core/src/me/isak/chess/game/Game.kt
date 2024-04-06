@@ -4,10 +4,13 @@ package me.isak.chess.game
 import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 import me.isak.chess.move.Moveset
+import me.isak.chess.move.MoveExecutor
 
 class Game(private val version: String) {
 
     private val moveCalculator: MoveCalculator
+    private val moveExecutor: MoveExecutor
+    private val gameOverChecker: GameOverChecker
     private val gameState: GameState
     private val gameHistory: GameHistory
 
@@ -15,33 +18,28 @@ class Game(private val version: String) {
 
     init {
         val gameFactory = GameFactory()
-        val (cal, state, history) = gameFactory.create(version)
+        val (cal, exec, checker, state, history) = gameFactory.create(version)
         moveCalculator = cal
+        moveExecutor = exec
+        gameOverChecker = checker
         gameState = state
         gameHistory = history
     }
 
     fun click(square: Int) : List<Move> {
-        val move = legalMoves.find { it.square == square }
 
-        if (move != null) {
+        val newBoard = moveExecutor.execute(legalMoves, square)
+
+        if (newBoard != null) {
+            gameOverChecker.checkGameOver()
+            /* TODO: figure out how game over should be handled. */
+
             legalMoves = listOf()
-            gameState.executeMove(move)
-            gameHistory.changeHistory(move)
-            return listOf()
-        }
+            return legalMoves
+        } 
 
-        val piece = gameState.board[square]
-
-        if (piece == ' ' || !gameState.isPieceTurn(piece)) {
-            legalMoves = listOf()
-            return listOf()
-        }
-
-        legalMoves = moveCalculator.calculate(gameState.getBoard(), square) // Calculate all potentially legal moves
-            .filter { gameState.checkGame(it) } // Filter away moves that are illegal for game specific reasons
-            .filter { gameHistory.checkHistory(it) } // Filter away moves that are illegal for historic reasons
-        return legalMoves;
+        legalMoves = moveCalculator.legalMoves(square)
+        return legalMoves
     }
 
     fun getBoard(): Array<Char> {
