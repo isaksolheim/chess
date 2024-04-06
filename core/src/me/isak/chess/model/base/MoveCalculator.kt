@@ -1,8 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.game.GameState
-import me.isak.chess.game.GameHistory
-
+package me.isak.chess.model.base
 
 
 class MoveCalculator(private val simpleMoveCalculator: SimpleMoveCalculator, private val gameState: GameState, private val gameHistory: GameHistory) {

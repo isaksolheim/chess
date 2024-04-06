@@ -1,6 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.move.PieceBuilder
+package me.isak.chess.model.base
 
 /**
  * Since most versions of chess use the same pieces, 

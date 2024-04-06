@@ -1,10 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.move.Action
-import me.isak.chess.move.MutableAction
-import kotlin.collections.mutableListOf
-import CoverPatterns
-import PathPatterns
+package me.isak.chess.model.base
 
 /**
  * This is a mutable version of the Action data class only used

@@ -1,4 +1,4 @@
-package me.isak.chess.move
+package me.isak.chess.model.base
 
 /**
  * Move is a description of where a piece can go.

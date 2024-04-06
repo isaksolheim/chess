@@ -1,9 +1,4 @@
-
-package me.isak.chess.game
-
-import me.isak.chess.move.MoveCalculator
-import me.isak.chess.move.Move
-import me.isak.chess.move.MoveExecutor
+package me.isak.chess.model.base
 
 class Game(private val version: String) {
 

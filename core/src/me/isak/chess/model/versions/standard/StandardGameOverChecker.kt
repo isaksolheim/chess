@@ -1,9 +1,8 @@
-package me.isak.chess.versions.standard
-import me.isak.chess.game.GameHistory
-import me.isak.chess.game.GameOverChecker
-import me.isak.chess.game.GameState
-import me.isak.chess.move.MoveCalculator
+package me.isak.chess.model.versions.standard
 
+import me.isak.chess.model.base.MoveCalculator
+import me.isak.chess.model.base.GameState
+import me.isak.chess.model.base.GameOverChecker
 
 class StandardGameOverChecker(private val moveCalculator: MoveCalculator, private val gameState: GameState) : GameOverChecker(moveCalculator, gameState) {
 

@@ -1,7 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.game.GameState
-import me.isak.chess.game.GameHistory
+package me.isak.chess.model.base
 
 /**
  * Updates game state and history should a move be executed.

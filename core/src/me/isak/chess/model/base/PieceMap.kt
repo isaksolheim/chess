@@ -1,5 +1,4 @@
-package me.isak.chess.move
-
+package me.isak.chess.model.base
 
 /**
  * Implement a mapping between characters and piece for each version of chess.

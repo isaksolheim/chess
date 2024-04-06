@@ -1,6 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.move.Action
+package me.isak.chess.model.base
 
 /**
  * Holds all information related to the behaviour of a piece 

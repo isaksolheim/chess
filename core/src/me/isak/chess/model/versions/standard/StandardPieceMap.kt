@@ -1,8 +1,8 @@
-package me.isak.chess.versions.standard
+package me.isak.chess.model.versions.standard
 
-import me.isak.chess.move.PieceMap
-import me.isak.chess.move.Piece
-import me.isak.chess.move.PieceDirector
+import me.isak.chess.model.base.PieceMap
+import me.isak.chess.model.base.Piece
+import me.isak.chess.model.base.PieceDirector
 
 val pd = PieceDirector()
 

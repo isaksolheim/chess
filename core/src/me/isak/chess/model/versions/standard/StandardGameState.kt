@@ -1,11 +1,8 @@
-package me.isak.chess.versions.standard
+package me.isak.chess.model.versions.standard
 
-import me.isak.chess.game.GameHistory
-import me.isak.chess.game.GameOverChecker
-import me.isak.chess.game.GameState
-import me.isak.chess.move.Move
-import me.isak.chess.move.SimpleMoveCalculator
-
+import me.isak.chess.model.base.SimpleMoveCalculator
+import me.isak.chess.model.base.Move
+import me.isak.chess.model.base.GameState
 
 open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator): GameState(simpleMoveCalculator) {
     override fun changeState(move: Move) {

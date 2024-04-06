@@ -1,14 +1,9 @@
-package me.isak.chess.game
+package me.isak.chess.model.base
 
-import me.isak.chess.versions.standard.StandardGameState
-import me.isak.chess.versions.standard.StandardGameHistory
-import me.isak.chess.move.MoveCalculator
-import me.isak.chess.move.PieceMap
-import me.isak.chess.move.MoveExecutor
-import me.isak.chess.move.SimpleMoveCalculator
-import me.isak.chess.game.GameHistory
-import me.isak.chess.versions.standard.StandardGameOverChecker
-import me.isak.chess.versions.standard.StandardPieceMap
+import me.isak.chess.model.versions.standard.StandardPieceMap
+import me.isak.chess.model.versions.standard.StandardGameState
+import me.isak.chess.model.versions.standard.StandardGameHistory
+import me.isak.chess.model.versions.standard.StandardGameOverChecker
 
 data class FactoryResult(
     val moveCalculator: MoveCalculator, 
@@ -37,6 +32,7 @@ class GameFactory {
             moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
             gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
         } else {   
+            // add move version here later
             throw Error("Incorrect version $version provided to GameFactory.create")
         }
         val moveExecutor = MoveExecutor(gameState, gameHistory)

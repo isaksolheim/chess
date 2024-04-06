@@ -1,4 +1,4 @@
-
+package me.isak.chess.model.base
 
 /**
  * Common patterns to verify the path taken by a piece.

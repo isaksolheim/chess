@@ -1,8 +1,4 @@
-package me.isak.chess.move
-
-import me.isak.chess.move.Move
-import me.isak.chess.move.PieceMap
-import me.isak.chess.move.Action
+package me.isak.chess.model.base
 
 enum class CalculationType { PATH, COVER }
 

@@ -1,6 +1,5 @@
-package me.isak.chess.game
+package me.isak.chess.model.base
 
-import me.isak.chess.move.Move
 
 interface GameHistory {
 

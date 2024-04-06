@@ -1,7 +1,7 @@
-package me.isak.chess.versions.standard
+package me.isak.chess.model.versions.standard
 
-import me.isak.chess.game.GameHistory
-import me.isak.chess.move.Move
+import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.Move
 
 val rookH1 = Regex("R$")
 val rookA1 = Regex("R.{7}$")

@@ -1,4 +1,4 @@
-package me.isak.chess.move
+package me.isak.chess.model.base
 
 /**
  * A description of the behaviour of a piece. Each piece may have multiple actions.

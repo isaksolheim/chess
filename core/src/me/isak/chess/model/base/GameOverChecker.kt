@@ -1,6 +1,4 @@
-package me.isak.chess.game
-
-import me.isak.chess.move.MoveCalculator
+package me.isak.chess.model.base
 
 abstract class GameOverChecker(private val moveCalculator: MoveCalculator, private val gameState: GameState) {
 
