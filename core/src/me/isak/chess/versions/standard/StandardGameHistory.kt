@@ -3,14 +3,9 @@ package me.isak.chess.versions.standard
 import me.isak.chess.game.GameHistory
 import me.isak.chess.move.Move
 
-import me.isak.chess.utils.parseDirection
-
 val rookH1 = Regex("R$")
-val kingF1 = Regex("K...$")
 val rookA1 = Regex("R.{7}$")
-
 val rookH8 = Regex("^.{7}r")
-val kingF8 = Regex("^.{4}k")
 val rookA8 = Regex("^r")
 
 class StandardGameHistory : GameHistory {
@@ -18,24 +13,25 @@ class StandardGameHistory : GameHistory {
     var castle: String = "KQkq"
 
     override fun checkHistory(move: Move): Boolean {
-        val tag = move.tag ?: return true // no tag means no check - move is acceptable
 
-        return when (tag) {
+        return when (move.id) {
             "enPassant" -> move.square == enPassant
-            in "KQkq" -> castle.contains(tag)
+            in "KQkq" -> castle.contains(move.id)
             else -> true
         }
     }
 
     override fun changeHistory(move: Move) {
-        val (square, result, tag) = move
+        val (square, result, id) = move
 
         enPassant = -1
 
         // For pawn double moves: add the square behind to history object
-        when (tag) {
-            "whitePawnDoubleForward" -> enPassant = square + parseDirection("S")
-            "blackPawnDoubleForward" -> enPassant = square + parseDirection("N")
+        when (id) {
+            "wPawnDoubleForward" -> enPassant = square + 8
+            "bPawnDoubleForward" -> enPassant = square - 8
+            "bk", "k", "q" -> castle = castle.replace(Regex("[kq]"), "")
+            "wk", "K", "Q" -> castle = castle.replace(Regex("[KQ]"), "")
         }
 
         // Check if rooks/kings have moved, and update castle rights accordingly.
@@ -51,13 +47,6 @@ class StandardGameHistory : GameHistory {
         }
         if (!rookH1.containsMatchIn((result))) {
             castle = castle.replace("K", "")
-        }
-        if (!kingF8.containsMatchIn(result)) {
-            castle = castle.replace(Regex("[kq]"), "")
-        }
-
-        if (!kingF1.containsMatchIn(result)) {
-            castle = castle.replace(Regex("[KQ]"), "")
         }
     }
 

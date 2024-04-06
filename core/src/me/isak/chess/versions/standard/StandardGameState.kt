@@ -3,36 +3,34 @@ package me.isak.chess.versions.standard
 import me.isak.chess.game.GameHistory
 import me.isak.chess.game.GameOverChecker
 import me.isak.chess.game.GameState
-import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
+import me.isak.chess.move.SimpleMoveCalculator
 
 
-open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker): GameState(moveCalculator,gameOverChecker) {
-    override fun executeMove(move: Move) {
+open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator): GameState(simpleMoveCalculator) {
+    override fun changeState(move: Move) {
         turn = !turn
 
-    
         val boardList = move.result.toCharArray().toMutableList()
     
         // Promote pawn should it reach the final rank
         val square = move.square
-        val tag = move.tag
-        if (tag == "P" && square / 8 == 0) {
+        val id = move.id
+        if (id == "P" && square / 8 == 0) {
             boardList[square] = 'Q'
         }
     
-        if (tag == "p" && square / 8 == 7) {
+        if (id == "p" && square / 8 == 7) {
             boardList[square] = 'q'
         }
     
-        /* NEED TO ALSO CHECK FOR GAME OVER AFTER EXECUTING A MOVE !!! */
-        if (gameOverChecker.gameOver(turn))
-            println("Check mate")
-
         board = boardList.joinToString("")
     }
-    override fun checkGame(move: Move): Boolean {
-        if (isKingInCheck(move)) return false
+    override fun checkState(move: Move): Boolean {
+
+        val board = move.result.toCharArray().toTypedArray()
+
+        if (simpleMoveCalculator.isKingInCheck(board, turn)) return false
     
         if (illegalCastle(move)) return false
     
@@ -42,5 +40,4 @@ open class StandardGameState(moveCalculator: MoveCalculator, gameOverChecker: Ga
     override fun toString(): String {
         return if (turn) "w" else "b"
     }
-
 }
