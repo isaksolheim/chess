@@ -1,6 +1,5 @@
 package me.isak.chess.model.base
 
-import me.isak.chess.model.versions.standard.StandardPieceMap
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
@@ -10,7 +9,7 @@ import me.isak.chess.model.versions.standard.standardPieceMap
  * Used to initialize the correct game objects for chess, 
  * depending on the specified version.
  * 
- * The name is slightly missleading, because it does not follow the factory pattern fully.
+ * The name is slightly misleading, because it does not follow the factory pattern fully.
  * It is still reasonable however, since it abstracts away the creation of objects, 
  * and makes sure the correct family of objects is accessible. 
  */
