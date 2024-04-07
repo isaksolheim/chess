@@ -62,11 +62,11 @@ classDiagram
     }
 
     class MoveExecutor {
-        +execute(legalMoves, square): Array~Char~?
+        +execute(legalMoves, square) Array~Char~?
     }
 
     class MoveCalculator {
-        +legalMoves(square: Int): List~Move~
+        +legalMoves(square: Int) List~Move~
     }
 
     class GameOverChecker {
@@ -78,7 +78,7 @@ classDiagram
     }
 
     class Game {
-        +click(square: Int): List~Move~
+        +click(square: Int) List~Move~
     }
 
     Piece --> Action
