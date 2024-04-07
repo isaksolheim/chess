@@ -3,7 +3,7 @@ package me.isak.chess
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ScreenUtils
-import me.isak.chess.game.Game
+import me.isak.chess.model.base.Game
 import me.isak.chess.viewmodels.GameViewModel
 import me.isak.chess.views.BoardView
 
