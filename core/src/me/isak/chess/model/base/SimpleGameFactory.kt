@@ -4,6 +4,7 @@ import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
+import me.isak.chess.model.base.versions.fisher.FisherGameState
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -26,18 +27,22 @@ class SimpleGameFactory(version: String) {
      * Create the game objects based on which version of chess is being played.
      */
     init {
+
+        // Set default as standard, and overwrite when needed.
+        pieceMap = PieceMap(standardPieceMap)
+        simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+        gameState = StandardGameState(simpleMoveCalculator)
+        gameHistory = StandardGameHistory()
+        
         when (version) {
-            "standard" -> {
-                pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = StandardGameState(simpleMoveCalculator)
-                gameHistory = StandardGameHistory()
-                moveExecutor = MoveExecutor(gameState, gameHistory)
-                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+            "fisher" -> {
+                gameState = FisherGameState(simpleMoveCalculator)
             }
-            else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }
+
+        moveExecutor = MoveExecutor(gameState, gameHistory)
+        moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+        gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
     }
 
     fun moveCalculator(): MoveCalculator {

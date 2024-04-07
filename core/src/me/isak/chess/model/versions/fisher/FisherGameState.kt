@@ -1,13 +1,16 @@
-package me.isak.chess.versions.fisher
+package me.isak.chess.model.base.versions.fisher
 
-import me.isak.chess.game.GameOverChecker
-import me.isak.chess.move.MoveCalculator
-import me.isak.chess.versions.standard.StandardGameState
+import me.isak.chess.model.base.SimpleMoveCalculator
+import me.isak.chess.model.base.GameOverChecker
+import me.isak.chess.model.versions.standard.StandardGameState
 import kotlin.random.Random
 
-class FisherGameState(moveCalculator: MoveCalculator, gameOverChecker: GameOverChecker) :
-    StandardGameState(moveCalculator, gameOverChecker) {
-    override var board = initBoard()
+class FisherGameState(moveCalculator: SimpleMoveCalculator) : StandardGameState(moveCalculator) {
+
+    init {
+        setBoardAsString(initBoard())
+    }
+
 
     /**
      * Prepare the fisher random (chess960) board. Rules:
