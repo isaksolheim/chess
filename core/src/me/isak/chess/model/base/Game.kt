@@ -1,25 +1,16 @@
 package me.isak.chess.model.base
 
 class Game(private val version: String) {
-
-    private val moveCalculator: MoveCalculator
-    private val moveExecutor: MoveExecutor
-    private val gameOverChecker: GameOverChecker
-    private val gameState: GameState
-    private val gameHistory: GameHistory
-
+    private val gameFactory = AbstractGameFactory(version)
+    
+    private val moveCalculator = gameFactory.moveCalculator()
+    private val moveExecutor = gameFactory.moveExecutor()
+    private val gameOverChecker = gameFactory.gameOverChecker()
+    private val gameState = gameFactory.gameState()
+    private val gameHistory = gameFactory.gameHistory()
+    
     private var legalMoves: List<Move> = listOf()
-
-    init {
-        val gameFactory = GameFactory()
-        val (cal, exec, checker, state, history) = gameFactory.create(version)
-        moveCalculator = cal
-        moveExecutor = exec
-        gameOverChecker = checker
-        gameState = state
-        gameHistory = history
-    }
-
+    
     fun click(square: Int) : List<Move> {
 
         val newBoard = moveExecutor.execute(legalMoves, square)
