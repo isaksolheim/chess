@@ -1,5 +1,9 @@
 package me.isak.chess.model.base
 
+/**
+ * The main interface between client and chess logic.
+ * @param version to specify which version of chess when creating the object.
+ */
 class Game(private val version: String) {
     private val gameFactory = SimpleGameFactory(version)
     
@@ -11,6 +15,11 @@ class Game(private val version: String) {
     
     private var legalMoves: List<Move> = listOf()
     
+    /**
+     * Main interaction with the game. 
+     * A player may click on a square, and the state of the game will change as a result.
+     * The board will either update, or the legal moves of the current player will update.
+     */
     fun click(square: Int) : List<Move> {
 
         val newBoard = moveExecutor.execute(legalMoves, square)

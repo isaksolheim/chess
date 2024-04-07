@@ -7,13 +7,31 @@ val tagToCastleSquares = mapOf(
     "K" to listOf(60, 61, 62)
 )
 
+/**
+ * Each version of chess might have different qualities that it needs to keep track of.
+ * However, most versions closely follow the standard chess state.
+ * 
+ * GameState keeps track only of immediate values. Who's turn it is, what the board looks
+ * like, etc. For long term values (like castling rights) are tracked by the GameHistory class.
+ */
 abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
     public var turn = true;
     public var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
     public var gameActive = true;
 
-    abstract fun changeState(move: Move)
+    /**
+     * A method for filtering down legal moves to
+     * only allow those not breaking state specific rules.
+     * @param move to check for legality.
+     * @return True if no historic rule is broken.
+     */
     abstract fun checkState(move: Move): Boolean
+    
+    /**
+     * Change state after a move has been executed.
+     * @param move that has been executed.
+     */    
+    abstract fun changeState(move: Move)
 
     fun getBoard(): Array<Char> {
         return board.toCharArray().toTypedArray()
@@ -28,7 +46,10 @@ abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
     } 
 
 
-    /* Return TRUE only if the move is attempting illegal castle */
+    /**
+     * Check if a move is attempting to castle illegally.
+     * @return true in that case.
+     */
     protected fun illegalCastle(move: Move): Boolean {
         val id = move.id
 
