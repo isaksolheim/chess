@@ -1,7 +1,7 @@
 package me.isak.chess.model.base
 
 class Game(private val version: String) {
-    private val gameFactory = AbstractGameFactory(version)
+    private val gameFactory = SimpleGameFactory(version)
     
     private val moveCalculator = gameFactory.moveCalculator()
     private val moveExecutor = gameFactory.moveExecutor()

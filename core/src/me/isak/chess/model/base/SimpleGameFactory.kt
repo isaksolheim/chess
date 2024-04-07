@@ -6,18 +6,14 @@ import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 
 /**
- * Represents the result of a factory method for creating the components
- * needed to play a game of chess.
+ * Used to initialize the correct game objects for chess, 
+ * depending on the specified version.
+ * 
+ * The name is slightly missleading, because it does not follow the factory pattern fully.
+ * It is still reasonable however, since it abstracts away the creation of objects, 
+ * and makes sure the correct family of objects is accessible. 
  */
-data class FactoryResult(
-    val moveCalculator: MoveCalculator, 
-    val moveExecutor: MoveExecutor, 
-    val gameOverChecker: GameOverChecker,
-    val gameState: GameState,
-    val gameHistory: GameHistory
-)
-
-class AbstractGameFactory(version: String) {
+class SimpleGameFactory(version: String) {
     private var pieceMap: PieceMap
     private var simpleMoveCalculator: SimpleMoveCalculator
     private var gameState: GameState
@@ -26,6 +22,9 @@ class AbstractGameFactory(version: String) {
     private var moveExecutor: MoveExecutor
     private var gameOverChecker: GameOverChecker
 
+    /**
+     * Create the game objects based on which version of chess is being played.
+     */
     init {
         when (version) {
             "standard" -> {
