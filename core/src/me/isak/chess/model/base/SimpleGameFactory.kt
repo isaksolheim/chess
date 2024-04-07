@@ -4,6 +4,7 @@ import me.isak.chess.model.versions.standard.StandardPieceMap
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
+import me.isak.chess.model.versions.standard.standardPieceMap
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -28,7 +29,7 @@ class SimpleGameFactory(version: String) {
     init {
         when (version) {
             "standard" -> {
-                pieceMap = StandardPieceMap()
+                pieceMap = PieceMap(standardPieceMap)
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
                 gameState = StandardGameState(simpleMoveCalculator)
                 gameHistory = StandardGameHistory()

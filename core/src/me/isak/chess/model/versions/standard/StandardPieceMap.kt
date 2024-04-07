@@ -1,6 +1,5 @@
 package me.isak.chess.model.versions.standard
 
-import me.isak.chess.model.base.PieceMap
 import me.isak.chess.model.base.Piece
 import me.isak.chess.model.base.PieceDirector
 
@@ -20,10 +19,4 @@ val standardPieceMap: Map<Char, Piece> = mapOf(
     'P' to pd.wPawn().buildPiece(),
     'p' to pd.bPawn().buildPiece()
 )
-class StandardPieceMap: PieceMap {
-
-    override fun getPiece(piece: Char): Piece { 
-        return standardPieceMap.get(piece) ?: throw Error("Piece does not exist for this piece :$piece")
-    }   
-}
 
