@@ -15,6 +15,14 @@ abstract class GameOverChecker(private val moveCalculator: MoveCalculator, priva
 
     abstract fun checkGameOver(): Boolean
 
+    /**
+     * Check if the current player has any legal moves available
+     * @return true if they do
+     */
+    fun hasLegalMove(): Boolean {
+        return gameState.board.indices
+            .any { moveCalculator.legalMoves(it).isNotEmpty() }            
+    }
 }
 
 
