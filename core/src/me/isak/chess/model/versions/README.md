@@ -19,7 +19,7 @@ To be able to do this, you first need to understand what an Action is.
 
 Some pieces have one action, while others have multiple. An action describes how the piece moves, and the conditions that must be met to allow this movement.
 
-A standard rook has one action. It can move horizontally and vertically. The condition are that it continues in one direction until blocked by an obstacle. If the obstacle is a friend, it blocks further movement. If the obstacle is an enemy, it is included in the movement, but it can go no further.
+A standard rook has one action. It can move horizontally and vertically. The conditions are that it continues in one direction until blocked by an obstacle. If the obstacle is a friend, it blocks further movement. If the obstacle is an enemy, it is included in the movement, but it can go no further.
 
 A standard pawn is a piece with multiple actions, because it has movements with different conditions. A forward move is only allowed if the square is empty, while a diagonal (attack) move is only allowed if there is an enemy occupying the square. These are therefore separate actions.
 
@@ -33,11 +33,11 @@ The properties of an action are as follows:
 
 #### 1.1.1 Id
 
-Id is not required, and is only used if the action requires that other parts of the program can access it. This will be explained further in later sections. But just as an example, the action "castle" requires an id because the conditions it must satisfy are too complex to be expressed in the action definition.
+The id field can be any string, and is used if the action requires that other parts of the program can access it. For most actions, the id can be just an empty string.  How special ids are used will be explained later. But just as an example, the action "castle" requires an id because the conditions it must satisfy are too complex to be expressed in the action definition.
 
 #### 1.1.2 Directions
 
-Directions is a list ways the piece can move. These directions are described using cardinal directions: N (north), E, S, and W. These can be combined to create a more complicated direction. Examples of directions: 
+Directions is a list of ways a piece can move. These directions are described using cardinal directions: N (north), E, S, and W. These can be combined to create a more complicated direction. Examples of directions: 
 - RookDirections = ["N", "E", "S", "W"]
 - KnightDirections = ["NNE", "EEN", "EES", "SSE", "SSW", "WWS", "WWN", "NNW"]
 
@@ -66,7 +66,7 @@ If you wanted to "jump" to the corners, and not walk on the squares between, you
 
 #### 1.1.3 Path
 
-The directions of rooks and knight seem to be the same, but in reality they are quite different. A rook continues until it meets and obstacle, but the knight stops immediately. The Path attribute is used to distinguish these types of moves. When calculating legal moves, the calculator combines all the visited squares in one direction into one string. This string is then tested against the Path attribute to determine if the piece is allowed to move further. 
+The way a piece walks in a direction depend on rules for the piece, and what the board looks like. A rook takes many steps in one direction until it meets and obstacle, but the knight stops after having walked one step. The Path attribute is used to distinguish these types of walks. When calculating legal moves, the calculator combines all the visited squares in a walk into a string. This string is then tested against the Path attribute to determine if the piece is allowed to move further. 
 
 More precisely, the path attribute is a regex defining legal paths for a piece. Let's look at some examples:
 
@@ -76,17 +76,17 @@ Explanation: the path of a white knight can have a length of 1 (plus the startin
 
 - WhiteRookPattern = R\s*[a-z]?
 
-Explanation: a white rook can visit any number of empty squares (\s*) and include one enemy ([a-z]). After meeting the first enemy, no more characters can be added to the path-string.
+Explanation: a white rook can visit any number of empty squares (\s*) and possibly include one enemy ([a-z]). After meeting the first enemy, no more characters can be added to the path-string.
 
 This might seem like a very complicated way to do things. Using regex is difficult to design and debug, but it is very powerful compared to other alternatives. With regex based pathing, there are fewer limits on what is possible. This decision was made because we wanted the most flexible/extendable design possible. 
 
 #### 1.1.4 Cover 
 
-This attribute works exactly the same way that the path attribute does. It is needed because the cover of a piece is not the same as where it is allowed to move. Some moves do not count as cover at all. A pawn forward move does not count as cover, for example. The reason we need both, is because some situations require the calculation of cover. To be allowed to castle for example, the enemy must not cover the squares next to the king.  
+This attribute works exactly the same way that the path attribute does. It is needed because the cover of a piece is not the same as where it is allowed to move. The most common example is that pieces can cover friends, but not capture them.  Some moves do not count as cover at all, like a pawn forward move. The reason we need both path and cover, is because some situations require knowledge of what a piece covers. To be allowed to castle for example, the enemy must not cover the squares next to the king.  
 
 #### 1.1.5 Board condition (optional)
 
-Most actions do not have a board condition. For those who do, define the board condition by making a regex describing what the board must look like, in order for the action to be legal. For example, the action allowing a white pawn to move two squares forward is only allowed when the pawn is on the second rank. En passant requires the white pawn to be on the fifth rank, with a black pawn next to it. Castle is allowed when king and rook is on the home square, with no piece between.
+Most actions do not have a board condition. For those that do, define the board condition by making a regex describing what the board must look like, in order for the action to be legal. For example, the action allowing a white pawn to move two squares forward is only allowed when the pawn is on the second rank. En passant requires the white pawn to be on the fifth rank, with a black pawn next to it. Castle is allowed when king and rook is on the home square, with no piece between.
 
 #### 1.1.6 replacement (optional)
 
@@ -144,7 +144,7 @@ val customRook = pieceDirector.rook()
 
 The example shows how to make a rook that can also move diagonally in the top right direction.
 
-## 1.2 Create mapping between symbols and pieces
+## 2. Create mapping between symbols and pieces
 
 The chessboard is represented as an array of characters. The empty char (' ') represents an emtpy square, uppercase characters are white pieces and lowercase characters are black pieces. Each version of chess requires a PieceMap, that tells the game engine how to find the behaviour of a piece based on the piece character. 
 
