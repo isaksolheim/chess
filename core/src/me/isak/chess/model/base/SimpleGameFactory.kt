@@ -4,7 +4,8 @@ import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
-
+import me.isak.chess.model.versions.horde.HordeGameState
+import me.isak.chess.model.versions.horde.HordeGameOverChecker
 /**
  * Used to initialize the correct game objects for chess, 
  * depending on the specified version.
@@ -35,6 +36,15 @@ class SimpleGameFactory(version: String) {
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+            }
+            "horde" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                gameState = HordeGameState(simpleMoveCalculator)
+                gameHistory = StandardGameHistory()
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = HordeGameOverChecker(moveCalculator, gameState)
             }
             else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }

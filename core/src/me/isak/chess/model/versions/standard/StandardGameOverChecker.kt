@@ -28,9 +28,4 @@ class StandardGameOverChecker(private val moveCalculator: MoveCalculator, privat
         }
         return true
      }
-
-    private fun hasLegalMove(): Boolean {
-        return gameState.board.indices
-            .any { moveCalculator.legalMoves(it).isNotEmpty() }            
-    }
 }

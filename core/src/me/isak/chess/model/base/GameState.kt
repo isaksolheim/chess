@@ -33,6 +33,10 @@ abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
      */    
     abstract fun changeState(move: Move)
 
+    fun setBoardAsString(newBoard: String) {
+        board = newBoard
+    }
+
     fun getBoard(): Array<Char> {
         return board.toCharArray().toTypedArray()
     }
