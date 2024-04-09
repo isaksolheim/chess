@@ -4,6 +4,7 @@ import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
+import me.isak.chess.model.versions.koth.KothGameOverChecker
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -35,6 +36,15 @@ class SimpleGameFactory(version: String) {
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+            }
+            "koth" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                gameState = StandardGameState(simpleMoveCalculator)
+                gameHistory = StandardGameHistory()
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = KothGameOverChecker(moveCalculator, gameState)
             }
             else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }
