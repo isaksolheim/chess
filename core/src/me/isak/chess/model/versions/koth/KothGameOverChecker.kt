@@ -9,7 +9,7 @@ class KothGameOverChecker(private val moveCalculator: MoveCalculator, private va
 
     private val centerSquares = arrayOf(27, 28, 35, 36) // d5, e5, d4, e4
 
-    override fun checkGameOver(): Boolean { 
+    override fun checkGameOver(): Boolean {
 
         // Game can end by getting the king to the center
         if (isKingInCenter()) {
@@ -27,9 +27,9 @@ class KothGameOverChecker(private val moveCalculator: MoveCalculator, private va
                 val winner = if (gameState.turn) "white" else "black"
                 println("Well done to $winner, you won by checkmate")
             }
-
             return true
         }
+        return false
      }
 
      /**
@@ -39,7 +39,8 @@ class KothGameOverChecker(private val moveCalculator: MoveCalculator, private va
       */
      private fun isKingInCenter(): Boolean {
         val kingToLookFor = if (gameState.turn) 'k' else 'K'
-        
+        println("king is on $kingToLookFor")
+
         val kingIndex = gameState.board.indices
           .first{ gameState.board[it] == kingToLookFor }
 
