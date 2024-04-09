@@ -1,4 +1,4 @@
-package me.isak.chess.model.base.versions.fisher
+package me.isak.chess.model.versions.fisher
 
 import me.isak.chess.model.base.SimpleMoveCalculator
 import me.isak.chess.model.base.GameOverChecker

@@ -1,10 +1,10 @@
 package me.isak.chess.model.base
 
+import me.isak.chess.model.versions.fisher.FisherGameState
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
-import me.isak.chess.model.versions.fisher.FisherGameState
 import me.isak.chess.model.versions.horde.HordeGameState
 import me.isak.chess.model.versions.horde.HordeGameOverChecker
 /**
