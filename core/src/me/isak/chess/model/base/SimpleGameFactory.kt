@@ -1,11 +1,13 @@
 package me.isak.chess.model.base
 
+import me.isak.chess.model.versions.fisher.FisherGameState
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
 import me.isak.chess.model.versions.koth.KothGameOverChecker
-
+import me.isak.chess.model.versions.horde.HordeGameState
+import me.isak.chess.model.versions.horde.HordeGameOverChecker
 /**
  * Used to initialize the correct game objects for chess, 
  * depending on the specified version.
@@ -27,6 +29,13 @@ class SimpleGameFactory(version: String) {
      * Create the game objects based on which version of chess is being played.
      */
     init {
+
+        // Set default as standard, and overwrite when needed.
+        pieceMap = PieceMap(standardPieceMap)
+        simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+        gameState = StandardGameState(simpleMoveCalculator)
+        gameHistory = StandardGameHistory()
+        
         when (version) {
             "standard" -> {
                 pieceMap = PieceMap(standardPieceMap)
@@ -46,8 +55,30 @@ class SimpleGameFactory(version: String) {
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = KothGameOverChecker(moveCalculator, gameState)
             }
+            "horde" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                gameState = HordeGameState(simpleMoveCalculator)
+                gameHistory = StandardGameHistory()
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = HordeGameOverChecker(moveCalculator, gameState)
+            }
+            "fisher" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                gameState = FisherGameState(simpleMoveCalculator)
+                gameHistory = StandardGameHistory()
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+            }
             else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }
+
+        moveExecutor = MoveExecutor(gameState, gameHistory)
+        moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+        gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
     }
 
     fun moveCalculator(): MoveCalculator {
