@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.utils.ScreenUtils
 import me.isak.chess.Chess
 import me.isak.chess.Renderer
-import me.isak.chess.game.Game
+import me.isak.chess.model.base.Game
 import me.isak.chess.viewmodels.GameViewModel
 
 class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter() {

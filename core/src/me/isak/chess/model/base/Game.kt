@@ -1,50 +1,45 @@
-
-package me.isak.chess.game
+package me.isak.chess.model.base
 
 import me.isak.chess.models.FirebaseGameModel
-import me.isak.chess.move.MoveCalculator
-import me.isak.chess.move.Move
 import kotlin.random.Random
 
+/**
+ * The main interface between client and chess logic.
+ * @param version to specify which version of chess when creating the object.
+ */
 class Game(private val version: String, var firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
-    var id: String = Random.nextInt(1000, 10000).toString()
-    var isOnline = false
-
-    private val moveCalculator: MoveCalculator
-    private val gameState: GameState
-    private val gameHistory: GameHistory
-
+    private val gameFactory = SimpleGameFactory(version)
+    
+    private val moveCalculator = gameFactory.moveCalculator()
+    private val moveExecutor = gameFactory.moveExecutor()
+    private val gameOverChecker = gameFactory.gameOverChecker()
+    private val gameState = gameFactory.gameState()
+    private val gameHistory = gameFactory.gameHistory()
+    
     private var legalMoves: List<Move> = listOf()
 
-    init {
-        val gameFactory = GameFactory()
-        val (cal, state, history) = gameFactory.create(version)
-        moveCalculator = cal
-        gameState = state
-        gameHistory = history
-    }
-
+    var id: String = Random.nextInt(1000, 10000).toString()
+    var isOnline = false
+    
+    /**
+     * Main interaction with the game. 
+     * A player may click on a square, and the state of the game will change as a result.
+     * The board will either update, or the legal moves of the current player will update.
+     */
     fun click(square: Int) : List<Move> {
-        val move = legalMoves.find { it.square == square }
 
-        if (move != null) {
+        val newBoard = moveExecutor.execute(legalMoves, square)
+
+        if (newBoard != null) {
+            gameOverChecker.checkGameOver()
+            /* TODO: figure out how game over should be handled. */
+
             legalMoves = listOf()
-            gameState.executeMove(move)
-            gameHistory.changeHistory(move)
-            return listOf()
-        }
+            return legalMoves
+        } 
 
-        val piece = gameState.board[square]
-
-        if (piece == ' ' || !gameState.isPieceTurn(piece)) {
-            legalMoves = listOf()
-            return listOf()
-        }
-
-        legalMoves = moveCalculator.calculate(gameState.getBoard(), square) // Calculate all potentially legal moves
-            .filter { gameState.checkGame(it) } // Filter away moves that are illegal for game specific reasons
-            .filter { gameHistory.checkHistory(it) } // Filter away moves that are illegal for historic reasons
-        return legalMoves;
+        legalMoves = moveCalculator.legalMoves(square)
+        return legalMoves
     }
 
     fun getBoard(): Array<Char> {
@@ -69,6 +64,7 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
     }
 
+
     fun getCurrentTurn(): String {
         if (gameState.turn) {
             return "white"
@@ -78,7 +74,6 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
 
     fun toJSON(): FirebaseGameModel {
         val currentTurn = getCurrentTurn()
-        // Assuming the board is stored as an Array<Char> in gameState and you want it as List<Char>
         val board = gameState.getBoardAsString()
 
         return FirebaseGameModel(
@@ -99,3 +94,5 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         gameState.setBoardAsString(model.board)
     }
 }
+
+

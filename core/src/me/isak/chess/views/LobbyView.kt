@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
-import me.isak.chess.game.Game
+import me.isak.chess.model.base.Game
 import me.isak.chess.models.FirebaseGameModel
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
