@@ -8,7 +8,7 @@ import me.isak.chess.Renderer
 import me.isak.chess.model.base.Game
 import me.isak.chess.viewmodels.GameViewModel
 
-class GameScreen(private val app: Chess, game: Game) : ScreenAdapter() {
+class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
     private val gameViewModel = GameViewModel(game, app)
@@ -27,7 +27,7 @@ class GameScreen(private val app: Chess, game: Game) : ScreenAdapter() {
 
         // Check if the game is over and navigate to a new screen if it is
         if (gameViewModel.checkGameOver()) {
-            app.setScreen(GameOverScreenView(app))
+            app.setScreen(GameOverScreenView(app, game))
         }
     }
 
