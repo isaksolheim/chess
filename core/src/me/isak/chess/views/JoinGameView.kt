@@ -30,16 +30,16 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join Game", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                // TODO: Join Firebase Game
-                // Get Firebase Game
-                var data = app.firebase.getData("games/${gameIdInput.text}", object : FirebaseCallback {
+                val game = Game("standard", player = "black") // Creating a new game
+
+                // Setting up an event listener to listen for updates to the game
+                app.firebase.getData("games/${gameIdInput.text}", object : FirebaseCallback {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
-                        // println(dataModel)
-                        val game = Game("standard", dataModel, "black")
-                        //println(game.getBoardAsString())
-                        app.setScreen(GameScreen(app, game))
+                        game.updateFromModel(dataModel)
                     }
                 })
+
+                app.setScreen(GameScreen(app, game))
             }
         })
 

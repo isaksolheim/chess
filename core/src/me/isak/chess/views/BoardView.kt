@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.move.Move
-import me.isak.chess.move.Moveset
 import me.isak.chess.viewmodels.GameViewModel
 
 class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
@@ -46,6 +45,7 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
         viewModel.onBoardChanged = { board ->
             Gdx.app.postRunnable { renderPieces(board) }
         }
+        font.data.setScale(3f)
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -103,9 +103,8 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     fun render() {
         val squareSize = Gdx.graphics.width / 8f
 
-        val gameIdText = "Game ID: {viewModel.getGameId()}"
+        val gameIdText = "Game ID: ${viewModel.getGameId()}"
 
-        font.data.setScale(3f)
         font.draw(spriteBatch, gameIdText, 20f, Gdx.graphics.height - 20f)
 
         var colNum = 0

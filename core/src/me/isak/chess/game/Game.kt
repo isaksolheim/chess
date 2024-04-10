@@ -6,7 +6,7 @@ import me.isak.chess.move.MoveCalculator
 import me.isak.chess.move.Move
 import kotlin.random.Random
 
-class Game(private val version: String, val firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
+class Game(private val version: String, var firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
     var id: String = Random.nextInt(1000, 10000).toString()
     var isOnline = false
 
@@ -22,16 +22,6 @@ class Game(private val version: String, val firebaseGameModel: FirebaseGameModel
         moveCalculator = cal
         gameState = state
         gameHistory = history
-
-        println("GAME ID: $id")
-
-        if (firebaseGameModel != null) {
-            isOnline = true
-            id = firebaseGameModel.id
-            gameState.setBoardAsString(firebaseGameModel.board)
-            player = firebaseGameModel.currentTurn
-            gameState.turn = player == "white"
-        }
     }
 
     fun click(square: Int) : List<Move> {
@@ -94,14 +84,18 @@ class Game(private val version: String, val firebaseGameModel: FirebaseGameModel
         return FirebaseGameModel(
             id = id,
             board = board,
-            turnId = 1,
-            players = mapOf(
-                "white" to "1", // player id "1"
-                "black" to "2"  // player id "2"
-            ),
             currentTurn = currentTurn
         )
     }
+
+    /**
+     * This function updates the current game with data from Firebase
+     * */
+    fun updateFromModel(model: FirebaseGameModel) {
+        gameState.turn = model.currentTurn == "white"
+        firebaseGameModel = model
+        isOnline = true
+        id = model.id
+        gameState.setBoardAsString(model.board)
+    }
 }
-
-

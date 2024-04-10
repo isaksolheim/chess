@@ -36,21 +36,17 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val createGameButton = TextButton("Create Game", skin)
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                // TODO: Create Firebase Game
-                val localGame = Game("standard")
-                val game = Game("standard", localGame.toJSON())
-                val firebaseGameModel = game.toJSON()
-                app.firebase.pushValue(game.id, firebaseGameModel)
+                val game = Game("standard") // Creating a new game
+                app.firebase.pushValue(game.id, game.toJSON()) // Pushing game to Firebase
 
-                var data = app.firebase.getData("games/${game.id}", object :
-                    FirebaseCallback {
+                // Setting up an event listener to listen for updates to the game
+                app.firebase.getData("games/${game.id}", object : FirebaseCallback {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
-                        // println(dataModel)
-                        val game = Game("standard", dataModel, "white")
-                        //println(game.getBoardAsString())
-                        app.setScreen(GameScreen(app, game))
+                        game.updateFromModel(dataModel)
                     }
                 })
+
+                app.setScreen(GameScreen(app, game))
             }
         })
 
