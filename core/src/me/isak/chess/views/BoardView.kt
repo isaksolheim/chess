@@ -2,7 +2,9 @@ package me.isak.chess.views
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.model.base.Move
@@ -13,8 +15,9 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
-
-    //private val dotTexture = new Texture(Gdx.files.internal("pieces/wP.png"))
+    private val font = BitmapFont().apply {
+        color = Color.BLACK
+    }
 
     private val pieceImages by lazy {
         hashMapOf<Char, Texture>().apply {
@@ -35,11 +38,12 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     init {
         viewModel.onLegalMovesChanged = { moves ->
-            Gdx.app.postRunnable{renderLegalMoves(moves)}
+            Gdx.app.postRunnable { renderLegalMoves(moves) }
         }
         viewModel.onBoardChanged = { board ->
             Gdx.app.postRunnable { renderPieces(board) }
         }
+        font.data.setScale(3f)
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -75,27 +79,29 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     }
 
-    private fun renderLegalMoves(moveset: List<Move>)
-    {
+    private fun renderLegalMoves(moveset: List<Move>) {
         val squareSize = Gdx.graphics.width / 8f
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
-        val circleSize = squareSize/8f
+        val circleSize = squareSize / 8f
 
-        for (move : Move in moveset)
-        {
+        for (move: Move in moveset) {
             val index = move.square
             val colNum = index % 8
             val rowNum = index / 8
 
-            val xPos = colNum * squareSize + squareSize/2
-            val adjustedYPos = yPos - rowNum * squareSize + squareSize/2
-            dotPixelDrawer.filledCircle(xPos, adjustedYPos,circleSize)
+            val xPos = colNum * squareSize + squareSize / 2
+            val adjustedYPos = yPos - rowNum * squareSize + squareSize / 2
+            dotPixelDrawer.filledCircle(xPos, adjustedYPos, circleSize)
         }
     }
 
 
     fun render() {
         val squareSize = Gdx.graphics.width / 8f
+
+        val gameIdText = "Game ID: ${viewModel.getGameId()}"
+
+        font.draw(spriteBatch, gameIdText, 20f, Gdx.graphics.height - 20f)
 
         var colNum = 0
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f)
@@ -109,15 +115,15 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
             var xPos = (squareSize * colNum)
             if ((i / 8) % 2 == 0) {
                 if (colNum % 2 == 0) {
-                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                } else {
                     lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
+                } else {
+                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             } else {
                 if (colNum % 2 == 0) {
-                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                } else {
                     darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
+                } else {
+                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             }
 

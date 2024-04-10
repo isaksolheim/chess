@@ -1,5 +1,7 @@
 package me.isak.chess
 
+import me.isak.chess.model.FirebaseGameModel
+
 /**
  * This interface outlines methods for interacting with Firebase Database,
  * including fetching data, pushing new values, and setting values at the database root.
@@ -10,7 +12,7 @@ interface FirebaseInterface {
      *
      * @param key The key at which to retrieve the value.
      */
-    fun getData(key: String)
+    fun getData(key: String, callback: FirebaseCallback)
 
     /**
      * Pushes a given value to a specific path in the Firebase database.
@@ -18,7 +20,7 @@ interface FirebaseInterface {
      * @param key The key under which to store the value.
      * @param value The value to be stored.
      */
-    fun pushValue(key: String, value: String)
+    fun pushValue(key: String, value: FirebaseGameModel)
 
     /**
      * Sets a given value at the root of the Firebase database.
@@ -26,5 +28,5 @@ interface FirebaseInterface {
      * @param key Unused parameter in this context, kept for interface compliance.
      * @param value The value to be set at the root.
      */
-    fun setValue(key: String, value: String)
+    fun setValue(key: String, value: FirebaseGameModel)
 }

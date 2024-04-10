@@ -8,6 +8,7 @@ import me.isak.chess.model.versions.standard.standardPieceMap
 import me.isak.chess.model.versions.koth.KothGameOverChecker
 import me.isak.chess.model.versions.horde.HordeGameState
 import me.isak.chess.model.versions.horde.HordeGameOverChecker
+
 /**
  * Used to initialize the correct game objects for chess, 
  * depending on the specified version.
@@ -89,4 +90,5 @@ class SimpleGameFactory(version: String) {
     fun gameHistory(): GameHistory {
         return gameHistory
     }
+
 }
