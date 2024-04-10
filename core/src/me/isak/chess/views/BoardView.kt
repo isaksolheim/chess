@@ -19,8 +19,6 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
         color = Color.BLACK
     }
 
-    //private val dotTexture = new Texture(Gdx.files.internal("pieces/wP.png"))
-
     private val pieceImages by lazy {
         hashMapOf<Char, Texture>().apply {
             put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn

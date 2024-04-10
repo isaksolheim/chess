@@ -30,6 +30,18 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.getLegalMoves()
     }
 
+    /**
+     * Processes a user's move attempt by either executing the move or selecting a piece.
+     *
+     * For a selected square, it attempts to move the previously selected piece to this new location.
+     * If the game is online, updates including the move are pushed to Firebase, given the move is valid.
+     *
+     * If no piece is selected (selectedSquare is null), it sets the current square as selected if the move is valid.
+     * Valid moves depend on the game state (online/offline) and, for online games, whether the piece belongs to the player
+     * and matches the player's turn.
+     *
+     * @param square The index of the board square selected by the user, ranging from 0 to 63.
+     */
     fun onUserMove(square: Int) {
         if (!game.isOnline || (game.getCurrentTurn() == game.player)) {
             selectedSquare?.let {
@@ -45,10 +57,11 @@ class GameViewModel(private val game: Game, private val app: Chess) {
                     app.firebase.pushValue(game.id, game.firebaseGameModel!!)
                 }
             } ?: run {
-                // No piece selected yet, so select the current square
-                selectedSquare = square
-                game.click(square)
-                onLegalMovesChanged?.invoke(game.getLegalMoves())
+                if  (!game.isOnline || game.getPieceColorAtSquare(square) == game.player) {
+                    selectedSquare = square
+                    game.click(square)
+                    onLegalMovesChanged?.invoke(game.getLegalMoves())
+                }
             }
 
             onBoardChanged?.invoke(game.getBoard())

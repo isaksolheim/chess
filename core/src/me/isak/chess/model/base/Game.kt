@@ -54,6 +54,30 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         return legalMoves
     }
 
+    /**
+     * Determines the color of the piece at a specified square on the chessboard.
+     *
+     * This function returns "white" for uppercase piece characters, "black" for lowercase,
+     * and null if the square is empty or the input is out of bounds.
+     *
+     * @param square The index of the square for which to determine the piece color, ranging from 0 to 63.
+     * @return The color of the piece ("white" or "black") or null if the square is empty or out of bounds.
+     */
+    fun getPieceColorAtSquare(square: Int): String? {
+        val board = getBoard()
+        if (square < 0 || square >= board.size) {
+            // Square is out of bounds
+            return null
+        }
+
+        val piece = board[square]
+        return when {
+            piece.isUpperCase() -> "white"
+            piece.isLowerCase() -> "black"
+            else -> null // No piece on the square or invalid input
+        }
+    }
+
     fun fen(): String {
         val gameString = (0 until 8).map { i ->
             gameState.getBoard().slice(i * 8 until (i + 1) * 8) }
@@ -63,7 +87,6 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
 
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
     }
-
 
     fun getCurrentTurn(): String {
         if (gameState.turn) {
