@@ -65,6 +65,10 @@ class Game(
         return legalMoves
     }
 
+    fun checkGameOver(): Boolean {
+        return gameOverChecker.checkGameOver()
+    }
+
     /**
      * Determines the color of the piece at a specified square on the chessboard.
      *
