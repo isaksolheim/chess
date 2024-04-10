@@ -25,8 +25,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.id
     }
 
-    fun getLegalMoves() : List<Move>
-    {
+    fun getLegalMoves(): List<Move> {
         return game.getLegalMoves()
     }
 
@@ -57,7 +56,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
                     app.firebase.pushValue(game.id, game.firebaseGameModel!!)
                 }
             } ?: run {
-                if  (!game.isOnline || game.getPieceColorAtSquare(square) == game.player) {
+                if (!game.isOnline || game.getPieceColorAtSquare(square) == game.player) {
                     selectedSquare = square
                     game.click(square)
                     onLegalMovesChanged?.invoke(game.getLegalMoves())

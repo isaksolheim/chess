@@ -20,7 +20,7 @@ class AndroidInterface : FirebaseInterface {
         ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val value = snapshot.getValue(FirebaseGameModel::class.java)
-                
+
                 if (value != null) {
                     callback.onDataReceived(value)
                 } else {

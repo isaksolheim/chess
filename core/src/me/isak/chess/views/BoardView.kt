@@ -38,7 +38,7 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     init {
         viewModel.onLegalMovesChanged = { moves ->
-            Gdx.app.postRunnable{renderLegalMoves(moves)}
+            Gdx.app.postRunnable { renderLegalMoves(moves) }
         }
         viewModel.onBoardChanged = { board ->
             Gdx.app.postRunnable { renderPieces(board) }
@@ -79,21 +79,19 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     }
 
-    private fun renderLegalMoves(moveset: List<Move>)
-    {
+    private fun renderLegalMoves(moveset: List<Move>) {
         val squareSize = Gdx.graphics.width / 8f
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
-        val circleSize = squareSize/8f
+        val circleSize = squareSize / 8f
 
-        for (move : Move in moveset)
-        {
+        for (move: Move in moveset) {
             val index = move.square
             val colNum = index % 8
             val rowNum = index / 8
 
-            val xPos = colNum * squareSize + squareSize/2
-            val adjustedYPos = yPos - rowNum * squareSize + squareSize/2
-            dotPixelDrawer.filledCircle(xPos, adjustedYPos,circleSize)
+            val xPos = colNum * squareSize + squareSize / 2
+            val adjustedYPos = yPos - rowNum * squareSize + squareSize / 2
+            dotPixelDrawer.filledCircle(xPos, adjustedYPos, circleSize)
         }
     }
 

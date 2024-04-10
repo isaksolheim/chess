@@ -16,7 +16,7 @@ import me.isak.chess.views.GameScreen
 
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
-    private lateinit var gameIdInput: TextField
+    private var gameIdInput: TextField
 
     init {
         Gdx.input.inputProcessor = stage

@@ -8,7 +8,7 @@ import me.isak.chess.Renderer
 import me.isak.chess.model.base.Game
 import me.isak.chess.viewmodels.GameViewModel
 
-class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter() {
+class GameScreen(app: Chess, game: Game) : ScreenAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
     private val gameViewModel = GameViewModel(game, app)
@@ -16,10 +16,6 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
 
     override fun show() {
         Gdx.input.inputProcessor = boardView
-
-        // TODO: create firebase game here?
-        // val firebaseGameModel = game.toJSON()
-        // firebase.pushValue("1", firebaseGameModel)
     }
 
     override fun render(delta: Float) {

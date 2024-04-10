@@ -5,7 +5,14 @@ import kotlin.random.Random
 
 /**
  * The main interface between client and chess logic.
+ *
+ * This class acts as the central hub for managing game interactions, state updates, and
+ * integrating with Firebase for online gameplay.
+ *
  * @param version to specify which version of chess when creating the object.
+ * @property firebaseGameModel An optional parameter used in online games to represent the current
+ * state of the game as synchronized with Firebase
+ * @property player An optional parameter indicating the player's color in online games.
  */
 class Game(private val version: String, var firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
     private val gameFactory = SimpleGameFactory(version)
@@ -88,6 +95,11 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"
     }
 
+    /**
+     * Retrieves the current turn in the game.
+     *
+     * @return A string indicating the current turn, either "white" or "black".
+     */
     fun getCurrentTurn(): String {
         if (gameState.turn) {
             return "white"
@@ -95,6 +107,11 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         return "black"
     }
 
+    /**
+     * Serializes the current game state into a [FirebaseGameModel].
+     *
+     * @return A [FirebaseGameModel] instance representing the current game state.
+     */
     fun toJSON(): FirebaseGameModel {
         val currentTurn = getCurrentTurn()
         val board = gameState.getBoardAsString()
@@ -107,8 +124,10 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
     }
 
     /**
-     * This function updates the current game with data from Firebase
-     * */
+     * Updates the game state from a [FirebaseGameModel].
+     *
+     * @param model The [FirebaseGameModel] containing the new state to be applied to the game.
+     */
     fun updateFromModel(model: FirebaseGameModel) {
         gameState.turn = model.currentTurn == "white"
         firebaseGameModel = model
