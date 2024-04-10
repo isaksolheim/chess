@@ -1,6 +1,6 @@
 package me.isak.chess
 
-import me.isak.chess.models.FirebaseGameModel
+import me.isak.chess.model.FirebaseGameModel
 
 class CoreInterface : FirebaseInterface {
     override fun getData(key: String, callback: FirebaseCallback) {

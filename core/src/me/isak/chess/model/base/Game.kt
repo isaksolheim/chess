@@ -1,6 +1,6 @@
 package me.isak.chess.model.base
 
-import me.isak.chess.models.FirebaseGameModel
+import me.isak.chess.model.FirebaseGameModel
 import kotlin.random.Random
 
 /**

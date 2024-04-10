@@ -5,7 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import me.isak.chess.models.FirebaseGameModel
+import me.isak.chess.model.FirebaseGameModel
 
 /**
  * Implements FirebaseInterface to interact with Firebase Database.

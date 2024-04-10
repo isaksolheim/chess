@@ -1,4 +1,4 @@
-package me.isak.chess.models
+package me.isak.chess.model
 
 /**
  * Model for storing games in Firebase Realtime Database

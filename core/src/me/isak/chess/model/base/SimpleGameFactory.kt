@@ -8,8 +8,6 @@ import me.isak.chess.model.versions.standard.standardPieceMap
 import me.isak.chess.model.versions.koth.KothGameOverChecker
 import me.isak.chess.model.versions.horde.HordeGameState
 import me.isak.chess.model.versions.horde.HordeGameOverChecker
-import me.isak.chess.models.FirebaseGameModel
-import kotlin.random.Random
 
 /**
  * Used to initialize the correct game objects for chess, 

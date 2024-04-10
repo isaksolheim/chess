@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
-import me.isak.chess.models.FirebaseGameModel
+import me.isak.chess.model.FirebaseGameModel
 import me.isak.chess.views.GameScreen
 
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
