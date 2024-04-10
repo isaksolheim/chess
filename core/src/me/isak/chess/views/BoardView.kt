@@ -119,15 +119,15 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
             var xPos = (squareSize * colNum)
             if ((i / 8) % 2 == 0) {
                 if (colNum % 2 == 0) {
-                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                } else {
                     lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
+                } else {
+                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             } else {
                 if (colNum % 2 == 0) {
-                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                } else {
                     darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
+                } else {
+                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             }
 
