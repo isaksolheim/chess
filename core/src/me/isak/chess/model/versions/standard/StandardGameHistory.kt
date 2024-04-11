@@ -12,9 +12,7 @@ val rookA8 = Regex("^r")
  * Keeps track of relevant history information for standard chess.
  * This is enPassant possibilities and castling rights for each side.
  */
-class StandardGameHistory : GameHistory {
-    var enPassant: Int = -1
-    var castle: String = "KQkq"
+class StandardGameHistory(private var castle: String, private var enPassant: Int, private var halfMove: Int, private var fullMove: Int) : GameHistory {
 
     /**
      * Use the move id to determine if it requires a history check.
@@ -68,6 +66,6 @@ class StandardGameHistory : GameHistory {
     override fun toString(): String {
         var enPassantString = if (enPassant == -1) "-" else enPassant
         var castleString = if (castle.length == 0) "-" else castle
-        return "$castleString $enPassantString"
+        return "$castleString $enPassantString $halfMove $fullMove"
     }
 }

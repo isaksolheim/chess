@@ -138,7 +138,7 @@ project(":core") {
             events 'passed', 'skipped', 'failed'
         }
         doLast {
-            println 'Finished running tests.'
+            println '\n All tests completed.'
         }
     }
 }
