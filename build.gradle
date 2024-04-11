@@ -98,10 +98,47 @@ project(":android") {
 
 project(":core") {
     apply plugin: "kotlin"
+    apply plugin: "jacoco"
+
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
         implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    }
+
+    sourceSets {
+        test {
+            java {
+                srcDirs = ['test']
+            }
+            kotlin {
+                srcDirs = ['test']
+            }
+        }
+    }
+
+    jacoco {
+        toolVersion = "0.8.7"
+    }   
+
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            html.destination file("${buildDir}/reports/jacocoHtml")
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events 'passed', 'skipped', 'failed'
+        }
+        doLast {
+            println 'Finished running tests.'
+        }
     }
 }
