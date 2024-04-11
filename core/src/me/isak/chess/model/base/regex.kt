@@ -56,7 +56,7 @@ val CoverPatterns = mapOf(
     /**
      * Rangers cover squares even though a friend occupies it.
      */
-    "ranger" to Regex("^([A-Z]\\W*[a-z]|[a-z]\\W*[A-Z])$"),
+    "ranger" to Regex("^([A-Z]\\W*[a-z]?|[a-z]\\W*[A-Z]?)$"),
     
     /**
      * Some moves do not count as cover. Examples are pawn forward moves
