@@ -14,26 +14,30 @@ import kotlin.random.Random
  * state of the game as synchronized with Firebase
  * @property player An optional parameter indicating the player's color in online games.
  */
-class Game(private val version: String, var firebaseGameModel: FirebaseGameModel? = null, var player: String? = "white") {
+class Game(
+    private val version: String,
+    var firebaseGameModel: FirebaseGameModel? = null,
+    var player: String? = "white"
+) {
     private val gameFactory = SimpleGameFactory(version)
-    
+
     private val moveCalculator = gameFactory.moveCalculator()
     private val moveExecutor = gameFactory.moveExecutor()
     private val gameOverChecker = gameFactory.gameOverChecker()
     private val gameState = gameFactory.gameState()
     private val gameHistory = gameFactory.gameHistory()
-    
+
     private var legalMoves: List<Move> = listOf()
 
     var id: String = Random.nextInt(1000, 10000).toString()
     var isOnline = false
-    
+
     /**
-     * Main interaction with the game. 
+     * Main interaction with the game.
      * A player may click on a square, and the state of the game will change as a result.
      * The board will either update, or the legal moves of the current player will update.
      */
-    fun click(square: Int) : List<Move> {
+    fun click(square: Int): List<Move> {
 
         val newBoard = moveExecutor.execute(legalMoves, square)
 
@@ -43,7 +47,7 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
 
             legalMoves = listOf()
             return legalMoves
-        } 
+        }
 
         legalMoves = moveCalculator.legalMoves(square)
         return legalMoves
@@ -57,8 +61,12 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
         return gameState.board
     }
 
-     fun getLegalMoves(): List<Move> {
+    fun getLegalMoves(): List<Move> {
         return legalMoves
+    }
+
+    fun checkGameOver(): Boolean {
+        return gameOverChecker.checkGameOver()
     }
 
     /**
@@ -87,9 +95,10 @@ class Game(private val version: String, var firebaseGameModel: FirebaseGameModel
 
     fun fen(): String {
         val gameString = (0 until 8).map { i ->
-            gameState.getBoard().slice(i * 8 until (i + 1) * 8) }
+            gameState.getBoard().slice(i * 8 until (i + 1) * 8)
+        }
             .map { row -> row.joinToString("") }
-            .map { row -> row.replace("\\s+".toRegex()) { match -> match.value.length.toString() }}
+            .map { row -> row.replace("\\s+".toRegex()) { match -> match.value.length.toString() } }
             .joinToString("/")
 
         return "$gameString ${gameState.toString()} ${gameHistory.toString()}"

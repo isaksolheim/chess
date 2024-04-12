@@ -34,6 +34,10 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.getLegalMoves()
     }
 
+    fun checkGameOver(): Boolean {
+        return game.checkGameOver()
+    }
+
     /**
      * Processes a user's move attempt by either executing the move or selecting a piece.
      *
