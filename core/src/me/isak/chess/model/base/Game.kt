@@ -22,8 +22,6 @@ class Game(
 ) {
     private val gameFactory = SimpleGameFactory(version, fen)
     
-    var player: String? = "white"
-
     private val moveCalculator = gameFactory.moveCalculator()
     private val moveExecutor = gameFactory.moveExecutor()
     private val gameOverChecker = gameFactory.gameOverChecker()
