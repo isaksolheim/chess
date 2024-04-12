@@ -49,14 +49,14 @@ val PathPatterns = mapOf(
 val CoverPatterns = mapOf(
 
     /** 
-     * Leapers cover squares even though a friend occupies it.
+     * Leapers cover squares regardless of what is there
      */
-    "leaper" to Regex("^([A-Z][a-z]|[a-z][A-Z])$"),
+    "leaper" to Regex("^\\w.$"),
     
     /**
-     * Rangers cover squares even though a friend occupies it.
+     * Rangers cover a piece after any number of empty squares
      */
-    "ranger" to Regex("^([A-Z]\\W*[a-z]?|[a-z]\\W*[A-Z]?)$"),
+    "ranger" to Regex("^\\w\\s*\\w?$"),
     
     /**
      * Some moves do not count as cover. Examples are pawn forward moves
