@@ -42,7 +42,7 @@ open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator): GameSt
 
         val board = move.result.toCharArray().toTypedArray()
 
-        if (simpleMoveCalculator.isKingInCheck(board, turn)) return false
+        if (simpleMoveCalculator.standardIsKingInCheck(board, turn)) return false
     
         if (illegalCastle(move)) return false
     

@@ -81,26 +81,64 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
   }
 
   /**
-   * Find out if the king is in check by generating all moves the enemy can do.
-   * If the resulting board after a move does not include the king, it means that
-   * he can be captured, and the king is in check.
-   * @param board to analyse
-   * @param whiteKing boolean true to check if white king is in check.
-   * @returns true if the selected king is in check
+   * Default method for figuring out if the king is in check. If we
+   * do not know in advance how all the pieces move, we have to figure it out here.
+   * Figure out all the squares covered by the enemy (expensive calculation). 
+   * Then return true if king is standing on one of them.
    */
   fun isKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
-    val kingToLookFor = if (whiteKing) 'K' else 'k'
 
-    // If we are playing a game without king, he cannot be in check
-    if (!board.contains(kingToLookFor)) return false;
+    // Find where the king is, or return false (not in check if he does not exist).
+    val kingSymbol = if (whiteKing) 'K' else 'k'
+    val kingSquare = board.indices
+      .find{ board[it] == kingSymbol }
+      ?: return false
 
-    // return true if one of the moves results in a board without a king
-    return board.indices
-      .filter { square -> board[square] != ' ' } // remove emtpy squares
-      .filter { piece -> board[piece].isLowerCase() == whiteKing } // remove friendly pieces
-      .flatMap { enemy -> calculateSimpleMoves(board, enemy) }
-      .any { move -> !move.result.contains(kingToLookFor) }
+    // return true if the king square is covered
+    return calculateTeamCover(board, !whiteKing)
+      .any { coveredSquare -> coveredSquare == kingSquare }
   }
+
+
+  /**
+   * This is a helper "piece" used to determine if the king is in check
+   * Can only be used with standard pieces (important!), because then we know all the
+   * ways our king can be attacked. This "piece" is a reverse engineered version of 
+   * these attack vectors.
+   */
+  private val kingCoverPiece = PieceBuilder()
+    .directions("NE", "NW").cover(Regex("Kp")).buildAction() // white king checked by black pawn
+    .directions("SE", "SW").cover(Regex("kP")).buildAction() // black king checked by white pawn
+    .directions("NNE", "EEN", "EES", "SSE", "SSW", "WWS", "WWN", "NNW").cover(Regex("kN|Kn")).buildAction() // king checked by enemy knight
+    .directions("E", "W", "S", "N").cover(Regex("^(K\\s*[qr]?|k\\s*[QR]?)$")).buildAction() // king checked on horizontal/verical by queen or rook
+    .directions("NE", "SE", "SW", "NW").cover(Regex("^(K\\s*[qb]?|k\\s*[QB]?)$")).buildAction() // king checked on diagonal by queen or bishop
+  .buildPiece()
+
+  /**
+   * When we know the behaviour of all the pieces, we can make some shortcuts when it comes
+   * to finding out if the king is in check. The kingCoverPiece is used to find all the relevant squares
+   * of enemies. In this function, we are trying to find a square with a piece on it.
+   * If we are able to do so, it means that this piece is attacking the king!
+   */
+  fun standardIsKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
+
+    // Find where the king is, or return false (not in check if he does not exist).
+    val kingSymbol = if (whiteKing) 'K' else 'k'
+    val kingIndex = board.indices
+      .find{ board[it] == kingSymbol }
+      ?: return false
+
+    // Return true if we are able to discover a piece that is 
+    // covering the king
+    return kingCoverPiece
+      .flatMap{action ->
+        action.directions.flatMap{direction ->
+          generateSquares(action, board, kingIndex, direction, CalculationType.COVER)
+        }
+      }
+      .any{ board[it] != ' '}
+  }
+
 
   /**
    * Calculate the absolute offset as described by a direction string.

@@ -5,7 +5,8 @@ package me.isak.chess.model.base
  * determine piece behaviour.
  */
 class PieceMap(private val pieceMap: Map<Char, Piece>) {
-    fun getPiece(piece: Char): Piece { 
-        return pieceMap.get(piece) ?: throw Error("Piece does not exist for this piece :$piece")
+    fun getPiece(piece: Char): Piece {
+        if (piece == ' ') throw IllegalArgumentException("Cannot use empty char in piece map") 
+        return pieceMap.get(piece) ?: throw Error("Piece map could not find mapping from this symbol: $piece")
     }   
 }
