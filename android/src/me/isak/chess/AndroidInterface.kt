@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import me.isak.chess.model.FirebaseGameModel
 
 /**
  * Implements FirebaseInterface to interact with Firebase Database.
@@ -13,13 +14,18 @@ import com.google.firebase.database.ValueEventListener
 class AndroidInterface : FirebaseInterface {
     private val database = FirebaseDatabase.getInstance()
 
-    override fun getData(key: String) {
+    override fun getData(key: String, callback: FirebaseCallback) {
         val ref = database.getReference("/").child(key)
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        ref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.value
-                Log.d("FirebaseGetData", "Value is: $value")
+                val value = snapshot.getValue(FirebaseGameModel::class.java)
+
+                if (value != null) {
+                    callback.onDataReceived(value)
+                } else {
+                    Log.d("FirebaseGetData", "No data available")
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -28,7 +34,7 @@ class AndroidInterface : FirebaseInterface {
         })
     }
 
-    override fun pushValue(key: String, value: String) {
+    override fun pushValue(key: String, value: FirebaseGameModel) {
         val ref = database.getReference("/games").child(key)
 
         ref.setValue(value)
@@ -40,7 +46,7 @@ class AndroidInterface : FirebaseInterface {
             }
     }
 
-    override fun setValue(key: String, value: String) {
+    override fun setValue(key: String, value: FirebaseGameModel) {
         val ref = database.getReference("/")
 
         ref.child(key).setValue(value)
