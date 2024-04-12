@@ -17,10 +17,11 @@ import kotlin.random.Random
 class Game(
     private val version: String,
     var firebaseGameModel: FirebaseGameModel? = null,
-    var player: String? = "white"
+    var player: String = "white",
+    var fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 ) {
-    private val gameFactory = SimpleGameFactory(version)
-
+    private val gameFactory = SimpleGameFactory(version, fen)
+    
     private val moveCalculator = gameFactory.moveCalculator()
     private val moveExecutor = gameFactory.moveExecutor()
     private val gameOverChecker = gameFactory.gameOverChecker()
