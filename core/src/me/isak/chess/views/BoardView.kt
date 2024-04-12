@@ -15,10 +15,10 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
+
     private val font = BitmapFont().apply {
         color = Color.BLACK
     }
-
     private val pieceImages by lazy {
         hashMapOf<Char, Texture>().apply {
             put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn

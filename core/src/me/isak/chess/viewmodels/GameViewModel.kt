@@ -1,10 +1,15 @@
 package me.isak.chess.viewmodels
 
+
 import me.isak.chess.Chess
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.base.Move
+import me.isak.chess.sound.SoundController
+
 
 class GameViewModel(private val game: Game, private val app: Chess) {
+    private val soundController = SoundController.getInstance()
+
     var onBoardChanged: ((Array<Char>) -> Unit)? = null
     var onLegalMovesChanged: ((List<Move>) -> Unit)? = null
     private var selectedSquare: Int? = null
@@ -29,6 +34,10 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.getLegalMoves()
     }
 
+    fun checkGameOver(): Boolean {
+        return game.checkGameOver()
+    }
+
     /**
      * Processes a user's move attempt by either executing the move or selecting a piece.
      *
@@ -47,6 +56,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
                 game.click(square)
                 onBoardChanged?.invoke(game.getBoard())
                 selectedSquare = null
+                soundController.playGameSoundEffect(SoundController.GameSounds.Click)
 
                 // TODO: Only call this if move was actually done
                 if (game.isOnline) {
