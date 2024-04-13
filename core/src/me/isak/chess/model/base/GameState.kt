@@ -14,10 +14,17 @@ val tagToCastleSquares = mapOf(
  * GameState keeps track only of immediate values. Who's turn it is, what the board looks
  * like, etc. For long term values (like castling rights) are tracked by the GameHistory class.
  */
-abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
-    public var turn = true;
-    public var board = "rnbqkbnrpppppppp                                PPPPPPPPRNBQKBNR";
-    public var gameActive = true;
+abstract class GameState(protected val simpleMoveCalculator: SimpleMoveCalculator, fen: String) {
+
+    var board: String
+    var turn: Boolean
+
+    // Extract game state relevant information from the fen string
+    init {
+        val gameInfo = fen.split(" ")
+        board = processGameString(gameInfo[0])
+        turn = gameInfo[1] == "w" 
+    }
 
     /**
      * A method for filtering down legal moves to
@@ -66,4 +73,29 @@ abstract class GameState(val simpleMoveCalculator: SimpleMoveCalculator) {
         .any{ squaresToClear.contains(it) }
     }
 
+    protected fun promoteIfPossible(board: Array<Char>, move: Move) {
+        // Promote pawn should it reach the final rank
+        val square = move.square
+        val id = move.id
+        if (id == "P" && square / 8 == 0) {
+            board[square] = 'Q'
+        }
+    
+        if (id == "p" && square / 8 == 7) {
+            board[square] = 'q'
+        }
+    }
+
+    private fun processGameString(gamestring: String): String {
+        val board = gamestring
+          .filter{ it != '/'}
+          .replace(Regex("\\d")) { " ".repeat(it.value.toInt()) } 
+
+        if (board.length != 64) throw Error("game string $gamestring produced $board board of incorrect size ${board.length}, when it should have been 64")
+        return board
+    }
+
+    override fun toString(): String {
+        return if (turn) "w" else "b"
+    }
 }
