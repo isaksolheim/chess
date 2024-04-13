@@ -15,18 +15,18 @@ import kotlin.random.Random
  * @property player An optional parameter indicating the player's color in online games.
  */
 class Game(
-    private val version: String,
+    private var version: String,
     var firebaseGameModel: FirebaseGameModel? = null,
     var player: String = "white",
     var fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 ) {
-    private val gameFactory = SimpleGameFactory(version, fen)
+    private var gameFactory = SimpleGameFactory(version, fen)
     
-    private val moveCalculator = gameFactory.moveCalculator()
-    private val moveExecutor = gameFactory.moveExecutor()
-    private val gameOverChecker = gameFactory.gameOverChecker()
-    private val gameState = gameFactory.gameState()
-    private val gameHistory = gameFactory.gameHistory()
+    private var moveCalculator = gameFactory.moveCalculator()
+    private var moveExecutor = gameFactory.moveExecutor()
+    private var gameOverChecker = gameFactory.gameOverChecker()
+    private var gameState = gameFactory.gameState()
+    private var gameHistory = gameFactory.gameHistory()
 
     private var legalMoves: List<Move> = listOf()
 
@@ -128,6 +128,7 @@ class Game(
 
         return FirebaseGameModel(
             id = id,
+            version = version,
             board = board,
             currentTurn = currentTurn
         )
@@ -139,6 +140,17 @@ class Game(
      * @param model The [FirebaseGameModel] containing the new state to be applied to the game.
      */
     fun updateFromModel(model: FirebaseGameModel) {
+        if (model.version !== version) {
+            println("Updating firebase version")
+            version = model.version
+            gameFactory = SimpleGameFactory(version, fen)
+            moveCalculator = gameFactory.moveCalculator()
+            moveExecutor = gameFactory.moveExecutor()
+            gameOverChecker = gameFactory.gameOverChecker()
+            gameState = gameFactory.gameState()
+            gameHistory = gameFactory.gameHistory()
+        }
+
         gameState.turn = model.currentTurn == "white"
         firebaseGameModel = model
         isOnline = true
