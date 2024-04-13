@@ -8,6 +8,7 @@ import me.isak.chess.model.versions.standard.standardPieceMap
 import me.isak.chess.model.versions.koth.KothGameOverChecker
 import me.isak.chess.model.versions.horde.HordeGameOverChecker
 import me.isak.chess.model.versions.racing.RacingGameOverChecker
+import me.isak.chess.model.versions.racing.RacingGameState
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -81,7 +82,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             "racing" -> {
                 pieceMap = PieceMap(standardPieceMap)
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = StandardGameState(simpleMoveCalculator, fen)
+                gameState = RacingGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
