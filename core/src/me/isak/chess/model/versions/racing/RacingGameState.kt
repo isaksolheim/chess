@@ -24,10 +24,14 @@ class RacingGameState(moveCalculator: SimpleMoveCalculator, fen: String)
         return true
     }
 
-    /**
-     * No relevant state exist, because castle is not in the game and
-     * en passant is not in the game.
-     */
-    override fun changeState(move: Move) {  }
-    
+
+    override fun changeState(move: Move) {
+        turn = !turn
+
+        val boardArray = move.result.toCharArray().toTypedArray()
+
+        promoteIfPossible(boardArray, move)
+
+        board = boardArray.joinToString("")
+    }
 }
