@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
-import me.isak.chess.model.base.Game
 
 class MainMenuView(val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
@@ -23,18 +22,8 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
         table.setFillParent(true)
         stage.addActor(table)
 
-        val playLocalButton = TextButton("Play Local", app.skin)
-        playLocalButton.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent, actor: Actor) {
-                // Create new local game
-                val game = Game("standard")
-
-                app.setScreen(GameScreen(app, game))
-            }
-        })
-
-        val playMultiplayerButton = TextButton("Play Multiplayer", app.skin)
-        playMultiplayerButton.addListener(object : ChangeListener() {
+        val playButton = TextButton("Play", app.skin)
+        playButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 app.setScreen(LobbyView(app))
             }
@@ -47,10 +36,8 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
             }
         })
 
-        table.add(playLocalButton).fillX().uniformX()
+        table.add(playButton).fillX().uniformX()
         table.row().pad(10f, 0f, 10f, 0f)
-        table.add(playMultiplayerButton).fillX().uniformX()
-        table.row()
         table.add(aboutButton).fillX().uniformX()
     }
 

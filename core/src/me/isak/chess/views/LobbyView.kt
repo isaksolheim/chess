@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox
+import com.badlogic.gdx.utils.Array
 import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
@@ -19,11 +22,27 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
 
     init {
         Gdx.input.inputProcessor = stage
+
+        val gameVariants = arrayOf("standard", "koth", "horde", "fisher")
+        val libGDXArray = Array<String>()
+
+        gameVariants.forEach { variant ->
+            libGDXArray.add(variant)
+        }
+
+        val selectBox = SelectBox<String>(app.skin).apply {
+            items = libGDXArray
+            setSelected("standard")
+        }
+
         val table = Table()
         table.setFillParent(true)
         stage.addActor(table)
 
         val skin = app.skin
+
+        val gameModeLabel = Label("Choose a Game Mode:", app.skin)
+        val joinGameLabel = Label("Or join an existing game:", app.skin)
 
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
@@ -32,11 +51,22 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
             }
         })
 
+        val playLocalButton = TextButton("Start Local Game", app.skin)
+        playLocalButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent, actor: Actor) {
+                val selectedVariant = selectBox.selected
+                val game = Game(selectedVariant)
+
+                app.setScreen(GameScreen(app, game))
+            }
+        })
+
         // Create Game button
-        val createGameButton = TextButton("Create Game", skin)
+        val createGameButton = TextButton("Start Online Game", skin)
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                val game = Game("standard") // Creating a new game
+                val selectedVariant = selectBox.selected
+                val game = Game(selectedVariant) // Creating a new game
                 app.firebase.pushValue(game.id, game.toJSON()) // Pushing game to Firebase
 
                 // Setting up an event listener to listen for updates to the game
@@ -51,7 +81,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         })
 
         // Join Game button
-        val joinGameButton = TextButton("Join Game", skin)
+        val joinGameButton = TextButton("Join", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 app.setScreen(JoinGameView(app))
@@ -59,11 +89,25 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         })
 
         // Adding buttons to the table
-        table.add(backButton).padTop(10f)
+        table.add(backButton).padBottom(50f)
         table.row()
+
+        table.add(gameModeLabel).padTop(30f)
+        table.row()
+
+        table.add(selectBox).pad(50f)
+        table.row()
+
+        table.add(playLocalButton).pad(10f)
+        table.row()
+
         table.add(createGameButton).pad(10f)
         table.row()
-        table.add(joinGameButton).pad(10f)
+
+        table.add(joinGameLabel).padTop(30f)
+        table.row()
+
+        table.add(joinGameButton).pad(50f)
     }
 
     override fun show() {
