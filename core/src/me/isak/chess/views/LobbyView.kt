@@ -14,6 +14,8 @@ import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.FirebaseGameModel
+import me.isak.chess.views.AboutScreenView
+import me.isak.chess.views.FaqScreenView
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
 
@@ -40,6 +42,13 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         stage.addActor(table)
 
         val skin = app.skin
+
+        val questionButton = TextButton("?", app.skin)
+        questionButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                app.setScreen(FaqScreenView(app))
+            }
+        })
 
         val gameModeLabel = Label("Choose a Game Mode:", app.skin)
         val joinGameLabel = Label("Or join an existing game:", app.skin)
@@ -89,25 +98,26 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         })
 
         // Adding buttons to the table
-        table.add(backButton).padBottom(50f)
+        table.add(backButton).top().left().pad(10f)
+        table.add(questionButton).top().right().pad(10f)
         table.row()
 
-        table.add(gameModeLabel).padTop(30f)
+        table.add(gameModeLabel).padTop(60f)
         table.row()
 
-        table.add(selectBox).pad(50f)
+        table.add(selectBox).left().pad(50f)
         table.row()
 
-        table.add(playLocalButton).pad(10f)
+        table.add(playLocalButton).left().pad(10f)
         table.row()
 
-        table.add(createGameButton).pad(10f)
+        table.add(createGameButton).left().pad(10f)
         table.row()
 
         table.add(joinGameLabel).padTop(30f)
         table.row()
 
-        table.add(joinGameButton).pad(50f)
+        table.add(joinGameButton).left().pad(50f)
     }
 
     override fun show() {
