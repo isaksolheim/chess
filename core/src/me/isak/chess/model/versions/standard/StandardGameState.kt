@@ -5,8 +5,8 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.GameState
 
 
-open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator, board: String, turn: Boolean)
-    : GameState(simpleMoveCalculator, board, turn) {
+open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
+    : GameState(simpleMoveCalculator, fen) {
 
     /**
      * Defines the way standard chess state changes when a move 
@@ -39,9 +39,5 @@ open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator, board: 
         if (illegalCastle(move)) return false
     
         return true
-    }
-
-    override fun toString(): String {
-        return if (turn) "w" else "b"
     }
 }

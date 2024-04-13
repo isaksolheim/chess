@@ -3,9 +3,10 @@ package me.isak.chess.model.versions.horde
 import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
+import me.isak.chess.model.base.GameHistory
 
-class HordeGameOverChecker(private val moveCalculator: MoveCalculator, private val gameState: GameState) 
-    : GameOverChecker(moveCalculator, gameState) {
+class HordeGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory) 
+    : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
     /**
      * White loses if they lose all pawns.

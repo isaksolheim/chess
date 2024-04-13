@@ -3,9 +3,10 @@ package me.isak.chess.model.versions.koth
 import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
+import me.isak.chess.model.base.GameHistory
 
-class KothGameOverChecker(private val moveCalculator: MoveCalculator, private val gameState: GameState)
-    : GameOverChecker(moveCalculator, gameState) {
+class KothGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory)
+    : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
     private val centerSquares = arrayOf(27, 28, 35, 36) // d5, e5, d4, e4
 

@@ -5,8 +5,8 @@ import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.versions.standard.StandardGameState
 import kotlin.random.Random
 
-class FisherGameState(moveCalculator: SimpleMoveCalculator, board: String, turn: Boolean) 
-    : StandardGameState(moveCalculator, board, turn) {
+class FisherGameState(moveCalculator: SimpleMoveCalculator, fen: String) 
+    : StandardGameState(moveCalculator, fen) {
 
     // Overwrite the fen string by creating a random starting position
     init {

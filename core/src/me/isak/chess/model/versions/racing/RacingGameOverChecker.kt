@@ -3,13 +3,14 @@ package me.isak.chess.model.versions.racing
 import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
+import me.isak.chess.model.base.GameHistory
 
 /**
  * Only way to win is by reaching the 8th rank with the king. Not possible 
  * to checkmate or stalemate.
  */
-class RacingGameOverChecker(private val moveCalculator: MoveCalculator, private val gameState: GameState)
-    : GameOverChecker(moveCalculator, gameState) {
+class RacingGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory)
+    : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
     override fun checkGameOver(): Boolean {
         val board = gameState.getBoard()

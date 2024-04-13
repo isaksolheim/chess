@@ -5,8 +5,8 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.GameState
 
 
-class RacingGameState(moveCalculator: SimpleMoveCalculator, board: String, turn: Boolean) 
-    : GameState(moveCalculator, board, turn) {
+class RacingGameState(moveCalculator: SimpleMoveCalculator, fen: String) 
+    : GameState(moveCalculator, fen) {
 
     /**
      * Not allowed to put your own king in check, or the opponent's.
@@ -25,7 +25,7 @@ class RacingGameState(moveCalculator: SimpleMoveCalculator, board: String, turn:
     }
 
     /**
-     * No relevant state exist, because castle is not in the game,
+     * No relevant state exist, because castle is not in the game and
      * en passant is not in the game.
      */
     override fun changeState(move: Move) {  }
