@@ -5,7 +5,8 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.GameState
 
 
-open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator): GameState(simpleMoveCalculator) {
+open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator, board: String, turn: Boolean)
+    : GameState(simpleMoveCalculator, board, turn) {
 
     /**
      * Defines the way standard chess state changes when a move 
@@ -15,20 +16,11 @@ open class StandardGameState(simpleMoveCalculator: SimpleMoveCalculator): GameSt
     override fun changeState(move: Move) {
         turn = !turn
 
-        val boardList = move.result.toCharArray().toMutableList()
+        val boardArray = move.result.toCharArray().toTypedArray()
     
-        // Promote pawn should it reach the final rank
-        val square = move.square
-        val id = move.id
-        if (id == "P" && square / 8 == 0) {
-            boardList[square] = 'Q'
-        }
+        promoteIfPossible(boardArray, move)
     
-        if (id == "p" && square / 8 == 7) {
-            boardList[square] = 'q'
-        }
-    
-        board = boardList.joinToString("")
+        board = boardArray.joinToString("")
     }
 
     /**
