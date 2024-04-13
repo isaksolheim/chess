@@ -17,10 +17,15 @@ class StandardGameOverChecker(moveCalculator: MoveCalculator, gameState: GameSta
 
     override fun checkGameOver(): Boolean { 
 
+        if (checkFiftyMoveRule()) {
+            println("draw by fifty move rule")
+            return true
+        }
+
         val gameOver = !hasLegalMove()
         if (!gameOver) return false
 
-        val isKingInCheck = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
+        val isKingInCheck = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
 
         if (isKingInCheck) {
             val loser = if (gameState.turn) "white" else "black"

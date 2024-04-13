@@ -32,4 +32,12 @@ class MoveCalculator(private val simpleMoveCalculator: SimpleMoveCalculator, pri
     fun isKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
         return simpleMoveCalculator.isKingInCheck(board, whiteKing)
     }
+
+  /**
+   * Uses the more efficient function to see if the king is in check,
+   * given that we are playing with standard pieces.
+   */
+    fun standardIsKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
+        return simpleMoveCalculator.standardIsKingInCheck(board, whiteKing)
+    }
 }
