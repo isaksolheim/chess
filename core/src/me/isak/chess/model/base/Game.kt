@@ -38,20 +38,16 @@ class Game(
      * A player may click on a square, and the state of the game will change as a result.
      * The board will either update, or the legal moves of the current player will update.
      */
-    fun click(square: Int): List<Move> {
-
+    fun click(square: Int): GameResult {
         val newBoard = moveExecutor.execute(legalMoves, square)
 
         if (newBoard != null) {
-            gameOverChecker.checkGameOver()
-            /* TODO: figure out how game over should be handled. */
-
             legalMoves = listOf()
-            return legalMoves
+            return gameOverChecker.checkGameOver()
         }
 
         legalMoves = moveCalculator.legalMoves(square)
-        return legalMoves
+        return GameResults.active
     }
 
     fun getBoard(): Array<Char> {
@@ -66,7 +62,7 @@ class Game(
         return legalMoves
     }
 
-    fun checkGameOver(): Boolean {
+    fun checkGameOver(): GameResult {
         return gameOverChecker.checkGameOver()
     }
 

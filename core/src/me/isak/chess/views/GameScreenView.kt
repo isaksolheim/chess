@@ -26,8 +26,9 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
         spriteBatch.end()
 
         // Check if the game is over and navigate to a new screen if it is
-        if (gameViewModel.checkGameOver()) {
-            app.setScreen(GameOverScreenView(app, game))
+        val (gameOver, message) = gameViewModel.checkGameOver()
+        if (gameOver) {
+            app.setScreen(GameOverScreenView(app, game, message))
         }
     }
 
