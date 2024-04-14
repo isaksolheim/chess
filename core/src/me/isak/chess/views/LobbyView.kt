@@ -25,7 +25,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
     init {
         Gdx.input.inputProcessor = stage
 
-        val gameVariants = arrayOf("standard", "koth", "horde", "fisher")
+        val gameVariants = arrayOf("standard", "koth", "horde", "fischer")
         val libGDXArray = Array<String>()
 
         gameVariants.forEach { variant ->

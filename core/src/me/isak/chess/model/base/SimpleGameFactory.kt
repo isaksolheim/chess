@@ -1,6 +1,6 @@
 package me.isak.chess.model.base
 
-import me.isak.chess.model.versions.fisher.FisherGameState
+import me.isak.chess.model.versions.fischer.fischerGameState
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
@@ -71,10 +71,10 @@ class SimpleGameFactory(version: String, _fen: String) {
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = HordeGameOverChecker(moveCalculator, gameState, gameHistory)
             }
-            "fisher" -> {
+            "fischer" -> {
                 pieceMap = PieceMap(standardPieceMap)
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = FisherGameState(simpleMoveCalculator, fen)
+                gameState = fischerGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
