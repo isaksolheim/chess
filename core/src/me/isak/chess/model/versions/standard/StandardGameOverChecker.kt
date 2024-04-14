@@ -28,7 +28,7 @@ class StandardGameOverChecker(moveCalculator: MoveCalculator, gameState: GameSta
         }
 
         val winner = if (gameState.turn) "Black" else "White"
-        val checkmate = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
+        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
 
         return when (checkmate) {
             true -> GameResult(true, "$winner won by checkmate")
