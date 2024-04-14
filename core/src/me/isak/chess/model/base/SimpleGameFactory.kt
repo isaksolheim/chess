@@ -46,7 +46,7 @@ class SimpleGameFactory(version: String, _fen: String) {
         when (version) {
             "standard" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
@@ -55,7 +55,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             }
             "koth" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
@@ -64,7 +64,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             }
             "horde" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
@@ -73,7 +73,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             }
             "fischer" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = fischerGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
@@ -82,7 +82,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             }
             "racing" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = RacingGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
@@ -91,7 +91,7 @@ class SimpleGameFactory(version: String, _fen: String) {
             }
             "threecheck" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)

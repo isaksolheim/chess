@@ -16,8 +16,8 @@ class RacingGameState(moveCalculator: SimpleMoveCalculator, fen: String)
         val board = move.result.toCharArray().toTypedArray()
 
         // filter away move if it puts any of the kings in chdck
-        if (simpleMoveCalculator.standardIsKingInCheck(board, true)) return false
-        if (simpleMoveCalculator.standardIsKingInCheck(board, false)) return false
+        if (simpleMoveCalculator.isKingInCheck(board, true)) return false
+        if (simpleMoveCalculator.isKingInCheck(board, false)) return false
 
         
         // no need to check for castle, it is not legal.

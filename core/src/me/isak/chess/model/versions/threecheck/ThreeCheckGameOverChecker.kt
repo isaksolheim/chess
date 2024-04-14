@@ -27,7 +27,7 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
         }
         
         val whitesTurn = gameState.turn
-        val isKingInCheck = moveCalculator.standardIsKingInCheck(gameState.getBoard(), whitesTurn)
+        val isKingInCheck = moveCalculator.isKingInCheck(gameState.getBoard(), whitesTurn)
 
         if (whitesTurn && isKingInCheck) whiteHasBeenChecked++ 
         if (!whitesTurn && isKingInCheck) blackHasBeenChecked++ 
@@ -45,7 +45,7 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
         }
 
         val winner = if (gameState.turn) "Black" else "White"
-        val checkmate = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
+        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
 
         return when (checkmate) {
             true -> GameResult(true, "$winner won by checkmate")
