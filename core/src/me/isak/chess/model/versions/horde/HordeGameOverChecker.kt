@@ -4,56 +4,54 @@ import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.GameResult
+import me.isak.chess.model.base.GameResults
 
 class HordeGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory) 
     : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
     /**
-     * White loses if they lose all pawns.
+     * White loses if they have less than two pieces
      * Black loses if they are checkmated like normal.
      * Stalemate works like normal.
      * The logic here can be improved. I will fix that later, 
      * when we decide how game over should be handled (by UI).
      */
-    override fun checkGameOver(): Boolean {
+    override fun checkGameOver(): GameResult {
 
-        val whitePlaying = gameState.turn
+        if (checkFiftyMoveRule()) {
+            return GameResults.fiftyMove
+        }
 
-        if (whitePlaying && checkGameOverForWhite()) {
-            return true
-        } 
-        return checkGameOverForBlack()
+        return when (gameState.turn) {
+            true -> checkGameOverForWhite()
+            false -> checkGameOverForBlack()
+        }
     }
 
-    private fun checkGameOverForWhite(): Boolean {
+    private fun checkGameOverForWhite(): GameResult {
         val board = gameState.getBoardAsString()
-
-        val whiteLost = !board.contains('P')
+    
+        val whiteLost = board.count { it.isUpperCase() } < 2
         if (whiteLost) {
-            println("White lost")
-            return true
+            return GameResult(true, "Black won by capturing enough pawns")
         }
-
-        val stalemate = !hasLegalMove()
-        if (stalemate) {
-            println("stalemate")
-            return true
+    
+        return when (hasLegalMove()) {
+            true -> GameResults.active
+            false -> GameResults.stalemate
         }
-        return false
     }
 
-    private fun checkGameOverForBlack(): Boolean {
+    private fun checkGameOverForBlack(): GameResult {
         val gameContinues = hasLegalMove()
-        if (gameContinues) return false
+        if (gameContinues) return GameResults.active
         
         val isKingInCheck = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
 
-        // TODO: handle this better
-        if (isKingInCheck) {
-            println("black lost")
-        } else {
-            println("stalemate")
+        return when (isKingInCheck) {
+            true -> GameResults.wCheckmate
+            false -> GameResults.stalemate
         }
-        return true
     }
 }

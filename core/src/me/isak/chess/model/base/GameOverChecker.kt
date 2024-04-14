@@ -1,5 +1,20 @@
 package me.isak.chess.model.base
 
+
+/**
+ * @property gameOver to indicate if the game is over
+ * @property message to explain how the game ended
+ */
+data class GameResult(val gameOver: Boolean, val message: String)
+
+object GameResults {
+    val active = GameResult(false, "")
+    val stalemate = GameResult(true, "Draw by stalemate")
+    val wCheckmate = GameResult(true, "White won by checkmate")
+    val bCheckmate = GameResult(true, "Black won by checkmate")
+    val fiftyMove = GameResult(true, "Draw by the fifty move rule")
+}
+
 /**
  * Each version of chess might have their own definition of when the game is over. 
  * Therefore, a new version might require its own implementation of the GameOverChecker class.
@@ -13,7 +28,7 @@ abstract class GameOverChecker(protected val moveCalculator: MoveCalculator, pro
 
     public enum class Winner{White,Black,Draw}
 
-    abstract fun checkGameOver(): Boolean
+    abstract fun checkGameOver(): GameResult
 
     /**
      * Check if the current player has any legal moves available

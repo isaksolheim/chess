@@ -4,6 +4,8 @@ import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.GameResult
+import me.isak.chess.model.base.GameResults
 
 /**
  * Checks if the game is over.
@@ -18,7 +20,11 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
     private var whiteHasBeenChecked = 0
     private var blackHasBeenChecked = 0
 
-    override fun checkGameOver(): Boolean {
+    override fun checkGameOver(): GameResult {
+
+        if (checkFiftyMoveRule()) {
+            return GameResults.fiftyMove
+        }
         
         val whitesTurn = gameState.turn
         val isKingInCheck = moveCalculator.standardIsKingInCheck(gameState.getBoard(), whitesTurn)
@@ -28,32 +34,23 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
 
         
         if (whiteHasBeenChecked > 2) {
-            println("black won by checking three times")
-            return true
+            return GameResult(true, "Black won by checking three times")
+        }
+        if (blackHasBeenChecked > 2) {
+            return GameResult(true, "White won by checking three times")
         }
 
-        if (blackHasBeenChecked > 2) {
-            println("white won by checking three times")
-            return true
+        if (hasLegalMove()) {
+            return GameResults.active
         }
-       
-        if (checkFiftyMoveRule()) {
-            println("draw by fifty move rule")
-            return true
+
+        val winner = if (gameState.turn) "Black" else "White"
+        val checkmate = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
+
+        return when (checkmate) {
+            true -> GameResult(true, "$winner won by checkmate")
+            false -> GameResults.stalemate
         }
-        
-        val gameOver = !hasLegalMove()
-        if (!gameOver) return false
-        
-        
-        if (isKingInCheck) {
-            val loser = if (gameState.turn) "white" else "black"
-            println("$loser lost.") 
-        } else {
-            println("stalemate")
-        }
-        
-        return true
      }      
 }
 

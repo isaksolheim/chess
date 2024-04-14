@@ -16,7 +16,7 @@ import me.isak.chess.Chess
 import me.isak.chess.model.base.Game
 import me.isak.chess.viewmodels.GameViewModel
 
-class GameOverScreenView(private val app: Chess, private val game: Game) : ScreenAdapter() {
+class GameOverScreenView(private val app: Chess, private val game: Game, private val message: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
     private val winnerWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
@@ -45,7 +45,7 @@ class GameOverScreenView(private val app: Chess, private val game: Game) : Scree
 
         // Information text
         val informationText = "is the winner"
-        val informationLabel = Label(informationText, skin, "button")
+        val informationLabel = Label(message, skin, "button")
 
         // Screen layout
         val table = Table()
