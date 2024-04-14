@@ -4,6 +4,8 @@ import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.GameResult
+import me.isak.chess.model.base.GameResults
 
 /**
  * Checks if the game is over.
@@ -15,24 +17,22 @@ import me.isak.chess.model.base.GameHistory
 class StandardGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory) 
     : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
-    override fun checkGameOver(): Boolean { 
+    override fun checkGameOver(): GameResult { 
 
         if (checkFiftyMoveRule()) {
-            println("draw by fifty move rule")
-            return true
+            return GameResults.fiftyMove
         }
 
-        val gameOver = !hasLegalMove()
-        if (!gameOver) return false
-
-        val isKingInCheck = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
-
-        if (isKingInCheck) {
-            val loser = if (gameState.turn) "white" else "black"
-            println("$loser lost.") 
-        } else {
-            println("stalemate")
+        if (hasLegalMove()) {
+            return GameResults.active
         }
-        return true
+
+        val winner = if (gameState.turn) "Black" else "White"
+        val checkmate = moveCalculator.standardIsKingInCheck(gameState.getBoard(), gameState.turn)
+
+        return when (checkmate) {
+            true -> GameResult(true, "$winner won by checkmate")
+            false -> GameResults.stalemate
+        }
      }
 }

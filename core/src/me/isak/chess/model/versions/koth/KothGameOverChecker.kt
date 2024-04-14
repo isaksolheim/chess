@@ -4,33 +4,37 @@ import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.GameResult
+import me.isak.chess.model.base.GameResults
 
 class KothGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory)
     : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
     private val centerSquares = arrayOf(27, 28, 35, 36) // d5, e5, d4, e4
 
-    override fun checkGameOver(): Boolean {
+    override fun checkGameOver(): GameResult {
+
+        if (checkFiftyMoveRule()) {
+            return GameResults.fiftyMove
+        }
+
+        // winner, if the game has one
+        val winner = if (gameState.turn) "Black" else "White"
 
         // Game can end by getting the king to the center
         if (isKingInCenter()) {
-            val winner = if (gameState.turn) "black" else "white"
-            println("Well done to $winner, you got the king to the center")
-            return true
+            return GameResult(true, "$winner won by bringing the king to the center")
         }
-        
-        if (!hasLegalMove()) {
-            val stalemate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
-            
-            if (stalemate) {
-                println("stalemate")
-            } else {
-                val winner = if (gameState.turn) "white" else "black"
-                println("Well done to $winner, you won by checkmate")
-            }
-            return true
+
+        if (hasLegalMove()) {
+            return GameResults.active
         }
-        return false
+
+        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
+        return when (checkmate) {
+            true -> GameResult(true, "$winner won by checkmate")
+            false -> GameResults.stalemate
+        }
      }
 
      /**
