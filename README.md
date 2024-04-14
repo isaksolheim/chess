@@ -1,4 +1,6 @@
-# Chess++ - Group Project in TDT4240 - Software Architecture
+# Group Project in TDT4240 - Software Architecture
+
+This is the android application Chess++. It is an online multiplayer game where you can play one of many chess variants.
 
 ## How to run the project
 
@@ -15,7 +17,7 @@ https://github.com/isaksolheim/chess.git
 
 ### Start the app
 
-In android studio, make sure to have an [emulated device](https://developer.android.com/studio/run/emulator) running in android studio.
+In android studio, make sure to have an [emulated device](https://developer.android.com/studio/run/emulator) running.
 
 Navigate to the root of the project in a terminal. Run the project with:
 
