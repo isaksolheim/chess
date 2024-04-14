@@ -1,11 +1,11 @@
-package me.isak.chess.model.versions.fisher
+package me.isak.chess.model.versions.fischer
 
 import me.isak.chess.model.base.SimpleMoveCalculator
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.versions.standard.StandardGameState
 import kotlin.random.Random
 
-class FisherGameState(moveCalculator: SimpleMoveCalculator, fen: String) 
+class fischerGameState(moveCalculator: SimpleMoveCalculator, fen: String) 
     : StandardGameState(moveCalculator, fen) {
 
     // Overwrite the fen string by creating a random starting position
@@ -15,7 +15,7 @@ class FisherGameState(moveCalculator: SimpleMoveCalculator, fen: String)
 
 
     /**
-     * Prepare the fisher random (chess960) board. Rules:
+     * Prepare the fischer random (chess960) board. Rules:
      * 1. Pawns are placed normally.
      * 2. Remaining black pieces are placed on the top rank.
      * 3. King is placed between the rooks.
