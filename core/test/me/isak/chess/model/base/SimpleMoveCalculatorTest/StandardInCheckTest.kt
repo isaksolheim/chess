@@ -10,15 +10,15 @@ import me.isak.chess.model.base.Game
 
 class StandardInCheckTest {
 
-    private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap))
+    private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap), "standard")
     private var board: Array<Char> = arrayOf()
 
     @Test 
     fun notCheck0() {
         board = Game("standard").getBoard()
 
-        val isWhiteInCheck = mvc.standardIsKingInCheck(board, true)
-        val isBlackInCheck = mvc.standardIsKingInCheck(board, false)
+        val isWhiteInCheck = mvc.isKingInCheck(board, true)
+        val isBlackInCheck = mvc.isKingInCheck(board, false)
 
         assertEquals(false, isWhiteInCheck)
         assertEquals(false, isBlackInCheck)
@@ -28,8 +28,8 @@ class StandardInCheckTest {
     fun notCheck1() {
         board = Game("standard", fen = "2rk4/4q3/4R1PP/5pp1/4P3/1K1pn1B1/7n/5Br1 w - - 0 1").getBoard()
 
-        val isWhiteInCheck = mvc.standardIsKingInCheck(board, true)
-        val isBlackInCheck = mvc.standardIsKingInCheck(board, false)
+        val isWhiteInCheck = mvc.isKingInCheck(board, true)
+        val isBlackInCheck = mvc.isKingInCheck(board, false)
 
         assertEquals(false, isWhiteInCheck)
         assertEquals(false, isBlackInCheck)
@@ -39,8 +39,8 @@ class StandardInCheckTest {
     fun notCheck2() {
         board = Game("standard", fen = "8/1Nk1pn2/Pp6/P1b5/p1K1Pn2/4q3/2P1P3/7r w - - 0 1").getBoard()
 
-        val isWhiteInCheck = mvc.standardIsKingInCheck(board, true)
-        val isBlackInCheck = mvc.standardIsKingInCheck(board, false)
+        val isWhiteInCheck = mvc.isKingInCheck(board, true)
+        val isBlackInCheck = mvc.isKingInCheck(board, false)
 
         assertEquals(false, isWhiteInCheck)
         assertEquals(false, isBlackInCheck)
@@ -50,8 +50,8 @@ class StandardInCheckTest {
     fun notCheck3() {
         board = Game("standard", fen = "8/2B5/1P5p/pB3P2/Q6P/5N1p/P4p2/4Rb2 w - - 0 1").getBoard()
 
-        val isWhiteInCheck = mvc.standardIsKingInCheck(board, true)
-        val isBlackInCheck = mvc.standardIsKingInCheck(board, false)
+        val isWhiteInCheck = mvc.isKingInCheck(board, true)
+        val isBlackInCheck = mvc.isKingInCheck(board, false)
 
         assertEquals(false, isWhiteInCheck, "No white king on the board -> not in check")
         assertEquals(false, isBlackInCheck, "No black king on the board -> not in check")
@@ -61,8 +61,8 @@ class StandardInCheckTest {
     fun inCheck0() {
         board = Game("standard", fen = "8/k6R/8/8/8/8/K6r/8 w - - 0 1").getBoard()
 
-        val isWhiteInCheck = mvc.standardIsKingInCheck(board, true)
-        val isBlackInCheck = mvc.standardIsKingInCheck(board, false)
+        val isWhiteInCheck = mvc.isKingInCheck(board, true)
+        val isBlackInCheck = mvc.isKingInCheck(board, false)
 
         assertEquals(true, isWhiteInCheck, "White king is in check")
         assertEquals(true, isBlackInCheck, "Black king is in check")
