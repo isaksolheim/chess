@@ -4,6 +4,8 @@ import me.isak.chess.model.base.MoveCalculator
 import me.isak.chess.model.base.GameState
 import me.isak.chess.model.base.GameOverChecker
 import me.isak.chess.model.base.GameHistory
+import me.isak.chess.model.base.GameResult
+import me.isak.chess.model.base.GameResults
 
 /**
  * Only way to win is by reaching the 8th rank with the king. Not possible 
@@ -12,8 +14,15 @@ import me.isak.chess.model.base.GameHistory
 class RacingGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory)
     : GameOverChecker(moveCalculator, gameState, gameHistory) {
 
-    override fun checkGameOver(): Boolean {
+    override fun checkGameOver(): GameResult {
         val board = gameState.getBoard()
+
+        if (checkFiftyMoveRule()) {
+            return GameResults.fiftyMove
+        }
+
+        // winner, if there is one
+        val winner = if (gameState.turn) "Black" else "White"
 
         // check if the king that just moved reached the 8th rank (index [0, 7])
         val kingToFind = if (gameState.turn) 'k' else 'K'
@@ -21,12 +30,9 @@ class RacingGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState
         val kingIndex = board.indices
          .find{ board[it] == kingToFind }
 
-        if (kingIndex in 0..7) {
-            val winner = if (gameState.turn) "black" else "white"
-            println("Winner is $winner")
-            return true
-        }
-        return false
+         return when (kingIndex in 0..7) {
+            true -> GameResult(true, "$winner won by bringing the king to the finish line")
+            false -> GameResults.active
+         }
      }
-
 }

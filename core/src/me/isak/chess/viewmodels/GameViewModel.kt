@@ -4,6 +4,7 @@ package me.isak.chess.viewmodels
 import me.isak.chess.Chess
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.base.Move
+import me.isak.chess.model.base.GameResult
 import me.isak.chess.sound.SoundController
 
 
@@ -34,7 +35,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.getLegalMoves()
     }
 
-    fun checkGameOver(): Boolean {
+    fun checkGameOver(): GameResult {
         return game.checkGameOver()
     }
 
