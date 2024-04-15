@@ -14,7 +14,6 @@ import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.FirebaseGameModel
-import me.isak.chess.views.AboutScreenView
 import me.isak.chess.views.FaqScreenView
 import me.isak.chess.views.GameScreen
 import me.isak.chess.views.MainMenuView
