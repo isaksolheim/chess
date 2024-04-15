@@ -19,7 +19,7 @@ import me.isak.chess.model.versions.threecheck.ThreeCheckGameOverChecker
  * It is still reasonable however, since it abstracts away the creation of objects, 
  * and makes sure the correct family of objects is accessible. 
  */
-class SimpleGameFactory(version: String, _fen: String) {
+class SimpleGameFactory(version: String, _fen: String?) {
     private var pieceMap: PieceMap
     private var simpleMoveCalculator: SimpleMoveCalculator
     private var gameState: GameState
@@ -35,12 +35,11 @@ class SimpleGameFactory(version: String, _fen: String) {
      */
     init {
 
-        // Some games vary only in how the game is setup. 
-        // This function will make sure they get the right starting information
-        val fen = when (version) {
+        // Use passed fen if it exist. If not, use fen specified for each version.
+        val fen = _fen ?: when (version) {
             "racing" -> "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1"
             "horde" -> "rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1"
-            else -> _fen
+            else -> "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         }
 
         when (version) {
