@@ -102,22 +102,24 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         table.add(questionButton).top().right().pad(10f)
         table.row()
 
-        table.add(gameModeLabel).padTop(60f)
+        table.add(gameModeLabel).padTop(60f).colspan(2).center()
         table.row()
 
-        table.add(selectBox).left().pad(50f)
+        table.add(selectBox).pad(50f).colspan(2).center()
         table.row()
 
-        table.add(playLocalButton).left().pad(10f)
+        table.add(playLocalButton).pad(10f).colspan(2).center()
         table.row()
 
-        table.add(createGameButton).left().pad(10f)
+        table.add(createGameButton).pad(10f).colspan(2).center()
         table.row()
 
-        table.add(joinGameLabel).padTop(30f)
+        table.add(joinGameLabel).padTop(30f).colspan(2).center()
         table.row()
 
-        table.add(joinGameButton).left().pad(50f)
+        table.add(joinGameButton).pad(50f).colspan(2).center()
+
+        stage.addActor(table)
     }
 
     override fun show() {
