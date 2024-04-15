@@ -31,12 +31,27 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.id
     }
 
+    fun getGameVersion(): String {
+        if (game.firebaseGameModel != null) {
+            return game.getGameVersion()
+        } // Needs review: previously defaulted to game.id (why?)
+        return game.getGameVersion()
+    }
+
     fun getLegalMoves(): List<Move> {
         return game.getLegalMoves()
     }
 
     fun checkGameOver(): GameResult {
         return game.checkGameOver()
+    }
+
+    fun getCurrentPlayer(): String {
+        return game.getCurrentTurn()
+    }
+
+    fun getPlayerColor(): String {
+        return game.player
     }
 
     /**

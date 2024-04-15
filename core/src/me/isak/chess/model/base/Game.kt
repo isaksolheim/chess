@@ -61,6 +61,9 @@ class Game(
     fun getLegalMoves(): List<Move> {
         return legalMoves
     }
+    fun getGameVersion(): String {
+        return version
+    }
 
     fun checkGameOver(): GameResult {
         return gameOverChecker.checkGameOver()
