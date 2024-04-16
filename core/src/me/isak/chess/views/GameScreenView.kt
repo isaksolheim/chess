@@ -47,14 +47,19 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
     override fun render(delta: Float) {
         ScreenUtils.clear(0.95f, 0.95f, 0.95f, 1f)
 
-        // Render the board view separately
+        // Render the board view
         spriteBatch.begin()
         boardView.render()
         spriteBatch.end()
 
-        // Update and draw the stage for UI
         stage.act(delta)
         stage.draw()
+
+        // Check if the game is over and navigate to a new screen if it is
+        val (gameOver, message) = gameViewModel.checkGameOver()
+        if (gameOver) {
+            app.setScreen(GameOverScreenView(app, game, message))
+        }
     }
 
     override fun hide() {
