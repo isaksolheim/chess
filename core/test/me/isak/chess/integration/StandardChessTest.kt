@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions.assertEquals;
 import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.Game
+import org.junit.jupiter.api.Assertions.assertEquals;
 
 class StandardChessTest {
     

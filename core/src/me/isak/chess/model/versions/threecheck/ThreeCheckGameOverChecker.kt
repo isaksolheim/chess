@@ -40,17 +40,7 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
             return GameResult(true, "White won by checking three times")
         }
 
-        if (hasLegalMove()) {
-            return GameResults.active
-        }
-
-        val winner = if (gameState.turn) "Black" else "White"
-        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
-
-        return when (checkmate) {
-            true -> GameResult(true, "$winner won by checkmate")
-            false -> GameResults.stalemate
-        }
+        return standardCheck()
      }      
 }
 

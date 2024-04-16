@@ -11,7 +11,6 @@ object GameResults {
     val active = GameResult(false, "")
     val stalemate = GameResult(true, "Draw by stalemate")
     val wCheckmate = GameResult(true, "White won by checkmate")
-    val bCheckmate = GameResult(true, "Black won by checkmate")
     val fiftyMove = GameResult(true, "Draw by the fifty move rule")
 }
 
@@ -25,8 +24,6 @@ object GameResults {
  * @gameState is needed to access the board. 
  */
 abstract class GameOverChecker(protected val moveCalculator: MoveCalculator, protected val gameState: GameState, protected val gameHistory: GameHistory) {
-
-    public enum class Winner{White,Black,Draw}
 
     abstract fun checkGameOver(): GameResult
 
@@ -46,6 +43,25 @@ abstract class GameOverChecker(protected val moveCalculator: MoveCalculator, pro
      */
     fun checkFiftyMoveRule(): Boolean {
         return gameHistory.halfMove > 49
+    }
+
+    /**
+     * The default checkmate functionality, used in many versions of chess.
+     */
+    fun standardCheck(): GameResult {
+
+        if (hasLegalMove()) {
+            return GameResults.active
+        }
+
+        val winner = if (gameState.turn) "Black" else "White"
+        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
+
+        if (checkmate) {
+            return GameResult(true, "$winner won by checkmate")
+        } else {
+            return GameResults.stalemate
+        }
     }
 }
 
