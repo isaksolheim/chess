@@ -154,7 +154,6 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap, private val version: 
   }
 
 
-
   /**
    * Calculate the absolute offset as described by a direction string.
    */

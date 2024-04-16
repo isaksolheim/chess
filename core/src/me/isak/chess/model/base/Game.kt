@@ -20,7 +20,6 @@ class Game(
     var player: String = "white",
     var fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 ) {
-
     private var gameFactory = SimpleGameFactory(version, fen)
     
     private var moveCalculator = gameFactory.moveCalculator()
@@ -158,5 +157,3 @@ class Game(
         gameState.setBoardAsString(model.board)
     }
 }
-
-

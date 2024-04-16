@@ -19,7 +19,6 @@ import me.isak.chess.model.versions.threecheck.ThreeCheckGameOverChecker
  * It is still reasonable however, since it abstracts away the creation of objects, 
  * and makes sure the correct family of objects is accessible. 
  */
-
 class SimpleGameFactory(version: String, _fen: String) {
     private var pieceMap: PieceMap
     private var simpleMoveCalculator: SimpleMoveCalculator
@@ -44,34 +43,27 @@ class SimpleGameFactory(version: String, _fen: String) {
             else -> _fen
         }
 
-
         when (version) {
             "standard" -> {
                 pieceMap = PieceMap(standardPieceMap)
-
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
-
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = StandardGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             "koth" -> {
                 pieceMap = PieceMap(standardPieceMap)
-
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
-
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = KothGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             "horde" -> {
                 pieceMap = PieceMap(standardPieceMap)
-
-
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
@@ -93,29 +85,21 @@ class SimpleGameFactory(version: String, _fen: String) {
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = RacingGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
-
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = RacingGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             "threecheck" -> {
                 pieceMap = PieceMap(standardPieceMap)
-
-
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
                 gameState = StandardGameState(simpleMoveCalculator, fen)
                 gameHistory = StandardGameHistory(fen)
-
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }
-
-        // Place game info into the objects.
-        gameState.board = board
-        gameState.turn = turn
     }
 
     fun moveCalculator(): MoveCalculator {
@@ -136,14 +120,5 @@ class SimpleGameFactory(version: String, _fen: String) {
 
     fun gameHistory(): GameHistory {
         return gameHistory
-    }
-
-
-    private fun processEnPassant(enPassant: String): Int {
-        if (!enPassant.matches(Regex("[a-h][1-8]"))) return -1
-        val x = enPassant[0].lowercase().toInt(16) % 10
-        val y = 8 - enPassant[1].digitToInt()
-
-        return y * 8 + x
     }
 }

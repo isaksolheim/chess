@@ -11,9 +11,8 @@ val rookA8 = Regex("^r")
 /**
  * Keeps track of relevant history information for standard chess.
  * This is enPassant possibilities and castling rights for each side.
-
+ */
 class StandardGameHistory(fen: String): GameHistory(fen) {
-
 
     /**
      * Use the move id to determine if it requires a history check.
@@ -63,6 +62,4 @@ class StandardGameHistory(fen: String): GameHistory(fen) {
             castle = castle.replace("K", "")
         }
     }
-
-
 }
