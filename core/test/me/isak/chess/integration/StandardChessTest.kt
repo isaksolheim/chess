@@ -3,11 +3,13 @@ package me.isak.chess.integration
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.Assertions.assertEquals;
-import me.isak.chess.model.base.Game
 import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.Game
 
 class StandardChessTest {
+    
+    private val integrationTestRunner = IntegrationTestRunner()
+    private val empty: List<Int> = listOf()
 
     @Test
     fun initialSetupTest() {
@@ -56,8 +58,6 @@ class StandardChessTest {
         assertEquals(actualLegalMoves, expectedLegalMoves)        
     }
 
-
-
     @Test
     fun pawnMovementTest() {
         val game = Game("standard")
@@ -103,14 +103,6 @@ class StandardChessTest {
         assertEquals(expectedBoard, actualBoard, "Board should be unchanged after selecting knight.")
         assertEquals(expectedLegalMoves, actualLegalMoves, "Legal moves for knight are incorrect.")
     }
-
-
-
-
-class StandardChessTest {
-
-    private val integrationTestRunner = IntegrationTestRunner()
-    private val empty: List<Int> = listOf()
 
     @Test
     fun ScholarsMate() {
