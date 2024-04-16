@@ -23,10 +23,10 @@ class HordeGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState,
             return GameResults.fiftyMove
         }
 
-        return when (gameState.turn) {
-            true -> checkGameOverForWhite()
-            false -> checkGameOverForBlack()
-        }
+        if (gameState.turn) 
+            return checkGameOverForWhite()
+         
+        return checkGameOverForBlack()
     }
 
     private fun checkGameOverForWhite(): GameResult {
@@ -37,10 +37,9 @@ class HordeGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState,
             return GameResult(true, "Black won by capturing enough pawns")
         }
     
-        return when (hasLegalMove()) {
-            true -> GameResults.active
-            false -> GameResults.stalemate
-        }
+        if (hasLegalMove())
+            return GameResults.active
+        return GameResults.stalemate
     }
 
     private fun checkGameOverForBlack(): GameResult {
@@ -49,9 +48,9 @@ class HordeGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState,
         
         val isKingInCheck = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
 
-        return when (isKingInCheck) {
-            true -> GameResults.wCheckmate
-            false -> GameResults.stalemate
-        }
+        if (isKingInCheck)
+            return GameResults.wCheckmate
+
+        return GameResults.stalemate
     }
 }
