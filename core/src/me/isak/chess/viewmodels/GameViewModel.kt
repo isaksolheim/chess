@@ -69,7 +69,11 @@ class GameViewModel(private val game: Game, private val app: Chess) {
     fun onUserMove(square: Int) {
         if (!game.isOnline || (game.getCurrentTurn() == game.player)) {
             selectedSquare?.let {
-                game.click(square)
+                val clickResult = game.click(square)
+
+                if (clickResult.isKingInCheck) {
+                    // ..
+                }
                 onBoardChanged?.invoke(game.getBoard())
                 selectedSquare = null
                 soundController.playGameSoundEffect(SoundController.GameSounds.Click)
@@ -84,7 +88,11 @@ class GameViewModel(private val game: Game, private val app: Chess) {
             } ?: run {
                 if (!game.isOnline || game.getPieceColorAtSquare(square) == game.player) {
                     selectedSquare = square
-                    game.click(square)
+                    val clickResult = game.click(square)
+
+                    if (clickResult.isKingInCheck) {
+                        // ..
+                    }
                     onLegalMovesChanged?.invoke(game.getLegalMoves())
                 }
             }

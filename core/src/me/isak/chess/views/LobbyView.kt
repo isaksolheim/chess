@@ -92,7 +92,15 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                 // Setting up an event listener to listen for updates to the game
                 app.firebase.getData("games/${game.id}", object : FirebaseCallback {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
-                        game.updateFromModel(dataModel)
+                        val result = game.updateFromModel(dataModel)
+
+                        if (result.isKingInCheck) {
+                            // play sound
+                        }
+
+                        if (result.pieceCapture) {
+                            // play sound
+                        }
                     }
                 })
 
