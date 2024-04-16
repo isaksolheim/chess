@@ -157,5 +157,3 @@ class Game(
         gameState.setBoardAsString(model.board)
     }
 }
-
-
