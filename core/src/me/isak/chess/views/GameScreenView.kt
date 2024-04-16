@@ -13,12 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.utils.viewport.ScreenViewport
+import me.isak.chess.viewmodels.TextureProvider
 
 class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter() {
     private val spriteBatch by lazy { Renderer.spriteBatch }
     private val stage = Stage(ScreenViewport())
     private val gameViewModel = GameViewModel(game, app)
-    private val boardView = BoardView(gameViewModel)
+    private val textureProvider = TextureProvider()
+    private val boardView = BoardView(gameViewModel, textureProvider)
 
     init {
         setupUI()
@@ -26,16 +28,33 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
 
     private fun setupUI() {
         Gdx.input.inputProcessor = stage
-        val backButton = TextButton("Back", app.skin)
+        val backButton = TextButton("Exit", app.skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 app.setScreen(MainMenuView(app))
             }
         })
 
+        val nextButton = TextButton("Next pieces", app.skin)
+        nextButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent, actor: Actor) {
+                textureProvider.nextPieceTheme()
+            }
+        })
+
+        val prevButton = TextButton("Prev pieces", app.skin)
+        prevButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent, actor: Actor) {
+                textureProvider.prevPieceTheme()
+            }
+        })
+
         val table = Table()
         table.setFillParent(true)
-        table.add(backButton).expand().top().left().pad(100f)
+        table.add(backButton).expand().top().left().padTop(100f)
+        table.row() // Create a new row for theme buttons
+        table.add(prevButton).expandX().top().padBottom(300f).padLeft(20f)  // Higher placement with specific top padding
+        table.add(nextButton).expandX().top().padBottom(300f).padRight(70f)
 
         stage.addActor(table)
     }
@@ -68,6 +87,7 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
 
     override fun dispose() {
         spriteBatch.dispose()
+        textureProvider.dispose()
         stage.dispose()
     }
 }

@@ -10,8 +10,10 @@ import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.model.base.Move
 import me.isak.chess.viewmodels.GameViewModel
+import me.isak.chess.viewmodels.TextureProvider
 
-class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
+class BoardView( private val viewModel: GameViewModel, private val textureProvider: TextureProvider) : InputAdapter() {
+
     private val lightPixelDrawer by lazy {
         if (viewModel.getPlayerColor() == "white") {
             Renderer.lightPixelDrawer
@@ -35,22 +37,22 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
     private val font = BitmapFont().apply {
         color = Color.BLACK
     }
-    private val pieceImages by lazy {
-        hashMapOf<Char, Texture>().apply {
-            put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn
-            put('p', Texture(Gdx.files.internal("pieces/bP.png"))) // Black pawn
-            put('R', Texture(Gdx.files.internal("pieces/wR.png"))) // White rook
-            put('r', Texture(Gdx.files.internal("pieces/bR.png"))) // Black rook
-            put('N', Texture(Gdx.files.internal("pieces/wN.png"))) // White knight
-            put('n', Texture(Gdx.files.internal("pieces/bN.png"))) // Black knight
-            put('B', Texture(Gdx.files.internal("pieces/wB.png"))) // White bishop
-            put('b', Texture(Gdx.files.internal("pieces/bB.png"))) // Black bishop
-            put('Q', Texture(Gdx.files.internal("pieces/wQ.png"))) // White queen
-            put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
-            put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
-            put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
-        }
-    }
+//    private val pieceImages by lazy {
+//        hashMapOf<Char, Texture>().apply {
+//            put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn
+//            put('p', Texture(Gdx.files.internal("pieces/bP.png"))) // Black pawn
+//            put('R', Texture(Gdx.files.internal("pieces/wR.png"))) // White rook
+//            put('r', Texture(Gdx.files.internal("pieces/bR.png"))) // Black rook
+//            put('N', Texture(Gdx.files.internal("pieces/wN.png"))) // White knight
+//            put('n', Texture(Gdx.files.internal("pieces/bN.png"))) // Black knight
+//            put('B', Texture(Gdx.files.internal("pieces/wB.png"))) // White bishop
+//            put('b', Texture(Gdx.files.internal("pieces/bB.png"))) // Black bishop
+//            put('Q', Texture(Gdx.files.internal("pieces/wQ.png"))) // White queen
+//            put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
+//            put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
+//            put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
+//        }
+//    }
 
     init {
         viewModel.onLegalMovesChanged = { moves ->
@@ -81,6 +83,7 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
     private fun renderPieces(board: Array<Char>) {
         val squareSize = Gdx.graphics.width / 8f
         val maxYPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
+        val pieceImages = textureProvider.getPieceTextures()
 
         for ((index, pieceChar) in board.withIndex()) {
             var colNum = index % 8
