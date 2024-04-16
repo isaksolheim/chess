@@ -12,8 +12,20 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.viewmodels.GameViewModel
 
 class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
-    private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
-    private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
+    private val lightPixelDrawer by lazy {
+        if (viewModel.getPlayerColor() == "white") {
+            Renderer.lightPixelDrawer
+        } else {
+            Renderer.darkPixelDrawer
+        }
+    }
+    private val darkPixelDrawer by lazy {
+        if (viewModel.getPlayerColor() == "white") {
+            Renderer.darkPixelDrawer
+        } else {
+            Renderer.lightPixelDrawer
+        }
+    }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
@@ -54,13 +66,13 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         val squareSize = Gdx.graphics.width / 8f
         val yOffset = Gdx.graphics.height - (Gdx.graphics.height / 5f) - (8 * squareSize)
         val boardX = (screenX / squareSize).toInt()
+
         val boardY = ((Gdx.graphics.height - screenY - yOffset) / squareSize).toInt()
 
-        val adjustedBoardX = if (viewModel.getPlayerColor() == "white") 7 - boardX else boardX
         val adjustedBoardY = if (viewModel.getPlayerColor() == "white") 7 - boardY else boardY
 
-        if (adjustedBoardX in 0..7 && adjustedBoardY in 0..7) {
-            val square = adjustedBoardY * 8 + adjustedBoardX
+        if (boardX in 0..7 && adjustedBoardY in 0..7) {
+            val square = adjustedBoardY * 8 + boardX
             viewModel.onUserMove(square)
         }
         return true
@@ -71,8 +83,11 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         val maxYPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
 
         for ((index, pieceChar) in board.withIndex()) {
-            val colNum = index % 8
+            var colNum = index % 8
             val rowNum = index / 8
+            if (viewModel.getPlayerColor() == "white") {
+                colNum = (7 - colNum) % 8
+            }
 
             // Check if player is white and rotate the board
             val xPos = if (viewModel.getPlayerColor() == "white") {
@@ -100,7 +115,10 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
 
         for (move: Move in moveSet) {
             val index = move.square
-            val colNum = index % 8
+            var colNum = index % 8
+            if (viewModel.getPlayerColor() == "white") {
+                colNum = (7 - colNum) % 8
+            }
             val rowNum = index / 8
 
             val xPos = if (viewModel.getPlayerColor() == "white") {
@@ -158,7 +176,6 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
 
         var colNum = 0
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f)
-        val boardIsFlipped = (playerColor == "white")
 
         for ((i, _) in viewModel.getBoard().withIndex()) {
             if (i % 8 == 0) {
@@ -169,31 +186,15 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
             val xPos = (squareSize * colNum)
             if ((i / 8) % 2 == 0) {
                 if (colNum % 2 == 0) {
-                    if (!boardIsFlipped) {
-                        lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    } else {
-                        darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    }
+                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 } else {
-                    if (!boardIsFlipped) {
-                        darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    } else {
-                        lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    }
+                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             } else {
                 if (colNum % 2 == 0) {
-                    if (!boardIsFlipped) {
-                        darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    } else {
-                        lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    }
+                    darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 } else {
-                    if (!boardIsFlipped) {
-                        lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    } else {
-                        darkPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
-                    }
+                    lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
                 }
             }
 
