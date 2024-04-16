@@ -28,11 +28,9 @@ class RacingGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState
         val kingToFind = if (gameState.turn) 'k' else 'K'
 
         val kingIndex = board.indices
-         .find{ board[it] == kingToFind }
+         .find{ board[it] == kingToFind }!!
 
-         return when (kingIndex in 0..7) {
-            true -> GameResult(true, "$winner won by bringing the king to the finish line")
-            false -> GameResults.active
-         }
+         if (kingIndex < 8) return GameResult(true, "$winner won by bringing the king to the finish line")
+         return standardCheck()
      }
 }
