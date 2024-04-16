@@ -10,12 +10,15 @@ import me.isak.chess.model.base.Game
 
 class StandardInCheckTest {
 
+
     private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap), "standard")
+
     private var board: Array<Char> = arrayOf()
 
     @Test 
     fun notCheck0() {
         board = Game("standard").getBoard()
+
 
         val isWhiteInCheck = mvc.isKingInCheck(board, true)
         val isBlackInCheck = mvc.isKingInCheck(board, false)
@@ -28,8 +31,10 @@ class StandardInCheckTest {
     fun notCheck1() {
         board = Game("standard", fen = "2rk4/4q3/4R1PP/5pp1/4P3/1K1pn1B1/7n/5Br1 w - - 0 1").getBoard()
 
+
         val isWhiteInCheck = mvc.isKingInCheck(board, true)
         val isBlackInCheck = mvc.isKingInCheck(board, false)
+
 
         assertEquals(false, isWhiteInCheck)
         assertEquals(false, isBlackInCheck)
@@ -38,6 +43,7 @@ class StandardInCheckTest {
     @Test 
     fun notCheck2() {
         board = Game("standard", fen = "8/1Nk1pn2/Pp6/P1b5/p1K1Pn2/4q3/2P1P3/7r w - - 0 1").getBoard()
+
 
         val isWhiteInCheck = mvc.isKingInCheck(board, true)
         val isBlackInCheck = mvc.isKingInCheck(board, false)
@@ -61,8 +67,10 @@ class StandardInCheckTest {
     fun inCheck0() {
         board = Game("standard", fen = "8/k6R/8/8/8/8/K6r/8 w - - 0 1").getBoard()
 
+
         val isWhiteInCheck = mvc.isKingInCheck(board, true)
         val isBlackInCheck = mvc.isKingInCheck(board, false)
+
 
         assertEquals(true, isWhiteInCheck, "White king is in check")
         assertEquals(true, isBlackInCheck, "Black king is in check")

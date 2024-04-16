@@ -42,11 +42,19 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
                 app.setScreen(GameScreen(app, game))
             }
         })
+        val backButton = TextButton("Back", skin)
+        backButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                app.setScreen(LobbyView(app))
+            }
+        })
 
         // Layout
         table.add(gameIdInput).pad(10f)
         table.row()
         table.add(joinGameButton).pad(10f)
+        table.row()
+        table.add(backButton)
     }
 
     override fun show() {

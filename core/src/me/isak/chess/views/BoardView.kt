@@ -5,16 +5,32 @@ import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.model.base.Move
 import me.isak.chess.viewmodels.GameViewModel
 
-class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
-    private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
-    private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
+class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
+    private val lightPixelDrawer by lazy {
+        if (viewModel.getPlayerColor() == "white") {
+            Renderer.lightPixelDrawer
+        } else {
+            Renderer.darkPixelDrawer
+        }
+    }
+    private val darkPixelDrawer by lazy {
+        if (viewModel.getPlayerColor() == "white") {
+            Renderer.darkPixelDrawer
+        } else {
+            Renderer.lightPixelDrawer
+        }
+    }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
+
+    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
+    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
@@ -50,11 +66,13 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
         val squareSize = Gdx.graphics.width / 8f
         val yOffset = Gdx.graphics.height - (Gdx.graphics.height / 5f) - (8 * squareSize)
         val boardX = (screenX / squareSize).toInt()
+
         val boardY = ((Gdx.graphics.height - screenY - yOffset) / squareSize).toInt()
 
-        // Check if boardX and boardY are within valid range before calculating the square
-        if (boardX in 0..7 && boardY in 0..7) {
-            val square = (7 - boardY) * 8 + boardX
+        val adjustedBoardY = if (viewModel.getPlayerColor() == "white") 7 - boardY else boardY
+
+        if (boardX in 0..7 && adjustedBoardY in 0..7) {
+            val square = adjustedBoardY * 8 + boardX
             viewModel.onUserMove(square)
         }
         return true
@@ -62,46 +80,99 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
 
     private fun renderPieces(board: Array<Char>) {
         val squareSize = Gdx.graphics.width / 8f
-        var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
+        val maxYPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
 
         for ((index, pieceChar) in board.withIndex()) {
-            val colNum = index % 8
+            var colNum = index % 8
             val rowNum = index / 8
+            if (viewModel.getPlayerColor() == "white") {
+                colNum = (7 - colNum) % 8
+            }
 
-            val xPos = colNum * squareSize
-            val adjustedYPos = yPos - rowNum * squareSize
+            // Check if player is white and rotate the board
+            val xPos = if (viewModel.getPlayerColor() == "white") {
+                (7 - colNum) * squareSize
+            } else {
+                colNum * squareSize
+            }
+            val yPos = if (viewModel.getPlayerColor() == "white") {
+                maxYPos - rowNum * squareSize
+            } else {
+                maxYPos - (7 - rowNum) * squareSize
+            }
 
             val pieceTexture = pieceImages[pieceChar]
             pieceTexture?.let {
-                spriteBatch.draw(it, xPos, adjustedYPos, squareSize, squareSize)
+                spriteBatch.draw(it, xPos, yPos, squareSize, squareSize)
             }
         }
-
     }
 
-    private fun renderLegalMoves(moveset: List<Move>) {
+    private fun renderLegalMoves(moveSet: List<Move>) {
         val squareSize = Gdx.graphics.width / 8f
-        var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
+        val yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
         val circleSize = squareSize / 8f
 
-        for (move: Move in moveset) {
+        for (move: Move in moveSet) {
             val index = move.square
-            val colNum = index % 8
+            var colNum = index % 8
+            if (viewModel.getPlayerColor() == "white") {
+                colNum = (7 - colNum) % 8
+            }
             val rowNum = index / 8
 
-            val xPos = colNum * squareSize + squareSize / 2
-            val adjustedYPos = yPos - rowNum * squareSize + squareSize / 2
+            val xPos = if (viewModel.getPlayerColor() == "white") {
+                (7 - colNum) * squareSize + squareSize / 2
+            } else {
+                colNum * squareSize + squareSize / 2
+            }
+
+            val adjustedYPos = if (viewModel.getPlayerColor() == "white") {
+                yPos - rowNum * squareSize + squareSize / 2
+            } else {
+                yPos - (7 - rowNum) * squareSize + squareSize / 2
+            }
+
             dotPixelDrawer.filledCircle(xPos, adjustedYPos, circleSize)
         }
     }
+    private fun renderPlayerTurn(currentTurn: String) {
+        val layout = GlyphLayout() // To measure text width(s)
 
+        // Current player text (centered)
+        val currentTurnText = "Current turn: $currentTurn"
+        layout.setText(font, currentTurnText)
+        val currentTurnTextWidth = layout.width
+        font.draw(spriteBatch, currentTurnText, ((Gdx.graphics.width - currentTurnTextWidth) / 2), (Gdx.graphics.height - 170f))
+
+        // Current player image (centered)
+        val texture = if (viewModel.getCurrentPlayer() == "white") turnWhiteTexture else turnBlackTexture
+        val imageY = (Gdx.graphics.height - 170f) - 250f
+        val imageSize = 200f
+        spriteBatch.draw(texture, (Gdx.graphics.width - imageSize) / 2, imageY, imageSize, imageSize)
+
+    }
 
     fun render() {
         val squareSize = Gdx.graphics.width / 8f
+        val layout = GlyphLayout() // To measure text width
 
+        // GameID text (upper left corner)
         val gameIdText = "Game ID: ${viewModel.getGameId()}"
+        font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
 
-        font.draw(spriteBatch, gameIdText, 20f, Gdx.graphics.height - 20f)
+        // Game mode text (upper right corner)
+        val gameModeText = "Game mode: ${viewModel.getGameVersion()}"
+        layout.setText(font, gameModeText)
+        val gameModeTextWidth = layout.width
+        font.draw(spriteBatch, gameModeText, Gdx.graphics.width - gameModeTextWidth - 20f, Gdx.graphics.height - 10f)
+
+        // Playing as color text (centered below board)
+        val playerColor = viewModel.getPlayerColor()
+        val playerColorText = "You are playing as: $playerColor"
+        layout.setText(font, playerColorText)
+        val currentTurnTextWidth = layout.width
+        font.draw(spriteBatch, playerColorText, ((Gdx.graphics.width - currentTurnTextWidth) / 2), (790f))
 
         var colNum = 0
         var yPos = Gdx.graphics.height - (Gdx.graphics.height / 5f)
@@ -112,7 +183,7 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
                 colNum = 0
             }
 
-            var xPos = (squareSize * colNum)
+            val xPos = (squareSize * colNum)
             if ((i / 8) % 2 == 0) {
                 if (colNum % 2 == 0) {
                     lightPixelDrawer.filledRectangle(Rectangle(xPos, yPos, squareSize, squareSize))
@@ -131,6 +202,7 @@ class BoardView(private val viewModel: GameViewModel) : InputAdapter() {
         }
 
         renderPieces(viewModel.getBoard())
+        renderPlayerTurn(viewModel.getCurrentPlayer())
         renderLegalMoves(viewModel.getLegalMoves())
     }
 }

@@ -10,6 +10,7 @@ import me.isak.chess.model.base.Game
 
 class PieceCoverTest {
 
+
     private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap), "standard")
     private var board: Array<Char> = arrayOf()
     private var expected: List<Int> = listOf()
