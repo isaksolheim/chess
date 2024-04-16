@@ -12,7 +12,7 @@ class FiftyMoveTest {
     @Test
     fun FiftyMoveRuleTest() {
         // All versions where the fifty move rule apply
-        val versions = listOf("standard", "fischer", "koth", "racing", "threecheck")
+        val versions = listOf("standard", "fischer", "koth", "racing", "threecheck", "horde")
 
         for (version in versions) {
             runFiftyMoveTest(version)
