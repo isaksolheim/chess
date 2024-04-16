@@ -12,20 +12,8 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.viewmodels.GameViewModel
 
 class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
-    private val lightPixelDrawer by lazy {
-        if (viewModel.getPlayerColor() == "white") {
-            Renderer.lightPixelDrawer
-        } else {
-            Renderer.darkPixelDrawer
-        }
-    }
-    private val darkPixelDrawer by lazy {
-        if (viewModel.getPlayerColor() == "white") {
-            Renderer.darkPixelDrawer
-        } else {
-            Renderer.lightPixelDrawer
-        }
-    }
+    private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
+    private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
@@ -85,9 +73,7 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         for ((index, pieceChar) in board.withIndex()) {
             var colNum = index % 8
             val rowNum = index / 8
-            if (viewModel.getPlayerColor() == "white") {
-                colNum = (7 - colNum) % 8
-            }
+            colNum = (7 - colNum) % 8
 
             // Check if player is white and rotate the board
             val xPos = if (viewModel.getPlayerColor() == "white") {
@@ -116,9 +102,7 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         for (move: Move in moveSet) {
             val index = move.square
             var colNum = index % 8
-            if (viewModel.getPlayerColor() == "white") {
-                colNum = (7 - colNum) % 8
-            }
+            colNum = (7 - colNum) % 8
             val rowNum = index / 8
 
             val xPos = if (viewModel.getPlayerColor() == "white") {
