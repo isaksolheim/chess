@@ -97,7 +97,7 @@ class SimpleGameFactory(version: String, _fen: String?) {
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, gameState, gameHistory)
             }
-            else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
+            else -> throw IllegalArgumentException("Incorrect version ($version) provided to GameFactory.create")
         }
     }
 
