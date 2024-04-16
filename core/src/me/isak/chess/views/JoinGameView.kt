@@ -12,6 +12,7 @@ import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.FirebaseGameModel
+import me.isak.chess.sound.SoundController
 import me.isak.chess.views.GameScreen
 
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
@@ -30,6 +31,7 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join Game", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 val game = Game("standard", player = "black") // Creating a new game
 
                 // Setting up an event listener to listen for updates to the game
@@ -45,6 +47,7 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.setScreen(LobbyView(app))
             }
         })

@@ -1,6 +1,7 @@
 package me.isak.chess.model.base
 
 import me.isak.chess.model.FirebaseGameModel
+import me.isak.chess.sound.SoundController
 import kotlin.random.Random
 
 /**
@@ -43,7 +44,9 @@ class Game(
 
         if (newBoard != null) {
             legalMoves = listOf()
+            SoundController.getInstance().playGameSoundEffect(SoundController.GameSounds.Move)
             return gameOverChecker.checkGameOver()
+
         }
 
         legalMoves = moveCalculator.legalMoves(square)

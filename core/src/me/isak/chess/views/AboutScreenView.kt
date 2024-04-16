@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
+import me.isak.chess.sound.SoundController
 
 class AboutScreenView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
@@ -33,6 +34,7 @@ class AboutScreenView(private val app: Chess) : ScreenAdapter() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 // This code will be executed when the back button is clicked
                 // Change to the previous screen, e.g., the main menu screen
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.setScreen(MainMenuView(app))
             }
         })
