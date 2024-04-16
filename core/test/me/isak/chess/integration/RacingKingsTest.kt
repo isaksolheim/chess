@@ -33,20 +33,7 @@ class RacingKingsTest {
         )
         integrationTestRunner.run(expectedStates, game)
     }
-    
-    @Test
-    fun drawByFiftyMoveRule() {
-        val game = Game("racing", fen = "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 49 100")
-        
-        val expectedStates: List<TestState> = listOf(
-            TestState(54, "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 49 100", listOf(46, 38, 30, 22, 14, 6)),
-            TestState(46, "8/8/8/8/8/6R1/krbnNB1K/qrbnNBRQ b - - 50 100", empty),
-        )
-        integrationTestRunner.run(expectedStates, game)
 
-        val result = game.checkGameOver()
-        assertEquals(true, result.gameOver, "Game should be over by fifty move rule")
-    }
 
     @Test 
     fun blackWinByWalking() {

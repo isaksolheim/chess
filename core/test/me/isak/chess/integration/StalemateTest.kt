@@ -12,7 +12,7 @@ class StalemateTest {
     @Test
     fun stalemateTest() {
         // all versions with custom game over checker:
-        val versions = listOf("standard", "horde", "koth", "racing")
+        val versions = listOf("standard", "horde", "koth", "racing", "threecheck")
 
         for (version in versions) {
             runStalemateTest(version)

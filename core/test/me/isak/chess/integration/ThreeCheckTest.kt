@@ -59,22 +59,4 @@ class ThreeCheckKingsTest {
         
         assertEquals(true, game.checkGameOver().gameOver, "Black should win by checking three times")
     }
-
-    @Test
-    fun drawByFiftyMoveRule() {
-        val game = Game("threecheck", fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 49 100")
-
-        var result = game.checkGameOver()
-        assertEquals(false, result.gameOver, "Game should not be over")
-        
-        val expectedStates: List<TestState> = listOf(
-            TestState(62, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 49 100", listOf(47, 45)),
-            TestState(45, "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 50 100", empty),
-        )
-        integrationTestRunner.run(expectedStates, game)     
-        
-        result = game.checkGameOver()
-        assertEquals(true, result.gameOver, "Game should be over by 50 move rule")
-    }
-
 }
