@@ -1,13 +1,15 @@
 package me.isak.chess.model.base
 
-import me.isak.chess.model.versions.fisher.FisherGameState
+import me.isak.chess.model.versions.fischer.fischerGameState
 import me.isak.chess.model.versions.standard.StandardGameState
 import me.isak.chess.model.versions.standard.StandardGameHistory
 import me.isak.chess.model.versions.standard.StandardGameOverChecker
 import me.isak.chess.model.versions.standard.standardPieceMap
 import me.isak.chess.model.versions.koth.KothGameOverChecker
-import me.isak.chess.model.versions.horde.HordeGameState
 import me.isak.chess.model.versions.horde.HordeGameOverChecker
+import me.isak.chess.model.versions.racing.RacingGameOverChecker
+import me.isak.chess.model.versions.racing.RacingGameState
+import me.isak.chess.model.versions.threecheck.ThreeCheckGameOverChecker
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -17,7 +19,8 @@ import me.isak.chess.model.versions.horde.HordeGameOverChecker
  * It is still reasonable however, since it abstracts away the creation of objects, 
  * and makes sure the correct family of objects is accessible. 
  */
-class SimpleGameFactory(version: String, fen: String) {
+
+class SimpleGameFactory(version: String, _fen: String) {
     private var pieceMap: PieceMap
     private var simpleMoveCalculator: SimpleMoveCalculator
     private var gameState: GameState
@@ -33,53 +36,79 @@ class SimpleGameFactory(version: String, fen: String) {
      */
     init {
 
-        val parts = fen.split(" ")
-        if (parts.size != 6) throw Error("incorrect fen format used to create game: $fen")
-        
-        // Extract game info from fen
-        val board = processGameString(parts[0])
-        val turn = parts[1] == "w"
-        val castle = parts[2]
-        val enPassant = processEnPassant(parts[3])
-        val halfMove = parts[4].toInt()
-        val fullMove = parts[5].toInt()
+        // Some games vary only in how the game is setup. 
+        // This function will make sure they get the right starting information
+        val fen = when (version) {
+            "racing" -> "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1"
+            "horde" -> "rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1"
+            else -> _fen
+        }
+
 
         when (version) {
             "standard" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = StandardGameState(simpleMoveCalculator)
-                gameHistory = StandardGameHistory(castle, enPassant, halfMove, fullMove)
+
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = StandardGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
+
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             "koth" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = StandardGameState(simpleMoveCalculator)
-                gameHistory = StandardGameHistory(castle, enPassant, halfMove, fullMove)
+
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = StandardGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
+
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = KothGameOverChecker(moveCalculator, gameState)
+                gameOverChecker = KothGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             "horde" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = HordeGameState(simpleMoveCalculator)
-                gameHistory = StandardGameHistory(castle, enPassant, halfMove, fullMove)
+
+
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = StandardGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = HordeGameOverChecker(moveCalculator, gameState)
+                gameOverChecker = HordeGameOverChecker(moveCalculator, gameState, gameHistory)
             }
-            "fisher" -> {
+            "fischer" -> {
                 pieceMap = PieceMap(standardPieceMap)
-                simpleMoveCalculator = SimpleMoveCalculator(pieceMap)
-                gameState = FisherGameState(simpleMoveCalculator)
-                gameHistory = StandardGameHistory(castle, enPassant, halfMove, fullMove)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = fischerGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState)
+                gameOverChecker = StandardGameOverChecker(moveCalculator, gameState, gameHistory)
+            }
+            "racing" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = RacingGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
+
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = RacingGameOverChecker(moveCalculator, gameState, gameHistory)
+            }
+            "threecheck" -> {
+                pieceMap = PieceMap(standardPieceMap)
+
+
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = StandardGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
+
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             else -> throw Error("Incorrect version ($version) provided to GameFactory.create")
         }
@@ -109,14 +138,6 @@ class SimpleGameFactory(version: String, fen: String) {
         return gameHistory
     }
 
-    private fun processGameString(gamestring: String): String {
-        val board = gamestring
-          .filter{ it != '/'}
-          .replace(Regex("\\d")) { " ".repeat(it.value.toInt()) } 
-
-        if (board.length != 64) throw Error("game string $gamestring produced $board board of incorrect size ${board.length}, when it should have been 64")
-        return board
-    }
 
     private fun processEnPassant(enPassant: String): Int {
         if (!enPassant.matches(Regex("[a-h][1-8]"))) return -1

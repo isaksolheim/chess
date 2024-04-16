@@ -10,7 +10,8 @@ import me.isak.chess.model.base.Game
 
 class GeneralInCheckTest {
 
-    private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap))
+    // check the non standard move calculator
+    private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap), "not standard")
     private var board: Array<Char> = arrayOf()
     private var white = true
     private var black = false

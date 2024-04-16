@@ -10,7 +10,7 @@ enum class CalculationType { PATH, COVER }
  * but cannot necessarily move there. It can move forward, but does not cover these squares. This separation is made
  * because some moves require a cover condition to be met. Castle for example cannot be done if the enemy covers certain squares.
 */
-class SimpleMoveCalculator(private val pieceMap: PieceMap) {
+class SimpleMoveCalculator(private val pieceMap: PieceMap, private val version: String) {
 
   private val offsetMap = mapOf(
     'E' to 1,
@@ -81,12 +81,25 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
   }
 
   /**
-   * Default method for figuring out if the king is in check. If we
+   * Figure out if the king is in check.
+   * @param board to analyse.
+   * @param boolean true to see if white is in check, false to look for 
+   * black king.
+   */
+  fun isKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
+    return when (version) {
+      "standard" -> standardIsKingInCheck(board, whiteKing)
+      else -> generalIsKingInCheck(board, whiteKing)
+    }
+  }
+
+  /**
+   * General method for figuring out if the king is in check. If we
    * do not know in advance how all the pieces move, we have to figure it out here.
    * Figure out all the squares covered by the enemy (expensive calculation). 
    * Then return true if king is standing on one of them.
    */
-  fun isKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
+  private fun generalIsKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
 
     // Find where the king is, or return false (not in check if he does not exist).
     val kingSymbol = if (whiteKing) 'K' else 'k'
@@ -115,12 +128,13 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
   .buildPiece()
 
   /**
+   * This method can only be used in a game using the standard pieces. 
    * When we know the behaviour of all the pieces, we can make some shortcuts when it comes
    * to finding out if the king is in check. The kingCoverPiece is used to find all the relevant squares
    * of enemies. In this function, we are trying to find a square with a piece on it.
    * If we are able to do so, it means that this piece is attacking the king!
    */
-  fun standardIsKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
+  private fun standardIsKingInCheck(board: Array<Char>, whiteKing: Boolean): Boolean {
 
     // Find where the king is, or return false (not in check if he does not exist).
     val kingSymbol = if (whiteKing) 'K' else 'k'
@@ -138,6 +152,7 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap) {
       }
       .any{ board[it] != ' '}
   }
+
 
 
   /**

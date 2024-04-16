@@ -14,13 +14,12 @@ class MoveExecutor(private val gameState: GameState, private val gameHistory: Ga
      */
     fun execute(legalMoves: List<Move>, square: Int): Array<Char>? {
         val move = legalMoves.find{ it.square == square } ?: return null
-
         gameState.changeState(move)
+
+        gameHistory.incrementHalfMove(move)
+        gameHistory.incrementFullMove(gameState.turn)
         gameHistory.changeHistory(move)
 
         return gameState.board.toCharArray().toTypedArray()
     }
-
-
-
 }

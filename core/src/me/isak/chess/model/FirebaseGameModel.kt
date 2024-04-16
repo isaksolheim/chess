@@ -13,6 +13,7 @@ package me.isak.chess.model
  */
 data class FirebaseGameModel(
     val id: String = "",
+    val version: String = "",
     var board: String = "",
     var currentTurn: String = ""
 )
