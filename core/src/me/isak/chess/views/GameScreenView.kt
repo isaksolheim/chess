@@ -2,6 +2,7 @@ package me.isak.chess.views
 
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.utils.ScreenUtils
 import me.isak.chess.Chess
 import me.isak.chess.Renderer
@@ -41,7 +42,10 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
     }
 
     override fun show() {
-        Gdx.input.inputProcessor = stage
+        val inputMultiplexer = InputMultiplexer()
+        inputMultiplexer.addProcessor(stage)
+        inputMultiplexer.addProcessor(boardView)
+        Gdx.input.inputProcessor = inputMultiplexer
     }
 
     override fun render(delta: Float) {
