@@ -30,16 +30,16 @@ val bPawn = pb
 .buildPiece()
 
 val makrukPieceMap: Map<Char, Piece> = mapOf(
-    'f' to rook,
-    'F' to rook,
-    'h' to knight,
-    'H' to knight,
-    's' to bishop,
-    'S' to bishop,
-    'm' to queen,
-    'M' to queen,
-    'l' to king,
-    'L' to king,
-    'c' to bPawn,
-    'C' to wPawn,
+    'r' to pd.rook().buildPiece(),
+    'R' to pd.rook().buildPiece(),
+    'n' to pd.knight().buildPiece(),
+    'N' to pd.knight().buildPiece(),
+    'b' to bishop,
+    'B' to bishop,
+    'q' to queen,
+    'Q' to queen,
+    'k' to king,
+    'K' to king,
+    'p' to bPawn,
+    'P' to wPawn,
 )

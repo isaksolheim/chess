@@ -43,7 +43,7 @@ class SimpleGameFactory(version: String, _fen: String?) {
         val fen = _fen ?: when (version) {
             "racing" -> "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1"
             "horde" -> "rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1"
-            "makruk"-> "fhsmlshf/8/cccccccc/8/8/CCCCCCCC/8/FHSLMSHF"
+            "makruk"-> "rnbqkbnr/8/pppppppp/8/8/PPPPPPPP/8/RNBQKBNR w - - 0 1"
             else -> "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         }
 
