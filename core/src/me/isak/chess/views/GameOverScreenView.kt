@@ -19,8 +19,8 @@ import me.isak.chess.viewmodels.GameViewModel
 class GameOverScreenView(private val app: Chess, private val game: Game, private val message: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
-    private val winnerWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
-    private val winnerBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
+    private val winnerWhiteTexture = Texture(Gdx.files.internal("pieces/standard/wK.png"))
+    private val winnerBlackTexture = Texture(Gdx.files.internal("pieces/standard/bK.png"))
     private val gameViewModel = GameViewModel(game, app)
 
     init {

@@ -17,30 +17,37 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
-    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
-    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
+    val pieceFolder = when (viewModel.getGameVersion()) {
+        "makruk" -> "makruk"
+        else -> "standard"
+    }
+
+    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))
+    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
     }
+
     private val pieceImages by lazy {
         hashMapOf<Char, Texture>().apply {
-            put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn
-            put('p', Texture(Gdx.files.internal("pieces/bP.png"))) // Black pawn
-            put('R', Texture(Gdx.files.internal("pieces/wR.png"))) // White rook
-            put('r', Texture(Gdx.files.internal("pieces/bR.png"))) // Black rook
-            put('N', Texture(Gdx.files.internal("pieces/wN.png"))) // White knight
-            put('n', Texture(Gdx.files.internal("pieces/bN.png"))) // Black knight
-            put('B', Texture(Gdx.files.internal("pieces/wB.png"))) // White bishop
-            put('b', Texture(Gdx.files.internal("pieces/bB.png"))) // Black bishop
-            put('Q', Texture(Gdx.files.internal("pieces/wQ.png"))) // White queen
-            put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
-            put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
-            put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
+            put('P', Texture(Gdx.files.internal("pieces/$pieceFolder/wP.png"))) // White pawn
+            put('p', Texture(Gdx.files.internal("pieces/$pieceFolder/bP.png"))) // Black pawn
+            put('R', Texture(Gdx.files.internal("pieces/$pieceFolder/wR.png"))) // White rook
+            put('r', Texture(Gdx.files.internal("pieces/$pieceFolder/bR.png"))) // Black rook
+            put('N', Texture(Gdx.files.internal("pieces/$pieceFolder/wN.png"))) // White knight
+            put('n', Texture(Gdx.files.internal("pieces/$pieceFolder/bN.png"))) // Black knight
+            put('B', Texture(Gdx.files.internal("pieces/$pieceFolder/wB.png"))) // White bishop
+            put('b', Texture(Gdx.files.internal("pieces/$pieceFolder/bB.png"))) // Black bishop
+            put('Q', Texture(Gdx.files.internal("pieces/$pieceFolder/wQ.png"))) // White queen
+            put('q', Texture(Gdx.files.internal("pieces/$pieceFolder/bQ.png"))) // Black queen
+            put('K', Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))) // White king
+            put('k', Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))) // Black king
         }
     }
 
     init {
+
         viewModel.onLegalMovesChanged = { moves ->
             Gdx.app.postRunnable { renderLegalMoves(moves) }
         }
