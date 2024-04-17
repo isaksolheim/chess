@@ -95,7 +95,6 @@ class GameViewModel(private val game: Game, private val app: Chess) {
                 playSounds(clickResult)
                 onBoardChanged?.invoke(game.getBoard())
                 selectedSquare = null
-                soundController.playGameSoundEffect(SoundController.GameSounds.Click)
 
                 // TODO: Only call this if move was actually done
                 if (game.isOnline) {

@@ -151,7 +151,7 @@ class Game(
      * @param model The [FirebaseGameModel] containing the new state to be applied to the game.
      */
 
-     data class UpdateResult(var isKingInCheck: Boolean, var pieceCapture: Boolean)
+     data class UpdateResult(var isKingInCheck: Boolean, var pieceCapture: Boolean,var myturn : Boolean)
 
     fun updateFromModel(model: FirebaseGameModel): UpdateResult {
         if (model.version !== version) {
@@ -182,7 +182,11 @@ class Game(
         val board = model.board.toCharArray().toTypedArray()
         val isKingInCheck = moveCalculator.isKingInCheck(board, gameState.turn)
         gameState.setBoardAsString(model.board)
+        var myturn = false
+        if (model.currentTurn == player)
+            myturn = true
 
-        return UpdateResult(isKingInCheck, pieceCapture)
+
+        return UpdateResult(isKingInCheck, pieceCapture,myturn)
     }
 }

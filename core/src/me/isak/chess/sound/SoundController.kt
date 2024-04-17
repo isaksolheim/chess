@@ -28,6 +28,10 @@ class SoundController private constructor()
         StandardSoundEffectsMap
     }
 
+    private val music by lazy{
+        Gdx.audio.newMusic(Gdx.files.internal("sound/music/age-of-war-music.mp3"))
+    }
+
 
     //Standard static menue sounds
     private val menueSounds by lazy {
@@ -73,6 +77,22 @@ class SoundController private constructor()
 
         if (soundEffects!!.CustomSoundEffects!!.containsKey(soundName))
             soundEffects!!.CustomSoundEffects!!.get(soundName)!!.play();
+    }
+
+    public fun playMusic()
+    {
+        if (music.isPlaying) return
+        music.setLooping(true)
+        music.volume = 0.5f
+        music.play()
+    }
+
+    public fun toggleMusic()
+    {
+        if (music.isPlaying)
+            music.stop()
+        else
+            music.play()
     }
 
 

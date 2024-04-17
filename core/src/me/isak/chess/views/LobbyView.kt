@@ -21,6 +21,7 @@ import me.isak.chess.views.MainMenuView
 
 class LobbyView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
+    val soundController : SoundController = SoundController.getInstance()
 
     init {
         Gdx.input.inputProcessor = stage
@@ -55,6 +56,14 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.setScreen(FaqScreenView(app))
+            }
+        })
+
+        val toggleMusicButton = TextButton("Toggle Music", app.skin)
+        toggleMusicButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
+                SoundController.getInstance().toggleMusic()
             }
         })
 
@@ -94,12 +103,14 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
                         val result = game.updateFromModel(dataModel)
 
-                        if (result.isKingInCheck) {
-                            // play sound
-                        }
+                        if (result.myturn) {
+                            if (result.isKingInCheck) {
+                                soundController.playGameSoundEffect(SoundController.GameSounds.Check)
+                            }
 
-                        if (result.pieceCapture) {
-                            // play sound
+                            if (result.pieceCapture) {
+                                soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
+                            }
                         }
                     }
                 })
@@ -118,8 +129,12 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         })
 
         // Adding buttons to the table
+
         table.add(backButton).top().left().pad(10f)
         table.add(questionButton).top().right().pad(10f)
+        table.row()
+
+        table.add(toggleMusicButton).top().center().pad(0f)
         table.row()
 
         table.add(gameModeLabel).padTop(60f).colspan(2).center()

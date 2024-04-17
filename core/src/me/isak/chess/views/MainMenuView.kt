@@ -27,6 +27,7 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
         playButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
                 SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
+                SoundController.getInstance().playMusic()
                 app.setScreen(LobbyView(app))
             }
         })

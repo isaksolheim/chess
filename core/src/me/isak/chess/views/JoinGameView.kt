@@ -18,6 +18,7 @@ import me.isak.chess.views.GameScreen
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private var gameIdInput: TextField
+    private val  soundController = SoundController.getInstance()
 
     init {
         Gdx.input.inputProcessor = stage
@@ -39,13 +40,16 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
                         val result = game.updateFromModel(dataModel)
 
-                        if (result.isKingInCheck) {
-                            //play sound
+                        if (result.myturn) {
+                            if (result.isKingInCheck) {
+                                soundController.playGameSoundEffect(SoundController.GameSounds.Check)
+                            }
+
+                            if (result.pieceCapture) {
+                                soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
+                            }
                         }
 
-                        if (result.pieceCapture) {
-                            // play sound
-                        }
                     }
                 })
 

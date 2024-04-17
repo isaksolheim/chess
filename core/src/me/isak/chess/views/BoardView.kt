@@ -70,7 +70,6 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         } else {
             boardY
         }
-            soundController.playGameSoundEffect(SoundController.GameSounds.Click)
         if (boardX in 0..7 && adjustedBoardY in 0..7) {
             val square = adjustedBoardY * 8 + boardX
             viewModel.onUserMove(square)
