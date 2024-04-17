@@ -46,6 +46,8 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
           .map{ offset -> captureSquare + simpleMoveCalculator.parseDirection(offset) } // map to the relevant squares
           .filter{ !"Pp ".contains(board[it]) } // filter away empty squares and pawns (they do not explode)
           .forEach{ board[it] = ' '} // clear the squares containing pieces
+
+        board[captureSquare] = ' ' // always clear the square when capturing
     }
 
     /**
