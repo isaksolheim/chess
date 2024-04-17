@@ -37,6 +37,19 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
             put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
             put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
             put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
+
+            put('f', Texture(Gdx.files.internal("pieces/bF.png")))
+            put('F', Texture(Gdx.files.internal("pieces/wF.png")))
+            put('h', Texture(Gdx.files.internal("pieces/bH.png")))
+            put('H', Texture(Gdx.files.internal("pieces/wH.png")))
+            put('s', Texture(Gdx.files.internal("pieces/bS.png")))
+            put('S', Texture(Gdx.files.internal("pieces/wS.png")))
+            put('m', Texture(Gdx.files.internal("pieces/bM.png")))
+            put('M', Texture(Gdx.files.internal("pieces/wM.png")))
+            put('l', Texture(Gdx.files.internal("pieces/bL.png")))
+            put('L', Texture(Gdx.files.internal("pieces/wL.png")))
+            put('c', Texture(Gdx.files.internal("pieces/bC.png")))
+            put('C', Texture(Gdx.files.internal("pieces/wC.png")))
         }
     }
 
