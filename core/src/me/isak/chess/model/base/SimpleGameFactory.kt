@@ -14,6 +14,8 @@ import me.isak.chess.model.versions.gounki.makrukPieceMap
 import me.isak.chess.model.versions.makruk.MakrukGameState
 import me.isak.chess.model.versions.makruk.MakrukGameHistory
 import me.isak.chess.model.versions.makruk.MakrukGameOverChecker
+import me.isak.chess.model.versions.atomic.AtomicGameState
+import me.isak.chess.model.versions.atomic.AtomicGameOverChecker
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -110,6 +112,15 @@ class SimpleGameFactory(version: String, _fen: String?) {
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = MakrukGameOverChecker(moveCalculator, gameState, gameHistory)
+            }
+            "atomic" -> {
+                pieceMap = PieceMap(standardPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
+                gameState = AtomicGameState(simpleMoveCalculator, fen)
+                gameHistory = StandardGameHistory(fen)
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = AtomicGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             else -> throw IllegalArgumentException("Incorrect version ($version) provided to GameFactory.create")
         }
