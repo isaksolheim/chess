@@ -9,6 +9,7 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
     : GameState(simpleMoveCalculator, fen) {
 
     private var pieceCount: Int
+    private val neighbourSquares = arrayOf("NE", "E", "SE", "S", "SW", "W", "NW", "N") // used to check squares around a square
 
     init {
         pieceCount = board.count { it.isLetter() }
@@ -40,7 +41,7 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
     private fun handleExplosion(board: Array<Char>, move: Move) {
         val captureSquare = move.square
 
-        arrayOf("NE", "E", "SE", "S", "SW", "W", "NW", "N") // all squares around the piece that captured
+        neighbourSquares // all squares around the piece that captured
           .filter{ offset -> simpleMoveCalculator.isInBounds(captureSquare, offset) } // remove squares off the board
           .map{ offset -> captureSquare + simpleMoveCalculator.parseDirection(offset) } // map to the relevant squares
           .filter{ !"Pp ".contains(board[it]) } // filter away empty squares and pawns (they do not explode)
@@ -59,7 +60,7 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
 
         val board = move.result.toCharArray().toTypedArray()
 
-        if (blowsUpOwnKing(board)) return false
+        if (blowsUpOwnKing(board, move)) return false
         if (simpleMoveCalculator.isKingInCheck(board, turn)) return false
     
         if (illegalCastle(move)) return false
@@ -68,9 +69,23 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
         return true
     }
 
-    // Check if the current player still has a king
-    private fun blowsUpOwnKing(board: Array<Char>): Boolean {
+    /**
+     * This is true when the move reduces the number of pieces (capture),
+     * and the king is next to the landing square.
+     */
+    private fun blowsUpOwnKing(board: Array<Char>, move: Move): Boolean {
+        val newPieceCount = move.result.count { it.isLetter() }
+
+        // false if no capture occured
+        if (newPieceCount == pieceCount) return false
+
+        // look for the current playing king
         val kingToLookFor = if (turn) 'K' else 'k'
-        return !board.contains(kingToLookFor)
+        val captureSquare = move.square
+
+        return neighbourSquares
+          .filter{ direction -> simpleMoveCalculator.isInBounds(captureSquare, direction)}  // remove squares off the board
+          .map{ direction -> captureSquare + simpleMoveCalculator.parseDirection(direction)} // map to index on the board
+          .any{ board[it] == kingToLookFor} // check if any of the indexes include the king
     }
 }
