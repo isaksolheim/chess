@@ -10,6 +10,10 @@ import me.isak.chess.model.versions.horde.HordeGameOverChecker
 import me.isak.chess.model.versions.racing.RacingGameOverChecker
 import me.isak.chess.model.versions.racing.RacingGameState
 import me.isak.chess.model.versions.threecheck.ThreeCheckGameOverChecker
+import me.isak.chess.model.versions.gounki.makrukPieceMap
+import me.isak.chess.model.versions.makruk.MakrukGameState
+import me.isak.chess.model.versions.makruk.MakrukGameHistory
+import me.isak.chess.model.versions.makruk.MakrukGameOverChecker
 
 /**
  * Used to initialize the correct game objects for chess, 
@@ -39,6 +43,7 @@ class SimpleGameFactory(version: String, _fen: String?) {
         val fen = _fen ?: when (version) {
             "racing" -> "8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1"
             "horde" -> "rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1"
+            "makruk"-> "fhsmlshf/8/cccccccc/8/8/CCCCCCCC/8/FHSLMSHF"
             else -> "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         }
 
@@ -96,6 +101,15 @@ class SimpleGameFactory(version: String, _fen: String?) {
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
                 gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, gameState, gameHistory)
+            }
+            "makruk" -> {
+                pieceMap = PieceMap(makrukPieceMap)
+                simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "general")
+                gameState = MakrukGameState(simpleMoveCalculator, fen)
+                gameHistory = MakrukGameHistory(fen)
+                moveExecutor = MoveExecutor(gameState, gameHistory)
+                moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
+                gameOverChecker = MakrukGameOverChecker(moveCalculator, gameState, gameHistory)
             }
             else -> throw IllegalArgumentException("Incorrect version ($version) provided to GameFactory.create")
         }
