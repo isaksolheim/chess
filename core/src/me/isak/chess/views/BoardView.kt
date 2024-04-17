@@ -53,11 +53,20 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val squareSize = Gdx.graphics.width / 8f
         val yOffset = Gdx.graphics.height - (Gdx.graphics.height / 5f) - (8 * squareSize)
-        val boardX = (screenX / squareSize).toInt()
+
+        val boardX = if (viewModel.getPlayerColor() == "white") {
+            (screenX / squareSize).toInt()
+        } else {
+            7 - (screenX / squareSize).toInt()
+        }
 
         val boardY = ((Gdx.graphics.height - screenY - yOffset) / squareSize).toInt()
 
-        val adjustedBoardY = if (viewModel.getPlayerColor() == "white") 7 - boardY else boardY
+        val adjustedBoardY = if (viewModel.getPlayerColor() == "white") {
+            7 - boardY
+        } else {
+            boardY
+        }
 
         if (boardX in 0..7 && adjustedBoardY in 0..7) {
             val square = adjustedBoardY * 8 + boardX
