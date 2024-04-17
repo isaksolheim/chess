@@ -54,6 +54,27 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.player
     }
 
+    fun playSounds(clickResult: Game.ClickResult)
+    {
+        if (clickResult.isKingInCheck)
+        {
+            soundController.playGameSoundEffect(SoundController.GameSounds.Check)
+            return
+        }
+        if (clickResult.capture)
+        {
+            soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
+            return
+        }
+        if (clickResult.hasMoved)
+        {
+            soundController.playGameSoundEffect(SoundController.GameSounds.Move)
+            return
+        }
+        soundController.playGameSoundEffect(SoundController.GameSounds.Click)
+    }
+
+
     /**
      * Processes a user's move attempt by either executing the move or selecting a piece.
      *
@@ -71,9 +92,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
             selectedSquare?.let {
                 val clickResult = game.click(square)
 
-                if (clickResult.isKingInCheck) {
-                    // ..
-                }
+                playSounds(clickResult)
                 onBoardChanged?.invoke(game.getBoard())
                 selectedSquare = null
                 soundController.playGameSoundEffect(SoundController.GameSounds.Click)
@@ -89,10 +108,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
                 if (!game.isOnline || game.getPieceColorAtSquare(square) == game.player) {
                     selectedSquare = square
                     val clickResult = game.click(square)
-
-                    if (clickResult.isKingInCheck) {
-                        // ..
-                    }
+                    playSounds(clickResult)
                     onLegalMovesChanged?.invoke(game.getLegalMoves())
                 }
             }
