@@ -5,7 +5,7 @@ import me.isak.chess.model.base.Move
 import me.isak.chess.model.base.GameState
 
 
-open class MakrukGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
+class MakrukGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
     : GameState(simpleMoveCalculator, fen) {
 
     /**
