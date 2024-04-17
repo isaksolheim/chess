@@ -19,7 +19,7 @@ class Game(
     private var version: String,
     var firebaseGameModel: FirebaseGameModel? = null,
     var player: String = "white",
-    var fen: String = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    var fen: String? = null
 ) {
     private var gameFactory = SimpleGameFactory(version, fen)
     
@@ -186,5 +186,3 @@ class Game(
         return UpdateResult(isKingInCheck, pieceCapture)
     }
 }
-
-
