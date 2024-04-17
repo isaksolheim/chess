@@ -34,8 +34,9 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
             handleExplosion(boardArray, move)
             pieceCount = newPieceCount
         }
-    
+        // must update the piece count after explosion
         board = boardArray.joinToString("")
+        pieceCount = board.count { it.isLetter() }
     }
 
     private fun handleExplosion(board: Array<Char>, move: Move) {
