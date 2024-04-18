@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
@@ -16,11 +17,17 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
 
     init {
-        Gdx.input.inputProcessor = stage // Set the stage to process input events
+        Gdx.input.inputProcessor = stage
 
         val table = Table()
         table.setFillParent(true)
         stage.addActor(table)
+
+        val titleText = "CHESS++"
+        val titleLabel = Label(titleText, app.skin, "button")
+        titleLabel.setFontScale(2.4f)
+
+        table.add(titleLabel).center().expandX().padBottom(30f)
 
         val playButton = TextButton("Play", app.skin)
         playButton.addListener(object : ChangeListener() {
@@ -35,10 +42,10 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
                 app.setScreen(AboutScreenView(app))
             }
         })
-
-        table.add(playButton).fillX().uniformX()
-        table.row().pad(10f, 0f, 10f, 0f)
-        table.add(aboutButton).fillX().uniformX()
+        table.row()
+        table.add(playButton).fillX().uniformX().padTop(30f).padLeft(200f).padRight(200f)
+        table.row()
+        table.add(aboutButton).fillX().uniformX().padTop(30f).padLeft(200f).padRight(200f)
     }
 
     override fun render(delta: Float) {
