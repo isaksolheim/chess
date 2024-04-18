@@ -59,6 +59,6 @@ class PieceDirector {
             .directions("S").pathType("unoccupied").coverType("never").id("p").buildAction()
             .directions("SS").pathType("unoccupied").coverType("never").boardCondition(Regex("^.{8,15}I.{7} ")).id("bPawnDoubleForward").buildAction()
             .directions("SE").pathType("unoccupied").coverType("never").boardCondition(Regex("^(.{32,38})IP(.{7}) ")).replacement("$1  $2p").id("enPassant").buildAction()
-            .directions("NW").pathType("unoccupied").coverType("never").boardCondition(Regex("^(.{32,38})PI(.{6}) ")).replacement("$1  $2p").id("enPassant").buildAction()
+            .directions("SW").pathType("unoccupied").coverType("never").boardCondition(Regex("^(.{32,38})PI(.{6}) ")).replacement("$1  $2p").id("enPassant").buildAction()
       }
     }

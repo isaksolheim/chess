@@ -10,6 +10,7 @@ import me.isak.chess.model.versions.horde.HordeGameOverChecker
 import me.isak.chess.model.versions.racing.RacingGameOverChecker
 import me.isak.chess.model.versions.racing.RacingGameState
 import me.isak.chess.model.versions.threecheck.ThreeCheckGameOverChecker
+import me.isak.chess.model.versions.threecheck.ThreeCheckGameState
 import me.isak.chess.model.versions.gounki.makrukPieceMap
 import me.isak.chess.model.versions.makruk.MakrukGameState
 import me.isak.chess.model.versions.makruk.MakrukGameHistory
@@ -98,11 +99,12 @@ class SimpleGameFactory(version: String, _fen: String?) {
             "threecheck" -> {
                 pieceMap = PieceMap(standardPieceMap)
                 simpleMoveCalculator = SimpleMoveCalculator(pieceMap, "standard")
-                gameState = StandardGameState(simpleMoveCalculator, fen)
+                val threeCheckGameState = ThreeCheckGameState(simpleMoveCalculator, fen)
+                gameState = threeCheckGameState
                 gameHistory = StandardGameHistory(fen)
                 moveExecutor = MoveExecutor(gameState, gameHistory)
                 moveCalculator = MoveCalculator(simpleMoveCalculator, gameState, gameHistory)
-                gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, gameState, gameHistory)
+                gameOverChecker = ThreeCheckGameOverChecker(moveCalculator, threeCheckGameState, gameHistory)
             }
             "makruk" -> {
                 pieceMap = PieceMap(makrukPieceMap)
