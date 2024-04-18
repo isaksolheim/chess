@@ -13,48 +13,42 @@ import me.isak.chess.viewmodels.GameViewModel
 import me.isak.chess.viewmodels.TextureProvider
 
 class BoardView( private val viewModel: GameViewModel, private val textureProvider: TextureProvider) : InputAdapter() {
-
-    private val lightPixelDrawer by lazy {
-        if (viewModel.getPlayerColor() == "white") {
-            Renderer.lightPixelDrawer
-        } else {
-            Renderer.darkPixelDrawer
-        }
-    }
-    private val darkPixelDrawer by lazy {
-        if (viewModel.getPlayerColor() == "white") {
-            Renderer.darkPixelDrawer
-        } else {
-            Renderer.lightPixelDrawer
-        }
-    }
+    private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
+    private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
-    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
-    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
+    val pieceFolder = when (viewModel.getGameVersion()) {
+        "makruk" -> "makruk"
+        else -> "standard"
+    }
+
+    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))
+    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
     }
-//    private val pieceImages by lazy {
-//        hashMapOf<Char, Texture>().apply {
-//            put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn
-//            put('p', Texture(Gdx.files.internal("pieces/bP.png"))) // Black pawn
-//            put('R', Texture(Gdx.files.internal("pieces/wR.png"))) // White rook
-//            put('r', Texture(Gdx.files.internal("pieces/bR.png"))) // Black rook
-//            put('N', Texture(Gdx.files.internal("pieces/wN.png"))) // White knight
-//            put('n', Texture(Gdx.files.internal("pieces/bN.png"))) // Black knight
-//            put('B', Texture(Gdx.files.internal("pieces/wB.png"))) // White bishop
-//            put('b', Texture(Gdx.files.internal("pieces/bB.png"))) // Black bishop
-//            put('Q', Texture(Gdx.files.internal("pieces/wQ.png"))) // White queen
-//            put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
-//            put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
-//            put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
-//        }
-//    }
+
+    private val pieceImages by lazy {
+        hashMapOf<Char, Texture>().apply {
+            put('P', Texture(Gdx.files.internal("pieces/$pieceFolder/wP.png"))) // White pawn
+            put('p', Texture(Gdx.files.internal("pieces/$pieceFolder/bP.png"))) // Black pawn
+            put('R', Texture(Gdx.files.internal("pieces/$pieceFolder/wR.png"))) // White rook
+            put('r', Texture(Gdx.files.internal("pieces/$pieceFolder/bR.png"))) // Black rook
+            put('N', Texture(Gdx.files.internal("pieces/$pieceFolder/wN.png"))) // White knight
+            put('n', Texture(Gdx.files.internal("pieces/$pieceFolder/bN.png"))) // Black knight
+            put('B', Texture(Gdx.files.internal("pieces/$pieceFolder/wB.png"))) // White bishop
+            put('b', Texture(Gdx.files.internal("pieces/$pieceFolder/bB.png"))) // Black bishop
+            put('Q', Texture(Gdx.files.internal("pieces/$pieceFolder/wQ.png"))) // White queen
+            put('q', Texture(Gdx.files.internal("pieces/$pieceFolder/bQ.png"))) // Black queen
+            put('K', Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))) // White king
+            put('k', Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))) // Black king
+        }
+    }
 
     init {
+
         viewModel.onLegalMovesChanged = { moves ->
             Gdx.app.postRunnable { renderLegalMoves(moves) }
         }
@@ -67,11 +61,20 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val squareSize = Gdx.graphics.width / 8f
         val yOffset = Gdx.graphics.height - (Gdx.graphics.height / 5f) - (8 * squareSize)
-        val boardX = (screenX / squareSize).toInt()
+
+        val boardX = if (viewModel.getPlayerColor() == "white") {
+            (screenX / squareSize).toInt()
+        } else {
+            7 - (screenX / squareSize).toInt()
+        }
 
         val boardY = ((Gdx.graphics.height - screenY - yOffset) / squareSize).toInt()
 
-        val adjustedBoardY = if (viewModel.getPlayerColor() == "white") 7 - boardY else boardY
+        val adjustedBoardY = if (viewModel.getPlayerColor() == "white") {
+            7 - boardY
+        } else {
+            boardY
+        }
 
         if (boardX in 0..7 && adjustedBoardY in 0..7) {
             val square = adjustedBoardY * 8 + boardX
@@ -88,9 +91,7 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
         for ((index, pieceChar) in board.withIndex()) {
             var colNum = index % 8
             val rowNum = index / 8
-            if (viewModel.getPlayerColor() == "white") {
-                colNum = (7 - colNum) % 8
-            }
+            colNum = (7 - colNum) % 8
 
             // Check if player is white and rotate the board
             val xPos = if (viewModel.getPlayerColor() == "white") {
@@ -119,9 +120,7 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
         for (move: Move in moveSet) {
             val index = move.square
             var colNum = index % 8
-            if (viewModel.getPlayerColor() == "white") {
-                colNum = (7 - colNum) % 8
-            }
+            colNum = (7 - colNum) % 8
             val rowNum = index / 8
 
             val xPos = if (viewModel.getPlayerColor() == "white") {
@@ -161,8 +160,13 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
         val layout = GlyphLayout() // To measure text width
 
         // GameID text (upper left corner)
-        val gameIdText = "Game ID: ${viewModel.getGameId()}"
-        font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        if (viewModel.getOnlineStatus()) {
+            val gameIdText = "Game ID: ${viewModel.getGameId()}"
+            font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        } else {
+            val localGameText = "Local Game"
+            font.draw(spriteBatch, localGameText, 10f, Gdx.graphics.height - 10f)
+        }
 
         // Game mode text (upper right corner)
         val gameModeText = "Game mode: ${viewModel.getGameVersion()}"

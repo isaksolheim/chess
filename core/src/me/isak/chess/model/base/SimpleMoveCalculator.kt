@@ -236,7 +236,7 @@ class SimpleMoveCalculator(private val pieceMap: PieceMap, private val version: 
    * the movement in y and x direction. This will allow us to see if the move
    * takes us out of bounds.
    */
-  private fun isInBounds(startSquare: Int, direction: String): Boolean {
+  public fun isInBounds(startSquare: Int, direction: String): Boolean {
     var x = startSquare % 8
     var y = startSquare / 8
     var dx = direction.count { it == 'E' } - direction.count { it == 'W' }

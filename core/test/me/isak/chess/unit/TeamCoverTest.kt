@@ -1,4 +1,4 @@
-package me.isak.chess.model.base.SimpleMoveCalculatorTest
+package me.isak.chess.unit
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,9 @@ import me.isak.chess.model.base.Game
 
 class TeamCoverTest {
 
+
     private var mvc = SimpleMoveCalculator(PieceMap(standardPieceMap), "standard")
+
     private var board: Array<Char> = arrayOf()
     private var expected: List<Int> = listOf()
     private var actual: List<Int> = listOf()

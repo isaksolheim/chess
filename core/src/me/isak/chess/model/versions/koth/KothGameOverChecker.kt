@@ -26,15 +26,7 @@ class KothGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, 
             return GameResult(true, "$winner won by bringing the king to the center")
         }
 
-        if (hasLegalMove()) {
-            return GameResults.active
-        }
-
-        val checkmate = moveCalculator.isKingInCheck(gameState.getBoard(), gameState.turn)
-        return when (checkmate) {
-            true -> GameResult(true, "$winner won by checkmate")
-            false -> GameResults.stalemate
-        }
+        return standardCheck()
      }
 
      /**
@@ -44,7 +36,6 @@ class KothGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, 
       */
      private fun isKingInCenter(): Boolean {
         val kingToLookFor = if (gameState.turn) 'k' else 'K'
-        println("king is on $kingToLookFor")
 
         val kingIndex = gameState.board.indices
           .first{ gameState.board[it] == kingToLookFor }
