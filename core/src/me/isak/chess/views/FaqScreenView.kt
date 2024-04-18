@@ -1,6 +1,5 @@
 package me.isak.chess.views
 
-import LobbyView
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20
@@ -14,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 import me.isak.chess.Chess
 
-class FaqScreenView(private val app: Chess) : ScreenAdapter() {
+class FaqScreenView(private val app: Chess, private val aboutString: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
 
@@ -60,7 +59,12 @@ class FaqScreenView(private val app: Chess) : ScreenAdapter() {
             3. Once entered, you'll be connected to the game already in progress.
         """.trimIndent()
         val faqLabel = Label(faqText, skin)
-        table.add(faqLabel)
+        table.add(faqLabel).padBottom(100f)
+        table.row()
+
+        val aboutGameLabel = Label(aboutString, skin)
+        aboutGameLabel.setWrap(true)
+        table.add(aboutGameLabel).width(300f).fillX().expandX()
 
         table.center()
     }
