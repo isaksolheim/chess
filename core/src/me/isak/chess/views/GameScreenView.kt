@@ -66,10 +66,6 @@ class GameScreen(private val app: Chess, private val game: Game) : ScreenAdapter
         }
     }
 
-    override fun hide() {
-        spriteBatch.dispose()
-    }
-
     override fun dispose() {
         spriteBatch.dispose()
         stage.dispose()
