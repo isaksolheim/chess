@@ -36,7 +36,7 @@ class GameOverScreenView(private val app: Chess, private val game: Game, private
         val mainMenuButton = TextButton("Return to main menu", skin)
         mainMenuButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(MainMenuView(app))
+                app.screen = MainMenuView(app)
             }
         })
 
