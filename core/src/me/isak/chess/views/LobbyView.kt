@@ -8,10 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
@@ -22,6 +26,27 @@ data class GameVariant(val name: String, val description: String)
 
 class LobbyView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
+
+    val gameGeneralInfo = """
+                To start playing, first use the game mode picker to select your desired game mode.
+                We offer several modes including standard chess, Horde, King of the Hill,
+                and Fischer random chess.
+
+                To play a local game:
+                1. Select your game mode from the picker.
+                2. Click the "Start Local Game" button to begin playing a friend on the same device.
+
+                To start an online game:
+                1. Select your game mode from the picker.
+                2. Click the "Start Online Game" button. This will create a new game and provide you
+                   with a 4-digit game ID.
+                3. Share this game ID with a friend so they can join your game.
+
+                To join an existing game:
+                1. Click the "Join" button.
+                2. Enter the 4-digit game ID provided by your opponent.
+                3. Once entered, you'll be connected to the game already in progress.
+            """.trimIndent()
 
     private val gameVariants = arrayOf(
         GameVariant("standard", "Standard chess: Classic rules, no modifications. Focus on controlling the center and developing pieces."),
@@ -37,16 +62,25 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
     fun getDescriptionByName(gameName: String): String {
         val gameVariant = gameVariants.find { it.name == gameName }
         if (gameVariant?.description != null) {
-            return gameVariant?.description
+            return gameVariant.description
         }
         return "Chess!"
     }
 
 
+
+
     init {
         Gdx.input.inputProcessor = stage
 
+        val backgroundTexture = Texture(Gdx.files.internal("background/chessbackground.png"))
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        val backgroundImage = Image(backgroundTexture)
+        backgroundImage.setFillParent(true)
+        stage.addActor(backgroundImage)
+
         val libGDXArray = Array<String>()
+        val fontScale = 2.5f
 
         gameVariants.forEach { variant ->
             libGDXArray.add(variant.name)
@@ -56,6 +90,11 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
             items = libGDXArray
             setSelected("standard")
         }
+        selectBox.style.listStyle.font.data.setScale(2.4f)
+        selectBox.style.listStyle.font.color = Color.WHITE
+        selectBox.style.listStyle.fontColorSelected = Color.WHITE
+        selectBox.style.listStyle.fontColorUnselected = Color.WHITE
+        selectBox.setAlignment(Align.center)
 
         val table = Table()
         table.setFillParent(true)
@@ -63,24 +102,45 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
 
         val skin = app.skin
 
-        val questionButton = TextButton("?", app.skin)
-        questionButton.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                val gameDescription = getDescriptionByName(selectBox.selected)
-
-                app.setScreen(FaqScreenView(app, gameDescription))
-            }
-        })
-
-        val gameModeLabel = Label("Choose a Game Mode:", app.skin)
-        val joinGameLabel = Label("Or join an existing game:", app.skin)
-
-        val backButton = TextButton("Back", skin)
+        // Back button
+        val backButton = TextButton("Exit", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(MainMenuView(app))
+                app.screen = MainMenuView(app)
             }
         })
+
+        // Help (?) button
+        val gameGeneralInfoButton = TextButton("Help", app.skin)
+        gameGeneralInfoButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                val infoTitle = "How to get started:"
+                app.screen = FaqScreenView(app, infoTitle, gameGeneralInfo)
+            }
+        })
+
+        val gameModeInfoButton = TextButton("?", app.skin)
+        gameModeInfoButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                val infoTitle = selectBox.selected
+                val gameDescription = getDescriptionByName(selectBox.selected)
+                app.screen = FaqScreenView(app, infoTitle, gameDescription)
+            }
+        })
+
+        // Title
+        val titleText = "CHESS++"
+        val titleLabel = Label(titleText, app.skin, "button")
+        titleLabel.setFontScale(2.4f)
+
+        // Game mode selection
+        val gameModeLabel = Label("Select your Game Mode:", app.skin)
+        gameModeLabel.setFontScale(fontScale)
+        gameModeLabel.setAlignment(Align.center)
+
+        val joinGameLabel = Label("Or join an existing game:", app.skin)
+        joinGameLabel.setFontScale(fontScale)
+
 
         val playLocalButton = TextButton("Start Local Game", app.skin)
         playLocalButton.addListener(object : ChangeListener() {
@@ -88,7 +148,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                 val selectedVariant = selectBox.selected
                 val game = Game(selectedVariant)
 
-                app.setScreen(GameScreen(app, game))
+                app.screen = GameScreen(app, game)
             }
         })
 
@@ -107,7 +167,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                     }
                 })
 
-                app.setScreen(GameScreen(app, game))
+                app.screen = GameScreen(app, game)
             }
         })
 
@@ -115,31 +175,28 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                app.setScreen(JoinGameView(app))
+                app.screen = JoinGameView(app)
             }
         })
 
-        // Adding buttons to the table
-        table.add(backButton).top().left().pad(10f)
-        table.add(questionButton).top().right().pad(10f)
+        table.top()
+        table.add(backButton).left().padTop(170f).padLeft(50f).width(200f).height(100f)
+        table.add(gameGeneralInfoButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
         table.row()
-
-        table.add(gameModeLabel).padTop(60f).colspan(2).center()
+        table.add(titleLabel).colspan(2).expandX().padTop(350f)
         table.row()
-
-        table.add(selectBox).pad(50f).colspan(2).center()
+        table.add(gameModeLabel).colspan(2).center().padTop(60f)
         table.row()
-
-        table.add(playLocalButton).pad(10f).colspan(2).center()
+        table.add(selectBox).expandX().padTop(30f).width(510f).padLeft(195f).padRight(-45f).colspan(1)
+        table.add(gameModeInfoButton).padTop(30f).width(200f).padRight(160f).padLeft(-75f).colspan(1)
         table.row()
-
-        table.add(createGameButton).pad(10f).colspan(2).center()
+        table.add(playLocalButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
         table.row()
-
-        table.add(joinGameLabel).padTop(30f).colspan(2).center()
+        table.add(createGameButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
         table.row()
-
-        table.add(joinGameButton).pad(50f).colspan(2).center()
+        table.add(joinGameLabel).colspan(2).center().padLeft(200f).padRight(200f).padTop(100f)
+        table.row()
+        table.add(joinGameButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
 
         stage.addActor(table)
     }

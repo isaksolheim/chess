@@ -26,11 +26,17 @@ class GameOverScreenView(private val app: Chess, private val game: Game, private
     init {
         Gdx.input.inputProcessor = stage
 
+        val backgroundTexture = Texture(Gdx.files.internal("background/chessbackground.png"))
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        val backgroundImage = Image(backgroundTexture)
+        backgroundImage.setFillParent(true)
+        stage.addActor(backgroundImage)
+
         // Button for opening main menu
         val mainMenuButton = TextButton("Return to main menu", skin)
         mainMenuButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(MainMenuView(app))
+                app.screen = MainMenuView(app)
             }
         })
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 
@@ -21,6 +22,12 @@ class AboutScreenView(private val app: Chess) : ScreenAdapter() {
 
     init {
         Gdx.input.inputProcessor = stage
+
+        val backgroundTexture = Texture(Gdx.files.internal("background/chessbackground.png"))
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        val backgroundImage = Image(backgroundTexture)
+        backgroundImage.setFillParent(true)
+        stage.addActor(backgroundImage)
 
         // Table used for layout
         val table = Table()
@@ -36,20 +43,25 @@ class AboutScreenView(private val app: Chess) : ScreenAdapter() {
                 app.setScreen(MainMenuView(app))
             }
         })
-        table.add(backButton).padTop(20f) // Adjust padding as needed
         table.row()
 
         // Image
         val logoImage = Image(logoTexture)
-        table.add(logoImage).padBottom(20f).row()
+        logoImage.setScale(2f)
+        table.add(logoImage).padBottom(40f).padTop(-100f).center().padRight(logoImage.width)
         table.row()
 
         // About us text
-        val aboutText = "This app is developed by students at NTNU\ntaking the TDT4240 course."
+        val aboutText = "CHESS++ was developed with passion by a group of chess enthusiasts from NTNU. The TDT4240 course guided us toward an architecture that suits its needs."
         val aboutLabel = Label(aboutText, skin)
-        table.add(aboutLabel)
+        aboutLabel.setFontScale(2.3f)
+        aboutLabel.wrap = true
+        aboutLabel.setAlignment(Align.center)
 
+        table.add(aboutLabel).expandX().fillX().padLeft(70f).padRight(70f)
         table.center()
+        table.row()
+        table.add(backButton).padTop(40f).width(350f)
     }
 
     override fun render(delta: Float) {

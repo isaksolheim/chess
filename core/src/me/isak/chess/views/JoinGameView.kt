@@ -6,8 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.utils.Align
 import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
@@ -21,13 +25,27 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
 
     init {
         Gdx.input.inputProcessor = stage
+
+        val backgroundTexture = Texture(Gdx.files.internal("background/chessbackground.png"))
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        val backgroundImage = Image(backgroundTexture)
+        backgroundImage.setFillParent(true)
+        stage.addActor(backgroundImage)
+
         val table = Table()
         table.setFillParent(true)
         stage.addActor(table)
 
         val skin = app.skin
 
+        val joinGameLabel = Label("Join with a 4-digit GameID:", app.skin)
+        joinGameLabel.setFontScale(2.5f)
+
         gameIdInput = TextField("", skin)
+        gameIdInput.setScale(450f)
+        gameIdInput.height = 200f
+        gameIdInput.maxLength = 4
+        gameIdInput.alignment = Align.center
         val joinGameButton = TextButton("Join Game", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
@@ -40,22 +58,24 @@ class JoinGameView(private val app: Chess) : ScreenAdapter() {
                     }
                 })
 
-                app.setScreen(GameScreen(app, game))
+                app.screen = GameScreen(app, game)
             }
         })
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(LobbyView(app))
+                app.screen = LobbyView(app)
             }
         })
 
         // Layout
-        table.add(gameIdInput).pad(10f)
+        table.add(joinGameLabel).center().padBottom(60f)
         table.row()
-        table.add(joinGameButton).pad(10f)
+        table.add(gameIdInput).expandX().fillX().center().padLeft(300f).padRight(300f).padBottom(50f)
         table.row()
-        table.add(backButton)
+        table.add(joinGameButton).expandX().fillX().center().padLeft(300f).padRight(300f).padBottom(50f)
+        table.row()
+        table.add(backButton).expandX().fillX().center().padLeft(300f).padRight(300f).padBottom(50f)
     }
 
     override fun show() {
