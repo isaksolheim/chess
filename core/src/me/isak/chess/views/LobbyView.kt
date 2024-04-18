@@ -61,7 +61,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val fontScale = 2.5f
 
         gameVariants.forEach { variant ->
-            libGDXArray.add(variant.name)
+            libGDXArray.add(variant)
         }
 
         val selectBox = SelectBox<String>(app.skin).apply {
@@ -84,7 +84,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val backButton = TextButton("Exit", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(MainMenuView(app))
+                app.screen = MainMenuView(app)
             }
         })
 
@@ -94,7 +94,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 val gameDescription = getDescriptionByName(selectBox.selected)
 
-                app.setScreen(FaqScreenView(app, gameDescription))
+                app.screen = FaqScreenView(app, gameDescription)
             }
         })
 
