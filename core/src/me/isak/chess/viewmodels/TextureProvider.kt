@@ -4,63 +4,59 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 
 class TextureProvider {
-    private var currentPieceThemeIndex = 0
-    private var currentBoardThemeIndex = 0
-    private val pieceThemes = listOf(
-        hashMapOf(
-            'P' to Texture(Gdx.files.internal("pieces/theme1/wP.png")),
-            'p' to Texture(Gdx.files.internal("pieces/theme1/bP.png")),
-            'R' to Texture(Gdx.files.internal("pieces/theme1/wR.png")),
-            'r' to Texture(Gdx.files.internal("pieces/theme1/bR.png")),
-            'N' to Texture(Gdx.files.internal("pieces/theme1/wN.png")),
-            'n' to Texture(Gdx.files.internal("pieces/theme1/bN.png")),
-            'B' to Texture(Gdx.files.internal("pieces/theme1/wB.png")),
-            'b' to Texture(Gdx.files.internal("pieces/theme1/bB.png")),
-            'Q' to Texture(Gdx.files.internal("pieces/theme1/wQ.png")),
-            'q' to Texture(Gdx.files.internal("pieces/theme1/bQ.png")),
-            'K' to Texture(Gdx.files.internal("pieces/theme1/wK.png")),
-            'k' to Texture(Gdx.files.internal("pieces/theme1/bK.png")),
-            ),
-        hashMapOf(
-            'P' to Texture(Gdx.files.internal("pieces/theme2/wP.png")),
-            'p' to Texture(Gdx.files.internal("pieces/theme2/bP.png")),
-            'R' to Texture(Gdx.files.internal("pieces/theme2/wR.png")),
-            'r' to Texture(Gdx.files.internal("pieces/theme2/bR.png")),
-            'N' to Texture(Gdx.files.internal("pieces/theme2/wN.png")),
-            'n' to Texture(Gdx.files.internal("pieces/theme2/bN.png")),
-            'B' to Texture(Gdx.files.internal("pieces/theme2/wB.png")),
-            'b' to Texture(Gdx.files.internal("pieces/theme2/bB.png")),
-            'Q' to Texture(Gdx.files.internal("pieces/theme2/wQ.png")),
-            'q' to Texture(Gdx.files.internal("pieces/theme2/bQ.png")),
-            'K' to Texture(Gdx.files.internal("pieces/theme2/wK.png")),
-            'k' to Texture(Gdx.files.internal("pieces/theme2/bK.png"))
-        )
-    )
+
+    private var currentThemeIndex = 0
+    private val pieceFolders = listOf("standard", "reverse", "makruk")
+    private val pieceThemes = mutableListOf<HashMap<Char, Texture>>()
+
+    var onThemeChange: ((String) -> Unit)? = null
+    val currentTheme: String
+        get() = pieceFolders[currentThemeIndex]
+
+    init {
+        pieceFolders.forEach { pieceTheme ->
+            pieceThemes.add(initPieceTheme(pieceTheme))
+        }
+    }
+
+    private fun initPieceTheme(theme: String): HashMap<Char, Texture> {
+        val pieces = listOf('P', 'R', 'N', 'B', 'Q', 'K')
+        val colors = listOf("w", "b")
+        val map = hashMapOf<Char, Texture>()
+
+        pieces.forEach { piece ->
+            colors.forEach { color ->
+                val key = if (color == "w") piece else piece.lowercaseChar()
+                map[key] = Texture(Gdx.files.internal("pieces/$theme/${color}$piece.png"))
+            }
+        }
+        return map
+    }
+
 
     fun nextPieceTheme() {
-        currentPieceThemeIndex = (currentPieceThemeIndex + 1) % pieceThemes.size
+        currentThemeIndex = (currentThemeIndex + 1) % pieceThemes.size
+        onThemeChange?.invoke(currentTheme)
     }
 
     fun prevPieceTheme() {
-        currentPieceThemeIndex = if (currentPieceThemeIndex - 1 < 0) pieceThemes.size - 1 else currentBoardThemeIndex - 1
+        currentThemeIndex = if (currentThemeIndex - 1 < 0) pieceThemes.size - 1 else currentThemeIndex - 1
+        onThemeChange?.invoke(currentTheme)
     }
-//    fun nextBoardTheme() {
-//        currentBoardThemeIndex = (currentBoardThemeIndex + 1) % pieceThemes.size
-//    }
 
-//    fun prevBoardTheme() {
-//        currentBoardThemeIndex = if (currentBoardThemeIndex - 1 < 0) boardThemes.size - 1 else currentBoardThemeIndex - 1
-//    }
+    fun setPieceTheme(pieceTheme: String) {
+        val index = pieceFolders.indexOf(pieceTheme)
+        if (index != -1) {
+            currentThemeIndex = index
+            onThemeChange?.invoke(currentTheme)
+        }
+    }
 
-    fun getPieceTextures(): HashMap<Char, Texture> = pieceThemes[currentPieceThemeIndex]
-//    fun getBoardTextures(): HashMap<Char, Texture> = boardThemes[currentBoardThemeIndex]
+    fun getPieceTextures(): HashMap<Char, Texture> = pieceThemes[currentThemeIndex]
 
     fun dispose() {
         pieceThemes.forEach { theme ->
             theme.values.forEach(Texture::dispose)
         }
-//        boardThemes.forEach { theme ->
-//            theme.values.forEach(Texture::dispose)
-//        }
     }
 }

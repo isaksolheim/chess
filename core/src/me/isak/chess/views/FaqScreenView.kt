@@ -21,7 +21,7 @@ class FaqScreenView(private val app: Chess) : ScreenAdapter() {
     init {
         Gdx.input.inputProcessor = stage
 
-        // Table used for layout
+        // Table layout
         val table = Table()
         table.setFillParent(true)
         stage.addActor(table)
@@ -30,12 +30,11 @@ class FaqScreenView(private val app: Chess) : ScreenAdapter() {
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                // This code will be executed when the back button is clicked
-                // Change to the previous screen, e.g., the main menu screen
+                // Navigate back to the lobby view
                 app.setScreen(LobbyView(app))
             }
         })
-        table.add(backButton).padTop(20f) // Adjust padding as needed
+        table.add(backButton).padTop(20f).padLeft(200f).padRight(200f).fillX().center()
         table.row()
 
         // FAQ text
@@ -60,7 +59,9 @@ class FaqScreenView(private val app: Chess) : ScreenAdapter() {
             3. Once entered, you'll be connected to the game already in progress.
         """.trimIndent()
         val faqLabel = Label(faqText, skin)
-        table.add(faqLabel)
+        faqLabel.setFontScale(2.3f)
+        faqLabel.wrap = true
+        table.add(faqLabel).expandX().fillX().padLeft(100f).padRight(100f).padTop(50f)
 
         table.center()
     }

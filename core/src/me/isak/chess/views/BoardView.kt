@@ -18,36 +18,59 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
-    val pieceFolder = when (viewModel.getGameVersion()) {
-        "makruk" -> "makruk"
-        else -> "standard"
-    }
-
-    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))
-    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))
+    private lateinit var turnWhiteTexture: Texture
+    private lateinit var turnBlackTexture: Texture
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
+        data.setScale(3f)
     }
 
-    private val pieceImages by lazy {
-        hashMapOf<Char, Texture>().apply {
-            put('P', Texture(Gdx.files.internal("pieces/$pieceFolder/wP.png"))) // White pawn
-            put('p', Texture(Gdx.files.internal("pieces/$pieceFolder/bP.png"))) // Black pawn
-            put('R', Texture(Gdx.files.internal("pieces/$pieceFolder/wR.png"))) // White rook
-            put('r', Texture(Gdx.files.internal("pieces/$pieceFolder/bR.png"))) // Black rook
-            put('N', Texture(Gdx.files.internal("pieces/$pieceFolder/wN.png"))) // White knight
-            put('n', Texture(Gdx.files.internal("pieces/$pieceFolder/bN.png"))) // Black knight
-            put('B', Texture(Gdx.files.internal("pieces/$pieceFolder/wB.png"))) // White bishop
-            put('b', Texture(Gdx.files.internal("pieces/$pieceFolder/bB.png"))) // Black bishop
-            put('Q', Texture(Gdx.files.internal("pieces/$pieceFolder/wQ.png"))) // White queen
-            put('q', Texture(Gdx.files.internal("pieces/$pieceFolder/bQ.png"))) // Black queen
-            put('K', Texture(Gdx.files.internal("pieces/$pieceFolder/wK.png"))) // White king
-            put('k', Texture(Gdx.files.internal("pieces/$pieceFolder/bK.png"))) // Black king
+    init {
+        textureProvider.onThemeChange = { theme ->
+            updateTextures(theme)
+        }
+
+        // Set an initial theme based on the game version
+        val initialTheme = when (viewModel.getGameVersion()) {
+            "makruk" -> "makruk"
+            else -> "standard"
+        }
+        textureProvider.setPieceTheme(initialTheme)
+        setupListeners()
+    }
+
+    private fun updateTextures(theme: String) {
+        disposeOldTextures()
+        turnWhiteTexture = Texture(Gdx.files.internal("pieces/$theme/wK.png"))
+        turnBlackTexture = Texture(Gdx.files.internal("pieces/$theme/bK.png"))
+    }
+
+    private fun disposeOldTextures() {
+        if (::turnWhiteTexture.isInitialized) {
+            turnWhiteTexture.dispose()
+        }
+        if (::turnBlackTexture.isInitialized) {
+            turnBlackTexture.dispose()
+        }
+    }
+
+    private fun setupListeners() {
+        viewModel.onLegalMovesChanged = { moves ->
+            Gdx.app.postRunnable { renderLegalMoves(moves) }
+        }
+        viewModel.onBoardChanged = { board ->
+            Gdx.app.postRunnable { renderPieces(board) }
         }
     }
 
     init {
+        // Set the theme based on the game version
+        val theme = when (viewModel.getGameVersion()) {
+            "makruk" -> "makruk"
+            else -> "standard"
+        }
+        textureProvider.setPieceTheme(theme)
 
         viewModel.onLegalMovesChanged = { moves ->
             Gdx.app.postRunnable { renderLegalMoves(moves) }
@@ -56,6 +79,8 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
             Gdx.app.postRunnable { renderPieces(board) }
         }
         font.data.setScale(3f)
+
+        setupListeners()
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
