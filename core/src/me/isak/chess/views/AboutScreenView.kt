@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
 
@@ -47,14 +48,15 @@ class AboutScreenView(private val app: Chess) : ScreenAdapter() {
         // Image
         val logoImage = Image(logoTexture)
         logoImage.setScale(2f)
-        table.add(logoImage).padBottom(20f).padTop(-100f).center().padRight(logoImage.width)
+        table.add(logoImage).padBottom(40f).padTop(-100f).center().padRight(logoImage.width)
         table.row()
 
         // About us text
-        val aboutText = "CHESS++ was developed with passion by a group of chess enthusiasts studying at NTNU. The TDT4240 course helped guide us towards an architecture fitting for its needs."
+        val aboutText = "CHESS++ was developed with passion by a group of chess enthusiasts from NTNU. The TDT4240 course guided us toward an architecture that suits its needs."
         val aboutLabel = Label(aboutText, skin)
         aboutLabel.setFontScale(2.3f)
         aboutLabel.wrap = true
+        aboutLabel.setAlignment(Align.center)
 
         table.add(aboutLabel).expandX().fillX().padLeft(70f).padRight(70f)
         table.center()

@@ -8,21 +8,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 import me.isak.chess.Chess
 
-class FaqScreenView(private val app: Chess, private val aboutString: String) : ScreenAdapter() {
+class FaqScreenView(private val app: Chess, aboutTitle: String, aboutString: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
 
     init {
         Gdx.input.inputProcessor = stage
 
-        // Table layout
-        val table = Table()
-        table.setFillParent(true)
-        stage.addActor(table)
+        val aboutTitleLabel = Label(aboutTitle, skin, "button")
+        aboutTitleLabel.setFontScale(1.6f)
+
+
+        val aboutGameLabel = Label(aboutString, skin)
+        aboutGameLabel.wrap = true
+        aboutGameLabel.setFontScale(2.3f)
+        if (aboutTitle != "How to get started:") {
+            aboutGameLabel.setAlignment(Align.center)
+        }
 
         // Back button
         val backButton = TextButton("Back", skin)
@@ -30,37 +37,19 @@ class FaqScreenView(private val app: Chess, private val aboutString: String) : S
             override fun changed(event: ChangeEvent?, actor: Actor?) {
                 // This code will be executed when the back button is clicked
                 // Change to the previous screen, e.g., the main menu screen
-                app.setScreen(LobbyView(app))
+                app.screen = LobbyView(app)
             }
         })
-        table.add(backButton).padTop(20f).padLeft(200f).padRight(200f).fillX().center()
+
+        // Table layout
+        val table = Table()
+        table.setFillParent(true)
+        stage.addActor(table)
+        table.add(aboutTitleLabel).center().expandX().padLeft(200f).padRight(200f).padTop(50f)
         table.row()
-
-        // FAQ text
-        val faqText = """
-            To start playing, first use the game mode picker to select your desired game mode.
-            We offer several modes including standard chess, Horde, King of the Hill,
-            and Fischer random chess.
-
-            To play a local game:
-            1. Select your game mode from the picker.
-            2. Click the "Start Local Game" button to begin playing a friend on the same device.
-
-            To start an online game:
-            1. Select your game mode from the picker.
-            2. Click the "Start Online Game" button. This will create a new game and provide you
-            with a 4-digit game ID.
-            3. Share this game ID with a friend so they can join your game.
-
-            To join an existing game:
-            1. Click the "Join" button.
-            2. Enter the 4-digit game ID provided by your opponent.
-            3. Once entered, you'll be connected to the game already in progress.
-        """.trimIndent()
-        val faqLabel = Label(faqText, skin)
-        faqLabel.setFontScale(2.3f)
-        faqLabel.wrap = true
-        table.add(faqLabel).expandX().fillX().padLeft(100f).padRight(100f).padTop(50f)
+        table.add(aboutGameLabel).center().fillX().padLeft(150f).padRight(150f).padTop(50f)
+        table.row()
+        table.add(backButton).padTop(60f).center().fillX().padLeft(200f).padRight(200f)
 
         table.center()
     }

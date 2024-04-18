@@ -27,6 +27,27 @@ data class GameVariant(val name: String, val description: String)
 class LobbyView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
 
+    val gameGeneralInfo = """
+                To start playing, first use the game mode picker to select your desired game mode.
+                We offer several modes including standard chess, Horde, King of the Hill,
+                and Fischer random chess.
+
+                To play a local game:
+                1. Select your game mode from the picker.
+                2. Click the "Start Local Game" button to begin playing a friend on the same device.
+
+                To start an online game:
+                1. Select your game mode from the picker.
+                2. Click the "Start Online Game" button. This will create a new game and provide you
+                   with a 4-digit game ID.
+                3. Share this game ID with a friend so they can join your game.
+
+                To join an existing game:
+                1. Click the "Join" button.
+                2. Enter the 4-digit game ID provided by your opponent.
+                3. Once entered, you'll be connected to the game already in progress.
+            """.trimIndent()
+
     private val gameVariants = arrayOf(
         GameVariant("standard", "Standard chess: Classic rules, no modifications. Focus on controlling the center and developing pieces."),
         GameVariant("koth", "King of the Hill: Reach and control the center squares (d4, d5, e4, e5) with your king to win. Prioritize king safety and center control."),
@@ -41,10 +62,12 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
     fun getDescriptionByName(gameName: String): String {
         val gameVariant = gameVariants.find { it.name == gameName }
         if (gameVariant?.description != null) {
-            return gameVariant?.description
+            return gameVariant.description
         }
         return "Chess!"
     }
+
+
 
 
     init {
@@ -56,12 +79,11 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         backgroundImage.setFillParent(true)
         stage.addActor(backgroundImage)
 
-        val gameVariants = arrayOf("standard", "koth", "horde", "fischer", "racing", "threecheck", "makruk", "atomic")
         val libGDXArray = Array<String>()
         val fontScale = 2.5f
 
         gameVariants.forEach { variant ->
-            libGDXArray.add(variant)
+            libGDXArray.add(variant.name)
         }
 
         val selectBox = SelectBox<String>(app.skin).apply {
@@ -89,12 +111,20 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         })
 
         // Help (?) button
-        val questionButton = TextButton("Help", app.skin)
-        questionButton.addListener(object : ChangeListener() {
+        val gameGeneralInfoButton = TextButton("Help", app.skin)
+        gameGeneralInfoButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                val gameDescription = getDescriptionByName(selectBox.selected)
+                val infoTitle = "How to get started:"
+                app.screen = FaqScreenView(app, infoTitle, gameGeneralInfo)
+            }
+        })
 
-                app.screen = FaqScreenView(app, gameDescription)
+        val gameModeInfoButton = TextButton("?", app.skin)
+        gameModeInfoButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                val infoTitle = selectBox.selected
+                val gameDescription = getDescriptionByName(selectBox.selected)
+                app.screen = FaqScreenView(app, infoTitle, gameDescription)
             }
         })
 
@@ -137,7 +167,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                     }
                 })
 
-                app.setScreen(GameScreen(app, game))
+                app.screen = GameScreen(app, game)
             }
         })
 
@@ -145,19 +175,20 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
-                app.setScreen(JoinGameView(app))
+                app.screen = JoinGameView(app)
             }
         })
 
-
-        table.top().add(backButton).left().padTop(170f).padLeft(50f).width(200f).height(100f)
-        table.add(questionButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
+        table.top()
+        table.add(backButton).left().padTop(170f).padLeft(50f).width(200f).height(100f)
+        table.add(gameGeneralInfoButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
         table.row()
         table.add(titleLabel).colspan(2).expandX().padTop(350f)
         table.row()
         table.add(gameModeLabel).colspan(2).center().padTop(60f)
         table.row()
-        table.add(selectBox).colspan(2).fillX().padLeft(240f).padRight(200f).padTop(30f)
+        table.add(selectBox).expandX().padTop(30f).width(510f).padLeft(195f).padRight(-45f).colspan(1)
+        table.add(gameModeInfoButton).padTop(30f).width(200f).padRight(160f).padLeft(-75f).colspan(1)
         table.row()
         table.add(playLocalButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
         table.row()
