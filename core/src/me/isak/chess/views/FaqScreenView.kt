@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 import me.isak.chess.Chess
 
-class FaqScreenView(private val app: Chess) : ScreenAdapter() {
+class FaqScreenView(private val app: Chess, private val aboutString: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
 
@@ -30,7 +30,8 @@ class FaqScreenView(private val app: Chess) : ScreenAdapter() {
         val backButton = TextButton("Back", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                // Navigate back to the lobby view
+                // This code will be executed when the back button is clicked
+                // Change to the previous screen, e.g., the main menu screen
                 app.setScreen(LobbyView(app))
             }
         })

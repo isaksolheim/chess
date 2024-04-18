@@ -1,6 +1,5 @@
 package me.isak.chess.views
 
-import LobbyView
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
 import com.badlogic.gdx.graphics.GL20

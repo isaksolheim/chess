@@ -17,6 +17,7 @@ import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.FirebaseGameModel
 import me.isak.chess.views.GameScreen
+import me.isak.chess.views.LobbyView
 
 class JoinGameView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
