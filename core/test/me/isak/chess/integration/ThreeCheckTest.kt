@@ -32,8 +32,11 @@ class ThreeCheckKingsTest {
             TestState(38, "rn1q1bnr/pppkpppp/3p4/8/4P1Q1/8/PPPP1PPP/RNB1K1NR b KQ - 1 4", empty),
         )
         integrationTestRunner.run(expectedStates, game)  
-        
-        assertEquals(true, game.checkGameOver().gameOver, "Game should be over by three check")
+
+        val (gameOver, message) = game.checkGameOver()
+
+        assertEquals("White won by checking three times", message)
+        assertEquals(true, gameOver, "Game should be over by three check")
     }
     
     @Test
