@@ -158,8 +158,13 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         val layout = GlyphLayout() // To measure text width
 
         // GameID text (upper left corner)
-        val gameIdText = "Game ID: ${viewModel.getGameId()}"
-        font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        if (viewModel.getOnlineStatus()) {
+            val gameIdText = "Game ID: ${viewModel.getGameId()}"
+            font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        } else {
+            val localGameText = "Local Game"
+            font.draw(spriteBatch, localGameText, 10f, Gdx.graphics.height - 10f)
+        }
 
         // Game mode text (upper right corner)
         val gameModeText = "Game mode: ${viewModel.getGameVersion()}"
