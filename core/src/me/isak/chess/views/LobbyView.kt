@@ -114,14 +114,6 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
 
         val skin = app.skin
 
-        val questionButton = TextButton("?", app.skin)
-        questionButton.addListener(object : ChangeListener() {
-            override fun changed(event: ChangeEvent?, actor: Actor?) {
-                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
-                app.setScreen(FaqScreenView(app))
-            }
-        })
-
         val toggleMusicButton = TextButton("Toggle Music", app.skin)
         toggleMusicButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
