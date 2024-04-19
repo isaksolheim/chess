@@ -2,7 +2,10 @@
 
 This is the android application Chess++. It is an online multiplayer game where you can play one of many chess variants.
 
-![Project Image](assets/home.png)
+<p align="center">
+  <img src="assets/home.png" alt="Project Image" width="300">
+</p>
+
 
 ## Built with
 
