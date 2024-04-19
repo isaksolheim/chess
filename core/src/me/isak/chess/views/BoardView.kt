@@ -11,39 +11,70 @@ import me.isak.chess.Renderer
 import me.isak.chess.model.base.Move
 import me.isak.chess.sound.SoundController
 import me.isak.chess.viewmodels.GameViewModel
+import me.isak.chess.viewmodels.TextureProvider
 
-class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
+class BoardView( private val viewModel: GameViewModel, private val textureProvider: TextureProvider) : InputAdapter() {
     private val lightPixelDrawer by lazy { Renderer.lightPixelDrawer }
     private val darkPixelDrawer by lazy { Renderer.darkPixelDrawer }
     private val dotPixelDrawer by lazy { Renderer.dotPixelDrawer }
     private val spriteBatch by lazy { Renderer.spriteBatch }
 
-    private val turnWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
-    private val turnBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
+    private lateinit var turnWhiteTexture: Texture
+    private lateinit var turnBlackTexture: Texture
 
     private  val soundController = SoundController.getInstance()
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
+        data.setScale(3f)
     }
-    private val pieceImages by lazy {
-        hashMapOf<Char, Texture>().apply {
-            put('P', Texture(Gdx.files.internal("pieces/wP.png"))) // White pawn
-            put('p', Texture(Gdx.files.internal("pieces/bP.png"))) // Black pawn
-            put('R', Texture(Gdx.files.internal("pieces/wR.png"))) // White rook
-            put('r', Texture(Gdx.files.internal("pieces/bR.png"))) // Black rook
-            put('N', Texture(Gdx.files.internal("pieces/wN.png"))) // White knight
-            put('n', Texture(Gdx.files.internal("pieces/bN.png"))) // Black knight
-            put('B', Texture(Gdx.files.internal("pieces/wB.png"))) // White bishop
-            put('b', Texture(Gdx.files.internal("pieces/bB.png"))) // Black bishop
-            put('Q', Texture(Gdx.files.internal("pieces/wQ.png"))) // White queen
-            put('q', Texture(Gdx.files.internal("pieces/bQ.png"))) // Black queen
-            put('K', Texture(Gdx.files.internal("pieces/wK.png"))) // White king
-            put('k', Texture(Gdx.files.internal("pieces/bK.png"))) // Black king
+
+    init {
+        textureProvider.onThemeChange = { theme ->
+            updateTextures(theme)
+        }
+
+        // Set an initial theme based on the game version
+        val initialTheme = when (viewModel.getGameVersion()) {
+            "makruk" -> "makruk"
+            else -> "standard"
+        }
+        textureProvider.setPieceTheme(initialTheme)
+        setupListeners()
+    }
+
+    private fun updateTextures(theme: String) {
+        disposeOldTextures()
+        turnWhiteTexture = Texture(Gdx.files.internal("pieces/$theme/wK.png"))
+        turnBlackTexture = Texture(Gdx.files.internal("pieces/$theme/bK.png"))
+    }
+
+    private fun disposeOldTextures() {
+        if (::turnWhiteTexture.isInitialized) {
+            turnWhiteTexture.dispose()
+        }
+        if (::turnBlackTexture.isInitialized) {
+            turnBlackTexture.dispose()
+        }
+    }
+
+    private fun setupListeners() {
+        viewModel.onLegalMovesChanged = { moves ->
+            Gdx.app.postRunnable { renderLegalMoves(moves) }
+        }
+        viewModel.onBoardChanged = { board ->
+            Gdx.app.postRunnable { renderPieces(board) }
         }
     }
 
     init {
+        // Set the theme based on the game version
+        val theme = when (viewModel.getGameVersion()) {
+            "makruk" -> "makruk"
+            else -> "standard"
+        }
+        textureProvider.setPieceTheme(theme)
+
         viewModel.onLegalMovesChanged = { moves ->
             Gdx.app.postRunnable { renderLegalMoves(moves) }
         }
@@ -51,6 +82,8 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
             Gdx.app.postRunnable { renderPieces(board) }
         }
         font.data.setScale(3f)
+
+        setupListeners()
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -80,6 +113,7 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
     private fun renderPieces(board: Array<Char>) {
         val squareSize = Gdx.graphics.width / 8f
         val maxYPos = Gdx.graphics.height - (Gdx.graphics.height / 5f) - squareSize
+        val pieceImages = textureProvider.getPieceTextures()
 
         for ((index, pieceChar) in board.withIndex()) {
             var colNum = index % 8
@@ -153,8 +187,13 @@ class BoardView( private val viewModel: GameViewModel) : InputAdapter() {
         val layout = GlyphLayout() // To measure text width
 
         // GameID text (upper left corner)
-        val gameIdText = "Game ID: ${viewModel.getGameId()}"
-        font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        if (viewModel.getOnlineStatus()) {
+            val gameIdText = "Game ID: ${viewModel.getGameId()}"
+            font.draw(spriteBatch, gameIdText, 10f, Gdx.graphics.height - 10f)
+        } else {
+            val localGameText = "Local Game"
+            font.draw(spriteBatch, localGameText, 10f, Gdx.graphics.height - 10f)
+        }
 
         // Game mode text (upper right corner)
         val gameModeText = "Game mode: ${viewModel.getGameVersion()}"

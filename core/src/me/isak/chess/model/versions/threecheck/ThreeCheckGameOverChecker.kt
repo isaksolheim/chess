@@ -14,11 +14,10 @@ import me.isak.chess.model.base.GameResults
  * If not, check if the player lost, or the game is stalemate.
  * They lose if the king is in check.
  */
-class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameState, gameHistory: GameHistory) 
-    : GameOverChecker(moveCalculator, gameState, gameHistory) {
+class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, private val threeCheckGameState: ThreeCheckGameState, gameHistory: GameHistory) 
+    : GameOverChecker(moveCalculator, threeCheckGameState, gameHistory) {
 
-    private var whiteHasBeenChecked = 0
-    private var blackHasBeenChecked = 0
+
 
     override fun checkGameOver(): GameResult {
 
@@ -26,18 +25,9 @@ class ThreeCheckGameOverChecker(moveCalculator: MoveCalculator, gameState: GameS
             return GameResults.fiftyMove
         }
         
-        val whitesTurn = gameState.turn
-        val isKingInCheck = moveCalculator.isKingInCheck(gameState.getBoard(), whitesTurn)
-
-        if (whitesTurn && isKingInCheck) whiteHasBeenChecked++ 
-        if (!whitesTurn && isKingInCheck) blackHasBeenChecked++ 
-
-        
-        if (whiteHasBeenChecked > 2) {
-            return GameResult(true, "Black won by checking three times")
-        }
-        if (blackHasBeenChecked > 2) {
-            return GameResult(true, "White won by checking three times")
+        if (threeCheckGameState.checkCount(gameState.turn) > 2) {
+            val winner = if (gameState.turn) "Black" else "White"
+            return GameResult(true, "$winner won by checking three times")
         }
 
         return standardCheck()

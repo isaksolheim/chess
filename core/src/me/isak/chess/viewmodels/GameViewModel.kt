@@ -24,6 +24,13 @@ class GameViewModel(private val game: Game, private val app: Chess) {
         return game.getBoard()
     }
 
+    fun getOnlineStatus(): Boolean {
+        if (game.firebaseGameModel !== null) {
+            return true
+        }
+        return false
+    }
+
     fun getGameId(): String {
         if (game.firebaseGameModel != null) {
             return game.firebaseGameModel!!.id

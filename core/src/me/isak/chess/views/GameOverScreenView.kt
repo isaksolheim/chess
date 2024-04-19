@@ -19,18 +19,24 @@ import me.isak.chess.viewmodels.GameViewModel
 class GameOverScreenView(private val app: Chess, private val game: Game, private val message: String) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
     private val skin = app.skin
-    private val winnerWhiteTexture = Texture(Gdx.files.internal("pieces/wK.png"))
-    private val winnerBlackTexture = Texture(Gdx.files.internal("pieces/bK.png"))
+    private val winnerWhiteTexture = Texture(Gdx.files.internal("pieces/standard/wK.png"))
+    private val winnerBlackTexture = Texture(Gdx.files.internal("pieces/standard/bK.png"))
     private val gameViewModel = GameViewModel(game, app)
 
     init {
         Gdx.input.inputProcessor = stage
 
+        val backgroundTexture = Texture(Gdx.files.internal("background/chessbackground.png"))
+        backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
+        val backgroundImage = Image(backgroundTexture)
+        backgroundImage.setFillParent(true)
+        stage.addActor(backgroundImage)
+
         // Button for opening main menu
         val mainMenuButton = TextButton("Return to main menu", skin)
         mainMenuButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
-                app.setScreen(MainMenuView(app))
+                app.screen = MainMenuView(app)
             }
         })
 
