@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.math.Rectangle
 import me.isak.chess.Renderer
 import me.isak.chess.model.base.Move
+import me.isak.chess.sound.SoundController
 import me.isak.chess.viewmodels.GameViewModel
 import me.isak.chess.viewmodels.TextureProvider
 
@@ -20,6 +21,8 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
 
     private lateinit var turnWhiteTexture: Texture
     private lateinit var turnBlackTexture: Texture
+
+    private  val soundController = SoundController.getInstance()
 
     private val font = BitmapFont().apply {
         color = Color.BLACK
@@ -100,8 +103,8 @@ class BoardView( private val viewModel: GameViewModel, private val textureProvid
         } else {
             boardY
         }
-
         if (boardX in 0..7 && adjustedBoardY in 0..7) {
+            soundController.playGameSoundEffect(SoundController.GameSounds.Click)
             val square = adjustedBoardY * 8 + boardX
             viewModel.onUserMove(square)
         }

@@ -1,6 +1,7 @@
 package me.isak.chess.model.base
 
 import me.isak.chess.model.FirebaseGameModel
+import me.isak.chess.sound.SoundController
 import kotlin.random.Random
 
 /**
@@ -38,16 +39,27 @@ class Game(
      * A player may click on a square, and the state of the game will change as a result.
      * The board will either update, or the legal moves of the current player will update.
      */
-    fun click(square: Int): GameResult {
+
+    data class ClickResult(val isKingInCheck: Boolean, val hasMoved: Boolean, val capture: Boolean)
+
+
+    fun click(square: Int): ClickResult {
+        val oldBoard = gameState.getBoard()
         val newBoard = moveExecutor.execute(legalMoves, square)
 
         if (newBoard != null) {
             legalMoves = listOf()
-            return gameOverChecker.checkGameOver()
+            gameOverChecker.checkGameOver()
+
+            val isKingInCheck = moveCalculator.isKingInCheck(newBoard, !gameState.turn)
+            val hasMoved = true
+            val capture = oldBoard.count { it.isLetter() } != newBoard.count { it.isLetter() }
+            
+            return ClickResult(isKingInCheck, hasMoved, capture)
         }
 
         legalMoves = moveCalculator.legalMoves(square)
-        return GameResults.active
+        return ClickResult(false, false, false)
     }
 
     fun getBoard(): Array<Char> {
@@ -138,7 +150,10 @@ class Game(
      *
      * @param model The [FirebaseGameModel] containing the new state to be applied to the game.
      */
-    fun updateFromModel(model: FirebaseGameModel) {
+
+     data class UpdateResult(var isKingInCheck: Boolean, var pieceCapture: Boolean,var myturn : Boolean)
+
+    fun updateFromModel(model: FirebaseGameModel): UpdateResult {
         if (model.version !== version) {
             println("Updating firebase version")
             version = model.version
@@ -150,10 +165,28 @@ class Game(
             gameHistory = gameFactory.gameHistory()
         }
 
+        
         gameState.turn = model.currentTurn == "white"
         firebaseGameModel = model
         isOnline = true
         id = model.id
+
+        val pieceCountBefore = gameState.board.count { it.isLetter() }
+        val pieceCountAfter = model.board.count { it.isLetter() }
+
+        val pieceCapture = pieceCountBefore != pieceCountAfter
+
+
+        
+        
+        val board = model.board.toCharArray().toTypedArray()
+        val isKingInCheck = moveCalculator.isKingInCheck(board, gameState.turn)
         gameState.setBoardAsString(model.board)
+        var myturn = false
+        if (model.currentTurn == player)
+            myturn = true
+
+
+        return UpdateResult(isKingInCheck, pieceCapture,myturn)
     }
 }

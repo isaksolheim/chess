@@ -21,11 +21,16 @@ import me.isak.chess.Chess
 import me.isak.chess.FirebaseCallback
 import me.isak.chess.model.base.Game
 import me.isak.chess.model.FirebaseGameModel
+import me.isak.chess.sound.SoundController
+import me.isak.chess.views.FaqScreenView
+import me.isak.chess.views.GameScreen
+import me.isak.chess.views.MainMenuView
 
 data class GameVariant(val name: String, val description: String)
 
 class LobbyView(private val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
+    val soundController : SoundController = SoundController.getInstance()
 
     val gameGeneralInfo = """
                 To start playing, first use the game mode picker to select your desired game mode.
@@ -96,16 +101,33 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         selectBox.style.listStyle.fontColorUnselected = Color.WHITE
         selectBox.setAlignment(Align.center)
 
+        selectBox.addListener(object  : ChangeListener()
+        {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
+            }
+        })
+
         val table = Table()
         table.setFillParent(true)
         stage.addActor(table)
 
         val skin = app.skin
 
+        val toggleMusicButton = TextButton("Music", app.skin)
+        toggleMusicButton.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
+                SoundController.getInstance().toggleMusic()
+            }
+        })
+
+
         // Back button
         val backButton = TextButton("Exit", skin)
         backButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent?, actor: Actor?) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.screen = MainMenuView(app)
             }
         })
@@ -145,6 +167,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val playLocalButton = TextButton("Start Local Game", app.skin)
         playLocalButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 val selectedVariant = selectBox.selected
                 val game = Game(selectedVariant)
 
@@ -156,6 +179,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val createGameButton = TextButton("Start Online Game", skin)
         createGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 val selectedVariant = selectBox.selected
                 val game = Game(selectedVariant) // Creating a new game
                 app.firebase.pushValue(game.id, game.toJSON()) // Pushing game to Firebase
@@ -163,7 +187,19 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                 // Setting up an event listener to listen for updates to the game
                 app.firebase.getData("games/${game.id}", object : FirebaseCallback {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
-                        game.updateFromModel(dataModel)
+                        val result = game.updateFromModel(dataModel)
+
+                        if (!result.myturn) return
+                        if (result.isKingInCheck) {
+                            soundController.playGameSoundEffect(SoundController.GameSounds.Check)
+                            return
+                        }
+
+                        if (result.pieceCapture) {
+                            soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
+                            return
+                        }
+                        soundController.playGameSoundEffect(SoundController.GameSounds.Move)
                     }
                 })
 
@@ -175,13 +211,14 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         val joinGameButton = TextButton("Join", skin)
         joinGameButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.screen = JoinGameView(app)
             }
         })
 
         table.top()
         table.add(backButton).left().padTop(170f).padLeft(50f).width(200f).height(100f)
-        table.add(gameGeneralInfoButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
+        table.add(toggleMusicButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
         table.row()
         table.add(titleLabel).colspan(2).expandX().padTop(350f)
         table.row()
@@ -197,6 +234,8 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         table.add(joinGameLabel).colspan(2).center().padLeft(200f).padRight(200f).padTop(100f)
         table.row()
         table.add(joinGameButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
+        table.row()
+        table.add(gameGeneralInfoButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
 
         stage.addActor(table)
     }

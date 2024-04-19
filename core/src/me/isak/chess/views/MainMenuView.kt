@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import me.isak.chess.Chess
+import me.isak.chess.sound.SoundController
 
 class MainMenuView(val app: Chess) : ScreenAdapter() {
     private val stage = Stage(ScreenViewport())
@@ -39,6 +40,8 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
         val playButton = TextButton("Play", app.skin)
         playButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
+                SoundController.getInstance().playMusic()
                 app.screen = LobbyView(app)
             }
         })
@@ -46,6 +49,7 @@ class MainMenuView(val app: Chess) : ScreenAdapter() {
         val aboutButton = TextButton("About CHESS++", app.skin)
         aboutButton.addListener(object : ChangeListener() {
             override fun changed(event: ChangeEvent, actor: Actor) {
+                SoundController.getInstance().playMenuSoundEffect(SoundController.MenueSounds.Click)
                 app.screen = AboutScreenView(app)
             }
         })
