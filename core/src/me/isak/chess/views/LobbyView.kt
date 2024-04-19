@@ -234,6 +234,8 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         table.add(joinGameLabel).colspan(2).center().padLeft(200f).padRight(200f).padTop(100f)
         table.row()
         table.add(joinGameButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
+        table.row()
+        table.add(toggleMusicButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
 
         stage.addActor(table)
     }
