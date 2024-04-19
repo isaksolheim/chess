@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "608165081605",
+    "firebase_url": "https://chess-41379-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "chess-41379",
+    "storage_bucket": "chess-41379.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608165081605:android:162065af865881e715626c",
+        "android_client_info": {
+          "package_name": "me.isak.chess"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcyKJ-bxkY3ZrQoyhPONB2ildbFJjEoZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
