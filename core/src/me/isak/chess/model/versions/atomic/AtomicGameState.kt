@@ -60,16 +60,20 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
      * Atomic: not allowed to blow your own king up.
      */
     override fun checkState(move: Move): Boolean {
-
         val board = move.result.toCharArray().toTypedArray()
 
-        if (blowsUpOwnKing(board, move)) return false
-        if (simpleMoveCalculator.isKingInCheck(board, turn)) return false
-    
-        if (illegalCastle(move)) return false
+        return when {
+            blowsUpOwnKing(board, move) -> false
+            blowsUpEnemyKing(board, move) -> true
+            simpleMoveCalculator.isKingInCheck(board, turn) -> false
+            illegalCastle(move) -> false
+            else -> true
+        }
+    }
 
-    
-        return true
+    private fun blowsUpEnemyKing(board: Array<Char>, move: Move): Boolean {
+        val kingToLookFor = if (turn) 'k' else 'K'
+        return blowsUpKing(board, move, kingToLookFor)
     }
 
     /**
@@ -77,18 +81,24 @@ class AtomicGameState(simpleMoveCalculator: SimpleMoveCalculator, fen: String)
      * and the king is next to the landing square.
      */
     private fun blowsUpOwnKing(board: Array<Char>, move: Move): Boolean {
-        val newPieceCount = move.result.count { it.isLetter() }
+        val kingToLookFor = if (turn) 'K' else 'k'
+        return blowsUpKing(board, move, kingToLookFor)
 
+    }
+    
+    private fun blowsUpKing(board: Array<Char>, move: Move, kingToLookFor: Char): Boolean {
+        val newPieceCount = move.result.count { it.isLetter() }
+    
         // false if no capture occured
         if (newPieceCount == pieceCount) return false
-
+    
         // look for the current playing king
-        val kingToLookFor = if (turn) 'K' else 'k'
         val captureSquare = move.square
-
+    
         return neighbourSquares
           .filter{ direction -> simpleMoveCalculator.isInBounds(captureSquare, direction)}  // remove squares off the board
           .map{ direction -> captureSquare + simpleMoveCalculator.parseDirection(direction)} // map to index on the board
           .any{ board[it] == kingToLookFor} // check if any of the indexes include the king
+
     }
 }
