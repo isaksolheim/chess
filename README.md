@@ -2,6 +2,17 @@
 
 This is the android application Chess++. It is an online multiplayer game where you can play one of many chess variants.
 
+<p align="center">
+  <img src="assets/home.png" alt="Project Image" width="300">
+</p>
+
+
+## Built with
+
+- Kotlin 🤖
+- LibGDX 🎮
+- Firebase Realtime Database 🏦
+
 ## How to run the project
 
 ### Prerequisites
@@ -10,9 +21,11 @@ This is the android application Chess++. It is an online multiplayer game where 
 - JVM version 17
 - Gradle 8.6
 - Install locally:
+
 ```
 https://github.com/isaksolheim/chess.git
 ```
+
 - Android studio with Android SDK
 
 ### Start the app
@@ -35,23 +48,22 @@ In a terminal, in the root of the project:
 
 Test report can be found in ./core/build/report/tests/index.html
 
-Generate jacoco coverage report with: 
+Generate jacoco coverage report with:
+
 ```
 ./gradlew :core:jacocoTestReport
 ```
 
 It can be found in ./core/build/report/jacocoHtml/index.html
 
-
-
 ## Project Structure
 
 The project is structured as follows:
 
-- `android`: Subproject for android. 
+- `android`: Subproject for android.
 - `core`: Subproject for the chess logic and views.
   - `src/me/isak/chess`: Source code
-    - `model`: 
+    - `model`:
       - `base`: All version agnostic chess logic
       - `versions`: Folder with source code specific for each version of chess
         - `fischer`
@@ -65,5 +77,4 @@ The project is structured as follows:
     - `views`: Different views presented to the user
   - `test/me/isak/chess`: Test for chess logic
     - `integration`: Tests for running of full games of each version
-    - `model/core`: Unit tests for chess logic  
-
+    - `model/core`: Unit tests for chess logic
