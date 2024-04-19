@@ -78,7 +78,7 @@ class GameViewModel(private val game: Game, private val app: Chess) {
             soundController.playGameSoundEffect(SoundController.GameSounds.Move)
             return
         }
-        soundController.playGameSoundEffect(SoundController.GameSounds.Click)
+
     }
 
 

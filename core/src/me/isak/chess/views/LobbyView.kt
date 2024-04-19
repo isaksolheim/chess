@@ -189,15 +189,17 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
                     override fun onDataReceived(dataModel: FirebaseGameModel) {
                         val result = game.updateFromModel(dataModel)
 
-                        if (result.myturn) {
-                            if (result.isKingInCheck) {
-                                soundController.playGameSoundEffect(SoundController.GameSounds.Check)
-                            }
-
-                            if (result.pieceCapture) {
-                                soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
-                            }
+                        if (!result.myturn) return
+                        if (result.isKingInCheck) {
+                            soundController.playGameSoundEffect(SoundController.GameSounds.Check)
+                            return
                         }
+
+                        if (result.pieceCapture) {
+                            soundController.playGameSoundEffect(SoundController.GameSounds.Capture)
+                            return
+                        }
+                        soundController.playGameSoundEffect(SoundController.GameSounds.Move)
                     }
                 })
 
