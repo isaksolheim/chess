@@ -218,7 +218,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
 
         table.top()
         table.add(backButton).left().padTop(170f).padLeft(50f).width(200f).height(100f)
-        table.add(gameGeneralInfoButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
+        table.add(toggleMusicButton).right().expandX().padTop(170f).padRight(80f).width(200f).height(100f)
         table.row()
         table.add(titleLabel).colspan(2).expandX().padTop(350f)
         table.row()
@@ -235,7 +235,7 @@ class LobbyView(private val app: Chess) : ScreenAdapter() {
         table.row()
         table.add(joinGameButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
         table.row()
-        table.add(toggleMusicButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
+        table.add(gameGeneralInfoButton).colspan(2).fillX().padLeft(200f).padRight(200f).padTop(30f)
 
         stage.addActor(table)
     }
